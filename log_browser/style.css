@@ -1,0 +1,196 @@
+body {
+	font-size:12px;
+	font-family:tahoma;
+	color:#222222;
+	width:500px;
+	margin: 0 auto;
+}
+
+h3 {
+	text-align: center;
+}
+
+a, a:visited {
+	color: #000;
+	text-decoration: none;
+}
+
+.browser{
+	position:relative;
+	display:block;
+	padding:0px;
+	margin-top: 10px;
+	height:300px;
+	border:1px solid #888888;
+}
+
+#dogrulama{
+	padding:5px;
+	margin:5px 0;
+	border:1px solid #888888;
+}
+
+#dogrulama p {
+	padding: 10px;
+	margin: 0;
+	text-align: center;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#dogrulama p.success {
+	background-color: #25A725;
+}
+#dogrulama p.error {
+	background-color: #DA2B2B;
+}
+
+#dogrulama div {
+	margin-top: 10px;
+}
+
+.show {display: block}
+.hide {display: none}
+
+.returnlink {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+
+.pfilter{
+	padding:2px;
+	margin:0px;
+	height:24px;
+}
+.pfilter input[type="button"]{
+	padding:1px 2px;
+	margin:0px;
+	color:#222222;
+	border:1px solid #666666;
+	background-color:#EEEEEE;
+	cursor:pointer;
+}
+
+.pfilter input[type="text"]{
+	padding:0px 2px;
+	margin:0px;
+	width:170px;
+	height:18px;
+	border:1px solid #666666;
+}
+
+.pPathDisplay{
+	padding:2px;
+	margin:0px;
+	height:18px;
+	background-color:#777777;
+	color:#FFFFFF;
+	white-space:nowrap;
+	overflow:hidden;
+}
+
+.dvContents{
+	padding:0px;
+	margin:0px;
+	width:100%;
+	height:278px;
+	overflow:auto;
+}
+
+.item{
+	padding:3px 0px 3px 23px;
+	margin:0px;
+	line-height:20px;
+	height:20px;
+	vertical-align:middle;
+	background-position: 3px 50%;
+	background-repeat:no-repeat;
+}
+
+.item span {
+	float: right;
+}
+.item span.size {
+	margin-right: 15px;
+}
+.item span.dogrula {
+	margin-right: 10px;
+	cursor: pointer;
+}
+.item span.dogrula:hover {
+	text-decoration: underline;
+}
+
+.ft_folder {
+	cursor:pointer;
+}
+
+.ft_folder:hover {
+	background-color:#FDFFDF;
+}
+
+.item{
+	background-image:url(./images/page_white.png);
+}
+
+.item a:hover {
+	text-decoration: underline;
+}
+
+.odd{
+	background-color:#EEEEEE;
+
+}
+
+.even{
+	background-color:#DDDDDD;
+}
+
+.item.ft_folder{
+	background-image:url(./images/folder.png);
+}
+
+.item.ft_pdf{
+	background-image:url(./images/page_white_acrobat.png);
+}
+
+.item.ft_cs{
+	background-image:url(./images/page_white_csharp.png);
+}
+
+.item.ft_xls{
+	background-image:url(./images/page_white_excel.png);
+}
+
+.item.ft_swf{
+	background-image:url(./images/page_white_flash.png);
+}
+
+.item.ft_php{
+	background-image:url(./images/page_white_php.png);
+}
+
+.item.ft_png,
+.item.ft_jpg,
+.item.ft_bmp,
+.item.ft_gif{
+	background-image:url(./images/page_white_picture.png);
+}
+
+.item.ft_txt,
+.item.ft_js,
+.item.ft_css{
+	background-image:url(./images/page_white_text.png);
+}
+
+.item.ft_htm,
+.item.ft_html{
+	background-image:url(./images/page_white_code.png);
+}
+
+.item.ft_rar,
+.item.ft_zip{
+	background-image:url(./images/page_white_compressed.png);
+}

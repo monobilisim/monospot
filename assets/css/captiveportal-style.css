@@ -1,0 +1,122 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	background-color: #666;
+}
+#container {
+	width: 640px;
+	margin: 0 auto;
+	padding: 4px 4px 20px 4px;
+	background-color: #fff;
+	text-align: center;
+}
+#title {
+	font-weight: bold;
+	color: #fff;
+	padding: 10px;
+}
+#logo {
+	padding: 20px;
+}
+.message {
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+.error {
+	color: #e00;
+}
+.success {
+	color: #080;
+}
+#form-selection {
+	margin: 20px;
+}
+#form-selection button {
+	border: none;
+	outline: none;
+	cursor: pointer;
+	background-color: #888;
+	color: #fff;
+	font-size: 18px;
+	padding: 6px 20px;
+	margin: 0 10px;
+}
+#form-selection .active {
+	background-color: #333;
+}
+.form {
+	width: 300px;
+	margin: 0 auto;
+	display: none;
+}
+.form .submit {
+	background-color: #333;
+	color: #fff;
+}
+.form .title {
+	font-size: 18px;
+	text-shadow: -1px -1px 0 #000;
+	padding: 8px;	
+}
+.form .content {
+	border: 1px solid #ddd;
+	color: #333;
+}
+.form .item {
+	margin-bottom: 10px;
+}
+.form .description {
+	margin: 20px;
+	font-size: 15px;
+}
+.form label {
+	display: block;
+	font-weight: bold;
+}
+.form .item-description {
+	font-size: 12px;
+}
+.form input {
+	padding: 4px;
+	font-size: 15px;
+	border: 1px solid #ccc;
+}
+.form input:focus{
+	outline: none;
+	box-shadow: 0 0 10px #ccc;
+}
+.form input.error {
+	border: 1px solid #c33;
+	box-shadow: 0 0 10px #ebadad;
+}
+.form .highlight {
+	color: #c33;
+	font-size: 14px;
+}
+.form .submit {
+	margin: 5px auto 20px;
+	padding: 6px 12px;
+	cursor: pointer;
+	font-size: 15px;
+	border: none;
+}
+.form .submit:active {
+	margin: 7px auto 18px;
+}
+#lang {
+	text-align: left;
+	margin-bottom: -16px;
+	font-size: 10px;
+}
+#lang input {
+	border: none;
+	background: none;
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	font-size: 10px;
+}
+#wifi-logo {
+	text-align: center;
+	margin-top: 20px;
+}

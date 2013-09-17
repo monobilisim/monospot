@@ -1,0 +1,157 @@
+body {
+	font: 12px/16px Tahoma, sans-serif;
+	margin: 20px 40px;
+	background-image: url(../img/fabric_1.png);
+}
+
+a, a:visited {
+	color: #333;
+}
+
+#nav {
+	padding: 10px;
+	font-size: 14px;
+}
+
+#list {
+	float: left;
+}
+
+table {
+	border-collapse: collapse;
+	background-color: #fff;
+}
+
+table th {
+	background-color: #666;
+	color: #fff;
+}
+
+table th a, table th a:visited {
+	color: #fff;
+}
+
+table th,
+table td {
+	border: 1px solid #ddd;
+	padding: 4px 10px;
+	text-align: center;
+}
+
+table tr:hover {
+	background-color: #eee;
+}
+
+table td.left {
+	text-align: left;
+}
+
+#filter {
+	float: left;
+	margin-left: 20px;
+}
+
+#filter .item {
+	margin-bottom: 10px;
+}
+
+#pager {
+	padding: 10px;
+	clear: left;
+}
+
+#pager a {
+	display: inline-block;
+	border: 1px solid #ddd;
+	text-decoration: none;
+	padding: 4px 8px;
+	margin-right: 4px;
+}
+#pager a:hover {
+	background-color: #fdfdfd;
+}
+#pager a.disabled {
+	color: #aaa;
+}
+#pager a.disabled:hover {
+	background: none;
+	cursor: default;
+}
+
+#user {
+	border: 1px solid #ccc;
+	background-color: #fff;
+	width: 500px;
+	padding: 0 10px;
+}
+
+.label {
+	font-weight: bold;
+	width: 200px;
+	display: inline-block;
+	text-align: right;
+	padding-right: 10px;
+}
+
+input {
+	padding: 2px;
+}
+
+input.xsmall {
+	width: 50px;
+}
+input.small {
+	width: 100px;
+}
+input.medium {
+	width: 150px;
+}
+input.large {
+	width: 200px;
+}
+input.xlarge {
+	width: 250px;
+}
+input.xxlarge {
+	width: 300px;
+}
+input.error {
+	border: 1px solid red;
+}
+
+.errors li {
+	color: red;
+}
+
+p.actions {
+	text-align: right;
+}
+
+fieldset {
+	width: 600px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+}
+
+.message {
+	margin: 20px 0;
+	font-weight: bold;
+	color: #018501;
+}
+
+footer {
+	padding-top: 10px;
+	clear: both;
+}
+
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; }
+.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
