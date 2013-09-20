@@ -36,7 +36,7 @@
 //////////////////////////////
 
 //password to gain access
-$password = "monospot";
+$password = "monospot#2013";
 
 //directory relative to this file to search for databases (if false, manually list databases in the $databases variable)
 $directory = "db";

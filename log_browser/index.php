@@ -72,7 +72,8 @@ if ($local_user['scope'] != 'system'):
 
 <?php endif; ?>
 
-<div class="returnlink"><a href="/monospot/?settings">&#8629; MonoSpot</a></div>
+<?php $hotspot = parse_ini_file('../hotspot.ini'); ?>
+<div class="returnlink"><a href="/<?=$hotspot['marka_url']?>/?settings">&#8629; <?=$hotspot['marka']?></a></div>
 
 </body>
 </html>

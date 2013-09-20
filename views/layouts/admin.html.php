@@ -2,7 +2,7 @@
 <html>
 <head>	
 	<meta charset="utf-8">
-	<title>Monospot</title>
+	<title><?=$hotspot['marka']?></title>
 	<link href="assets/css/style.css" rel="stylesheet" />
 	<link href="assets/css/smoothness/jquery-ui-1.10.1.custom.min.css" rel="stylesheet" />
 	<script src="assets/js/jquery-1.9.1.js"></script>
@@ -13,14 +13,11 @@
 <body>
 	<div class="container">
 	
-	<h1>Monospot Yönetim Paneli</h1>
+	<h1><?=$hotspot['marka']?> Yönetim Paneli</h1>
 	
 	<?php
-	if (file_exists(dirname(__FILE__) . '/../../config.ini'))
-	{
-		$config = parse_ini_file('config.ini');
-		echo '<div style="color:#e00;font-weight:bold">Hotspot demo süresi ' . $config['demo_bitis'] . ' tarihinde dolacaktır.</div>';
-	}
+	if (date('Y', strtotime($hotspot['demo_bitis'])) != '2010')
+		echo '<div style="color:#e00;font-weight:bold">Hotspot demo süresi ' . $hotspot['demo_bitis'] . ' tarihinde dolacaktır.</div>';
 	?>
 	
 	<div id="nav">
@@ -29,7 +26,7 @@
 		<a href="<?=url_for('sms')?>">SMS Raporu</a> | 
 	<? endif; ?>
 		<a href="<?=url_for('settings')?>">Ayarlar</a> | 
-		<a href="/monospot/log_browser/">Loglar</a> | 
+		<a href="/<?=$hotspot['marka_url']?>/log_browser/">Loglar</a> | 
 		<a href="/index.php?logout">Çıkış</a>
 	</div>
 	
@@ -42,7 +39,7 @@
 	</div>
 	
 	<footer>
-		<p>© Mono Bilişim 2013</p>
+		<p>© <?=$hotspot['firma']?> 2013</p>
 	</footer>
 	
 	</div>

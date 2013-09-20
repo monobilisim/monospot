@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <title><?=$title?></title>
-<link href="monospot/assets/css/captiveportal-style.css" rel="stylesheet">
-<script src="monospot/assets/js/captiveportal-jquery-1.9.1.js"></script>
+<link href="<?=$hotspot['marka_url']?>/assets/css/captiveportal-style.css" rel="stylesheet">
+<script src="<?=$hotspot['marka_url']?>/assets/js/captiveportal-jquery-1.9.1.js"></script>
 <script>
-<? include 'monospot/assets/js/captiveportal.js'; ?>
-<? $settings = include('monospot/settings.inc'); ?>
+<? include $hotspot['marka_url'] . '/assets/js/captiveportal.js'; ?>
+<? $settings = include $hotspot['marka_url'] . '/settings.inc'; ?>
 </script>
 <style>
 #title {background-color: <?=$color?>}
@@ -27,7 +27,7 @@ form {padding-top: 20px}
 	<div id="container">
 		<div id="title"><?=$title?></div>
 		<div id='logo'>
-			<img src="monospot/assets/img/captiveportal-logo.png">
+			<img src="<?=$hotspot['marka_url']?>/assets/img/captiveportal-logo.png">
 		</div>
 
 		<? if (isset($message)): ?>
@@ -147,7 +147,7 @@ form {padding-top: 20px}
 	</div>
 
 	<div id="wifi-logo">
-		<img src="monospot/assets/img/captiveportal-wifi.png">
+		<img src="<?=$hotspot['marka_url']?>/assets/img/captiveportal-wifi.png">
 	</div>
 
 </body>

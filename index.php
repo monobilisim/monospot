@@ -22,6 +22,7 @@ require 'lib/validate.class.php';
 require 'models/user.php';
 
 $settings = include 'settings.inc';
+$hotspot = parse_ini_file('hotspot.ini');
 
 function configure()
 {
@@ -33,6 +34,9 @@ function configure()
 
 	layout('layouts/admin.html.php');
 	error_layout('layouts/admin.html.php');
+	
+	global $hotspot;
+	set('hotspot', $hotspot);
 }
 
 dispatch('/', 'home');

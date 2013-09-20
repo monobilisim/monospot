@@ -9,6 +9,7 @@ require 'models/user.php';
 require 'sms.php';
 
 $settings = include('settings.inc');
+$hotspot = parse_ini_file('hotspot.ini');
 
 function configure()
 {	
@@ -19,34 +20,34 @@ function configure()
 	option('views_dir', $dir.'/views');
 	
 	error_layout('layouts/captiveportal.html.php');	
+	
+	global $hotspot;
+	set('hotspot', $hotspot);
 }
 
 dispatch('', 'welcome');
 function welcome()
 {
-	if (file_exists(dirname(__FILE__) . '/config.ini'))
+	global $hotspot;
+	if (date('Y', strtotime($hotspot['demo_bitis'])) != '2010' && time() > strtotime($hotspot['demo_bitis']))
 	{
-		$config = parse_ini_file('config.ini');
-		if ($config['demo_bitis'] && time() > strtotime($config['demo_bitis']))
-		{
-			$demo_expired = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Hotspot demo süresi ' . $config['demo_bitis'] . ' tarihinde dolmuştur.</div>';
-			return $demo_expired;
-		}
-		
-		// pfSense kodundan alındı: /usr/local/www/status_captiveportal.php
-		if (file_exists('/var/db/captiveportal.db')) {
-			$captiveportallck = lock('captiveportaldb');
-			$cpcontents = file("/var/db/captiveportal.db", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-			unlock($captiveportallck);	
-		} else
-			$cpcontents = array();
-		$concurrent = count($cpcontents);
-		
-		if ($config['maksimum_kullanici'] && $concurrent >= $config['maksimum_kullanici'])
-		{
-			$max_user_reached = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Maksimum kullanıcı sayısına ulaşıldı!</div>';
-			return $max_user_reached;
-		}
+		$demo_expired = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Hotspot demo süresi ' . $hotspot['demo_bitis'] . ' tarihinde dolmuştur.</div>';
+		return $demo_expired;
+	}
+	
+	// pfSense kodundan alındı: /usr/local/www/status_captiveportal.php
+	if (file_exists('/var/db/captiveportal.db')) {
+		$captiveportallck = lock('captiveportaldb');
+		$cpcontents = file("/var/db/captiveportal.db", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		unlock($captiveportallck);	
+	} else
+		$cpcontents = array();
+	$concurrent = count($cpcontents);
+	
+	if ($hotspot['maksimum_kullanici'] && $concurrent >= $hotspot['maksimum_kullanici'])
+	{
+		$max_user_reached = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Maksimum kullanıcı sayısına ulaşıldı!</div>';
+		return $max_user_reached;
 	}
 	
 	global $settings;
