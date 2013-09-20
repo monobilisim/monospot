@@ -14,6 +14,10 @@
 		<p>
 			<input type="radio" name="authentication" id="sms" value="sms"<? echo $settings['authentication'] == 'sms' ? ' checked="checked"' : ''; ?>>
 			<label for="sms">SMS ile şifre gönderimi</label>
+				<div class="secondary-setting">
+					<input type="checkbox" name="simple_screen" id="simple_screen" value="1"<? echo isset($settings['simple_screen']) ? ' checked="checked"' : ''; ?>>
+					<label for="simple_screen">Basitleştirilmiş Ekran</label>
+				</div>
 		</p>
 		<p>
 			<input type="radio" name="authentication" id="id_number" value="id_number"<? echo $settings['authentication'] == 'id_number' ? ' checked="checked"' : ''; ?>>
@@ -26,10 +30,9 @@
 		<p>
 			<input type="radio" name="authentication" id="manual_password" value="manual_password"<? echo $settings['authentication'] == 'manual_password' ? ' checked="checked"' : ''; ?>>
 			<label for="manual_password">Elle kullanıcı açma</label>
-			<p>
-				<div class="label">Kullanıcı adı alanı</div>
-				<input type="text" class="large" name="username" value="<?=$settings['username']?>">
-			</p>
+				<div class="secondary-setting">Kullanıcı adı alanı
+					<input type="text" class="large" name="username" value="<?=$settings['username']?>">
+				</div>
 		</p>
 	</fieldset>
 	
@@ -43,6 +46,11 @@
 	
 	<fieldset>
 		<legend>Genel Ayarlar</legend>
+		<p>
+			<div class="label">Maksimum kullanıcı sayısı</div>
+			<input type="text" class="xsmall<?=isset($errors['max_timeout']) ? ' error' : ''?>" name="max_user" value="<?=$settings['max_user']?>">
+			(Boş = Sınırsız)
+		</p>
 		<p>
 			<div class="label">Oturum Geçerlilik Süresi</div>
 			<input type="text" class="xsmall<?=isset($errors['session_timeout']) ? ' error' : ''?>" name="session_timeout" value="<?=$settings['session_timeout']?>"> dakika

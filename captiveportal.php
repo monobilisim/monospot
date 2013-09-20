@@ -24,12 +24,38 @@ function configure()
 dispatch('', 'welcome');
 function welcome()
 {
+	if (file_exists(dirname(__FILE__) . '/config.ini'))
+	{
+		$config = parse_ini_file('config.ini');
+		if ($config['demo_bitis'] && time() > strtotime($config['demo_bitis']))
+		{
+			$demo_expired = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Hotspot demo süresi ' . $config['demo_bitis'] . ' tarihinde dolmuştur.</div>';
+			return $demo_expired;
+		}
+		
+		// pfSense kodundan alındı: /usr/local/www/status_captiveportal.php
+		if (file_exists('/var/db/captiveportal.db')) {
+			$captiveportallck = lock('captiveportaldb');
+			$cpcontents = file("/var/db/captiveportal.db", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+			unlock($captiveportallck);	
+		} else
+			$cpcontents = array();
+		$concurrent = count($cpcontents);
+		
+		if ($config['maksimum_kullanici'] && $concurrent >= $config['maksimum_kullanici'])
+		{
+			$max_user_reached = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Maksimum kullanıcı sayısına ulaşıldı!</div>';
+			return $max_user_reached;
+		}
+	}
+	
 	global $settings;
 	$user = Model::factory('User')->create();
 	$user->defaults();
 	set('title', $settings['name'] . ' ' . t('welcome'));
 	set('color', $settings['color']);
 	set('user', $user);
+	if ($settings['simple_screen']) set('form', 'register');
 	return html('layouts/captiveportal.html.php');
 }
 
@@ -62,7 +88,8 @@ function welcome_post()
 
 	if (!isset($_POST['user']['password'])) # Yeni kayıt ya da TC Kimlik ile giriş
 	{
-		if ($user && $settings['authentication'] == 'sms')
+		if ($user && $settings['authentication'] == 'sms' && !$settings['simple_screen'])
+		// Sade ekran modelinde kullanıcı önceden kayıtlıysa bile şifre isteği olarak algıla ve devam et
 		{
 			$message = 'user_already_registered';
 			$form = 'login';

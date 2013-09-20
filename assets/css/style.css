@@ -133,6 +133,10 @@ fieldset {
 	border: 1px solid #ccc;
 }
 
+.secondary-setting {
+	margin-left: 30px;
+}
+
 .message {
 	margin: 20px 0;
 	font-weight: bold;

@@ -14,6 +14,11 @@
 <? if ($form): ?>
 #form-<?=$form?> {display: block}
 <? endif; ?>
+<? if ($settings['simple_screen']): ?>
+#form-selection button {display: none}
+.form .description {display: none}
+form {padding-top: 20px}
+<? endif; ?>
 </style>
 </head>
 

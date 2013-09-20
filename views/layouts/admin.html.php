@@ -16,10 +16,10 @@
 	<h1>Monospot Yönetim Paneli</h1>
 	
 	<?php
-	if (file_exists(dirname(__FILE__) . '/../../demo.ini'))
+	if (file_exists(dirname(__FILE__) . '/../../config.ini'))
 	{
-		$demo = parse_ini_file('demo.ini');
-		echo '<div style="color:#e00;font-weight:bold">Hotspot demo süresi ' . $demo['bitis'] . ' tarihinde dolacaktır.</div>';
+		$config = parse_ini_file('config.ini');
+		echo '<div style="color:#e00;font-weight:bold">Hotspot demo süresi ' . $config['demo_bitis'] . ' tarihinde dolacaktır.</div>';
 	}
 	?>
 	

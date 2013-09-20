@@ -2,6 +2,7 @@
 
 return array (
   'authentication' => 'sms',
+  'simple_screen' => '',
   'username' => 'Kullanıcı Adı',
   'valid_for' => '1',
   'daily_global_limit' => '200',
