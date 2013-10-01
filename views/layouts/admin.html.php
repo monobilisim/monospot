@@ -27,7 +27,7 @@
 	<? endif; ?>
 		<a href="<?=url_for('settings')?>">Ayarlar</a> | 
 		<a href="<?=url_for('lang/tr')?>">Dil</a> | 
-		<a href="/index.php?logout">Çıkış</a>
+		<a href="/">pfSense</a>
 	</div>
 	
 	<? if (isset($_SESSION['message'])): ?>
