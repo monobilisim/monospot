@@ -23,7 +23,7 @@
 
 <form action="<?=$action?>" method="POST">
 	<div id="user">
-	<? if ($settings['authentication'] == 'id_number' || isset($settings['fields']['id_number'])): ?>
+	<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
 		<p>
 			<div class="label">TC Kimlik No</div>
 			<input type="text" class="small<?=isset($errors['id_number']) ? ' error' : ''?>" name="user[id_number]" maxlength="11" value="<?=$user->id_number?>">
@@ -37,7 +37,7 @@
 			<input type="text" class="small" name="user[surname]" value="<?=$user->surname?>">
 		</p>
 	<? endif; ?>
-	<? if ($settings['authentication'] == 'sms'): ?>
+	<? if (isset($settings['authentication']['sms'])): ?>
 		<p>
 			<div class="label">GSM</div>
 			<input type="text" class="small<?=isset($errors['gsm']) ? ' error' : ''?>" name="user[gsm]" value="<?=$user->gsm?>">
@@ -63,22 +63,14 @@
 			<input type="text" class="xsmall<?=isset($errors['yearly_limit']) ? ' error' : ''?>" name="user[yearly_limit]" value="<?=$user->yearly_limit?>">
 		</p>
 	<? endif; ?>
-	<? if ($settings['authentication'] == 'manual_password'): ?>
+	<? if (isset($settings['authentication']['manual_user'])): ?>
 		<p>
-			<div class="label"><?=$settings['username']?></div>
+			<div class="label">Kullanıcı adı</div>
 			<input type="text" class="small" name="user[username]" value="<?=$user->username?>">
 		</p>
-	<? endif; ?>
-	<? if ($settings['authentication'] == 'id_number_passport'): ?>
-		<p>
-			<div class="label">Pasaport No</div>
-			<input type="text" class="small" name="user[username]" value="<?=$user->username?>">
-		</p>
-	<? endif; ?>
-	<? if ($settings['authentication'] == 'manual_password' || $settings['authentication'] == 'id_number_passport'): ?>
 		<p>
 			<div class="label">Şifre</div>
-			<input type="password" class="small" name="user[password]" value="<?=$user->password?>">
+			<input type="text" class="small" name="user[password]" value="<?=$user->password?>">
 		</p>
 	<? endif; ?>
 		<p>

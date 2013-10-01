@@ -1,15 +1,43 @@
 $(document).ready(function() {
-	$("#register").click(function() {
+	$("#sms_register").click(function() {
 		$(this).addClass("active");
-		$("#login").removeClass("active");
-		$("#form-login").before($("#form-register")).slideUp("slow");
-		$("#form-register").slideDown("slow");
+		$("#sms_login").removeClass("active");
+		$("#id_number_login").removeClass("active");
+		$("#manual_password_login").removeClass("active");
+		$("#form_sms_login").addClass("hide");
+		$("#form_id_number_login").addClass("hide");
+		$("#form_manual_user_login").addClass("hide");
+		$("#form_sms_register").removeClass("hide");
 	});
-	$("#login").click(function() {
+	$("#sms_login").click(function() {
 		$(this).addClass("active");
-		$("#register").removeClass("active");
-		$("#form-register").before($("#form-login")).slideUp("slow");
-		$("#form-login").slideDown("slow");
+		$("#sms_register").removeClass("active");
+		$("#id_number_login").removeClass("active");
+		$("#manual_user_login").removeClass("active");
+		$("#form_sms_register").addClass("hide");
+		$("#form_id_number_login").addClass("hide");
+		$("#form_manual_user_login").addClass("hide");
+		$("#form_sms_login").removeClass("hide");
+	});
+	$("#id_number_login").click(function() {
+		$(this).addClass("active");
+		$("#sms_register").removeClass("active");
+		$("#sms_login").removeClass("active");
+		$("#manual_user_login").removeClass("active");
+		$("#form_sms_register").addClass("hide");
+		$("#form_sms_login").addClass("hide");
+		$("#form_manual_user_login").addClass("hide");
+		$("#form_id_number_login").removeClass("hide");
+	});
+	$("#manual_user_login").click(function() {
+		$(this).addClass("active");
+		$("#sms_register").removeClass("active");
+		$("#sms_login").removeClass("active");
+		$("#id_number_login").removeClass("active");
+		$("#form_sms_register").addClass("hide");
+		$("#form_sms_login").addClass("hide");
+		$("#form_id_number_login").addClass("hide");
+		$("#form_manual_user_login").removeClass("hide");
 	});
 });
 
@@ -35,10 +63,10 @@ function validateForm(form) {
 			}
 		}
 
-		/* fullname validation */
-		if (el.name == "user[fullname]") {
+		/* username validation */
+		if (el.name == "user[username]") {
 			if (el.value == "") {
-				errors[i] = "<?=t('fullname_required')?>";
+				errors[i] = "<?=t('username_required')?>";
 			}
 		}
 		

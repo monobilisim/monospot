@@ -11,10 +11,11 @@
 </script>
 <style>
 #title {background-color: <?=$color?>}
+#form-selection .active {background-color: <?=$color?>}
 <? if ($form): ?>
-#form-<?=$form?> {display: block}
+#form_<?=$form?> {display: block}
 <? endif; ?>
-<? if ($settings['simple_screen']): ?>
+<? if (isset($settings['authentication']['sms']) && isset($settings['simple_screen'])): ?>
 #form-selection button {display: none}
 .form .description {display: none}
 form {padding-top: 20px}
@@ -35,101 +36,110 @@ form {padding-top: 20px}
 		<? endif; ?>
 
 		<div id="form-selection">
-		<? if ($settings['authentication'] == 'sms'): ?>
-			<button id="register"<?= $form == 'register' ? ' class="active"' : '' ?>><?=t('register_select')?></button>
-			<button id="login"<?= $form == 'login' ? ' class="active"' : '' ?>><?=t('login_select')?></button>
+		<? if (isset($settings['authentication']['sms'])): ?>
+			<button id="sms_register"<?= $form == 'sms_register' ? ' class="active"' : '' ?>><?=t('sms_register')?></button>
+			<button id="sms_login"<?= $form == 'sms_login' ? ' class="active"' : '' ?>><?=t('sms_login')?></button>
 		<? endif; ?>
-		<? if ($settings['authentication'] == 'id_number'): ?>
-			<button id="register"<?= $form == 'register' ? ' class="active"' : '' ?>><?=t('login_id_number')?></button>
+		<? if (isset($settings['authentication']['id_number'])): ?>
+			<button id="id_number_login"<?= $form == 'id_number_login' ? ' class="active"' : '' ?>><?=t('id_number_login')?></button>
 		<? endif; ?>
-		<? if ($settings['authentication'] == 'id_number_passport'): ?>
-			<button id="register"<?= $form == 'register' ? ' class="active"' : '' ?>><?=t('login_id_number')?></button>
-			<button id="login"<?= $form == 'login' ? ' class="active"' : '' ?>><?=t('login_passport')?></button>
-		<? endif; ?>
-		<? if ($settings['authentication'] == 'manual_password'): ?>
-			<button id="login"<?= $form == 'login' ? ' class="active"' : '' ?>><?=t('login_select')?></button>
+		<? if (isset($settings['authentication']['manual_user'])): ?>
+			<button id="manual_user_login"<?= $form == 'manual_user_login' ? ' class="active"' : '' ?>><?=t('manual_user_login')?></button>
 		<? endif; ?>
 		</div>
 		
-	<? if ($settings['authentication'] == 'sms' || $settings['authentication'] == 'id_number' || $settings['authentication'] == 'id_number_passport'): ?>
-		<div class="form" id="form-register">
+	<? if (isset($settings['authentication']['sms'])): ?>
+		<div class="form hide" id="form_sms_register">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
-		<? if ($settings['authentication'] == 'sms'): ?>
-			<p class="description"><?=t('register_desc')?></p>
-		<? endif; ?>
-		<? if ($settings['authentication'] == 'id_number' || $settings['authentication'] == 'id_number_passport'): ?>
-			<p class="description"><?=t('login_desc_id_number')?></p>
-		<? endif; ?>
-		<? if ($settings['authentication'] == 'sms'): ?>
+			<p class="description"><?=t('sms_register_desc')?></p>
 			<div class="item">
-			<label><?=t('gsm')?></label>
+			<label><?=t('gsm')?>:</label>
 			<input name="user[gsm]" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)">
 			<div class="item-description"><?=t('gsm_desc')?></div>
 			</div>
-		<? endif; ?>
-		<? if ($settings['authentication'] == 'id_number' || $settings['authentication'] == 'id_number_passport' || isset($settings['fields']['id_number'])): ?>
+		<? if (isset($settings['sms_fields']['id_number'])): ?>
 			<div class="item">
-			<label><?=t('name')?></label>
+			<label><?=t('name')?>:</label>
 			<input name="user[name]" type="text" maxlength="40" value="<?=$user->name?>">
 			</div>
 			<div class="item">
-			<label><?=t('surname')?></label>
+			<label><?=t('surname')?>:</label>
 			<input name="user[surname]" type="text" maxlength="40" value="<?=$user->surname?>">
 			</div>
 			<div class="item">
-			<label><?=t('birthyear')?></label>
+			<label><?=t('birthyear')?>:</label>
 			<input name="birthyear" type="text" maxlength="4" value="<?=$_POST['birthyear']?>">
 			</div>
 			<div class="item">
-			<label><?=t('id_number')?></label>
+			<label><?=t('id_number')?>:</label>
 			<input name="user[id_number]" type="text" maxlength="11" value="<?=$user->id_number?>">
 			</div>
 		<? endif; ?>
-		<? if ($settings['authentication'] == 'sms'): ?>
 			<input class="submit" name="submit" type="submit" value="<?=t('register')?> &#187;">
-		<? else: ?>
+			</form>
+			</div>
+		</div>
+		
+		<div class="form hide" id="form_sms_login">
+			<div class="content">
+			<form method="post" onSubmit="return validateForm(this)" action="">
+			<p class="description"><?=t('login_desc_sms')?></p>
+			<div class="item">
+			<label><?=t('gsm')?>:</label>
+			<input name="user[gsm]" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)"/>
+			<div class="item-description"><?=t('gsm_desc')?></div>
+			</div>
+			<div class="item">
+			<label><?=t('password')?>:</label>
+			<input name="user[password]" type="password">
+			<div class="item-description"><?=t('password_desc_gsm')?></div>
+			</div>
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
-		<? endif; ?>
 			</form>
 			</div>
 		</div>
 	<? endif; ?>
 	
-	<? if ($settings['authentication'] == 'sms' || $settings['authentication'] == 'id_number_passport' || $settings['authentication'] == 'manual_password'): ?>
-		<div class="form" id="form-login">
+	<? if (isset($settings['authentication']['id_number'])): ?>
+		<div class="form hide" id="form_id_number_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
-		<? if ($settings['authentication'] == 'sms'): ?>
-			<p class="description"><?=t('login_desc_gsm')?></p>
-		<? else: ?>
-			<p class="description"><?=t('login_desc')?></p>
-		<? endif; ?>
-		<? if ($settings['authentication'] == 'sms'): ?>
+			<p class="description"><?=t('login_desc_id_number')?></p>
 			<div class="item">
-			<label><?=t('gsm')?></label>
-			<input name="user[gsm]" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)"/>
-			<div class="item-description"><?=t('gsm_desc')?></div>
+			<label><?=t('name')?>:</label>
+			<input name="user[name]" type="text" maxlength="40" value="<?=$user->name?>">
 			</div>
-		<? endif; ?>
-		<? if ($settings['authentication'] == 'manual_password'): ?>
 			<div class="item">
-			<label><?=$settings['username']?>:</label>
+			<label><?=t('surname')?>:</label>
+			<input name="user[surname]" type="text" maxlength="40" value="<?=$user->surname?>">
+			</div>
+			<div class="item">
+			<label><?=t('birthyear')?>:</label>
+			<input name="birthyear" type="text" maxlength="4" value="<?=$_POST['birthyear']?>">
+			</div>
+			<div class="item">
+			<label><?=t('id_number')?>:</label>
+			<input name="user[id_number]" type="text" maxlength="11" value="<?=$user->id_number?>">
+			</div>
+			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
+			</form>
+			</div>
+		</div>
+	<? endif; ?>
+	
+	<? if (isset($settings['authentication']['manual_user'])): ?>
+		<div class="form hide" id="form_manual_user_login">
+			<div class="content">
+			<form method="post" onSubmit="return validateForm(this)" action="">
+			<p class="description"><?=t('login_desc')?></p>
+			<div class="item">
+			<label><?=t('manual_user_name')?>:</label>
 			<input name="user[username]" type="text" maxlength="11" value="<?=$user->username?>">
 			</div>
-		<? endif; ?>
-		<? if ($settings['authentication'] == 'id_number_passport'): ?>
 			<div class="item">
-			<label><?=t('passport')?></label>
-			<input name="user[username]" type="text" value="<?=$user->username?>">
-			</div>
-		<? endif; ?>
-			<div class="item">
-			<label><?=t('password')?></label>
+			<label><?=t('password')?>:</label>
 			<input name="user[password]" type="password">
-		<? if ($settings['authentication'] == 'gsm'): ?>
-			<div class="item-description"><?=t('password_desc_gsm')?></div>
-		<? endif; ?>
 			</div>
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>

@@ -6,7 +6,7 @@ require 'lib/limonade.php';
 require 'lib/idiorm.php';
 require 'lib/paris.php';
 require 'models/user.php';
-require 'sms.php';
+include 'sms.php';
 
 $settings = include('settings.inc');
 $hotspot = parse_ini_file('hotspot.ini');
@@ -56,7 +56,7 @@ function welcome()
 	set('title', $settings['name'] . ' ' . t('welcome'));
 	set('color', $settings['color']);
 	set('user', $user);
-	if ($settings['simple_screen']) set('form', 'register');
+	if (isset($settings['simple_screen'])) set('form', 'sms_register');
 	return html('layouts/captiveportal.html.php');
 }
 
@@ -71,71 +71,49 @@ function welcome_post()
 	}
 	
 	$user = null;
-	if ($settings['authentication'] == 'sms')
-		$user = Model::factory('User')->where('gsm', $_POST['user']['gsm'])->find_one();
-	if ($settings['authentication'] == 'id_number')
-		$user = Model::factory('User')->where('id_number', $_POST['user']['id_number'])->find_one();
-	if ($settings['authentication'] == 'id_number_passport')
-	{
-		if (isset($_POST['user']['id_number'])) $field = 'id_number';
-		if (isset($_POST['user']['username'])) $field = 'username';
-		$user = Model::factory('User')->where($field, $_POST['user'][$field])->find_one();
-	}
-	if ($settings['authentication'] == 'manual_password')
-		$user = Model::factory('User')->where('username', $_POST['user']['username'])->find_one();
+	if (isset($_POST['user']['gsm'])) $field = 'gsm';
+	elseif (isset($_POST['user']['id_number'])) $field = 'id_number';
+	elseif (isset($_POST['user']['username'])) $field = 'username';
+	$user = Model::factory('User')->where($field, $_POST['user'][$field])->find_one();
 	
 	$form = '';
 	$arg = '';
-
-	if (!isset($_POST['user']['password'])) # Yeni kayıt ya da TC Kimlik ile giriş
+	
+	// SMS ile giriş
+	if (isset($_POST['user']['gsm']) && strlen($_POST['user']['gsm']) == 10)
 	{
-		if ($user && $settings['authentication'] == 'sms' && !$settings['simple_screen'])
-		// Sade ekran modelinde kullanıcı önceden kayıtlıysa bile şifre isteği olarak algıla ve devam et
+		if (!isset($_POST['user']['password'])) // Yeni kayıt ekranı
 		{
-			$message = 'user_already_registered';
-			$form = 'login';
-		}
-		else
-		{
-			// Geçersiz form gönderimlerine karşı önlem
-			if (empty($_POST['user'])) redirect_to('');
-			if ($settings['authentication'] == 'sms' && empty($_POST['user']['gsm'])) redirect_to('');
-			
-			if (!$user)
+			if (!$user) // Daha önceden kaydı yoksa yeni kayıt açıp gerekirse TC kimlik kontrolü yapıyoruz
 			{
 				$user = Model::factory('User')->create();
 				$user->defaults();
 				$user->fill($_POST['user']);
-			}
-			
-			if ($user->id_number)
-			{
-				$bilgiler = array(
-					"isim"      => tr_toUpper($user->name),
-					"soyisim"   => tr_toUpper($user->surname),
-					"dogumyili" => $_POST['birthyear'],
-					"tcno"      => $user->id_number
-				);
-				 
-				$sonuc = tcno_dogrula($bilgiler);
-				 
-				if ($sonuc == 'true')
+				
+				if (isset($settings['sms_fields']['id_number']))
 				{
-					if ($settings['authentication'] == 'id_number' || $settings['authentication'] == 'id_number_passport')
+					$user->name = tr_toUpper($user->name);
+					$user->surname = tr_toUpper($user->surname);
+					
+					$bilgiler = array(
+						"isim"      => $user->name,
+						"soyisim"   => $user->surname,
+						"dogumyili" => $_POST['birthyear'],
+						"tcno"      => $user->id_number
+					);
+					 
+					$sonuc = tcno_dogrula($bilgiler);
+					 
+					if ($sonuc != 'true')
 					{
-						login($user);
+						captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
+						$message = 'invalid_id_number';
+						$form = 'sms_register';
 					}
 				}
-				else
-				{
-					if ($settings['authentication'] == 'id_number' || $settings['authentication'] == 'id_number_passport')
-						captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
-					$message = 'invalid_id_number';
-					$form = 'register';
-				}
 			}
-			
-			if ($settings['authentication'] == 'sms' && !$form)
+				
+			if (!$form) // TC kimlik doğrulama varsa ondan geçmiş demektir
 			{
 				$message = password_request_check($user);
 				if (!$message)
@@ -144,43 +122,28 @@ function welcome_post()
 					$user->password = $password;
 					$user->save();
 					if ($sent = send_sms($user, $password, $clientmac))
-					{
 						$message = 'password_sent';
-					}
 					else
-					{
 						$message = 'password_not_sent';
-					}
-					$form = 'login';
+					$form = 'sms_login';
 				}
 				else
 				{
-					$form = 'register';
+					if ($message == 'min_interval') $arg = $settings['min_interval'];
+					$form = 'sms_register';
 				}
 			}
 		}
-	}
-	else # Login
-	{
-		if (!$user)
+		else // Giriş ekranı
 		{
-			$message = 'user_not_found';
-			if ($settings['authentication'] == 'sms') $form = 'register';
-			else $form = 'login';
-			$user = Model::factory('User')->create();
-			$user->defaults();
-		}
-		else
-		{
-			if (strlen($_POST['user']['password']) > 0) # login attempt
+			if (strlen($_POST['user']['password']) > 0) // giriş denemesi
 			{
 				if ($user->password == $_POST['user']['password'])
 				{
 					if (password_expired($user))
 					{
-						if ($settings['authentication'] == 'sms') $message = 'password_expired_sms';
-						else $message = 'password_expired';
-						$form = 'login';
+						$message = 'password_expired_sms';
+						$form = 'sms_login';
 					}
 					else
 					{
@@ -192,10 +155,10 @@ function welcome_post()
 					captiveportal_logportalauth($user->gsm,$clientmac,$clientip,"FAILURE");
 					$user->password = '';
 					$message = 'invalid_password';
-					$form = 'login';
+					$form = 'sms_login';
 				}
 			}
-			else # password request
+			else // şifre isteği
 			{
 				$message = password_request_check($user);
 				if (!$message)
@@ -204,19 +167,80 @@ function welcome_post()
 					$user->password = $password;
 					$user->save();
 					if ($sent = send_sms($user, $password, $clientmac))
-					{
 						$message = 'password_sent';
-					}
 					else
-					{
 						$message = 'password_not_sent';
-					}
 				}
-				if ($message == 'min_interval') $arg = $settings['min_interval'];
-				$form = 'login';
+				else
+				{
+					if ($message == 'min_interval') $arg = $settings['min_interval'];
+				}
+				$form = 'sms_login';
 			}
 		}
 	}
+	// TC kimlik no ile giriş
+	elseif (isset($_POST['user']['id_number']) && !isset($_POST['user']['gsm']))
+	{
+		if (!$user)
+		{
+			$user = Model::factory('User')->create();
+			$user->defaults();
+			$user->fill($_POST['user']);
+			$user->name = tr_toUpper($user->name);
+			$user->surname = tr_toUpper($user->surname);
+		}
+		
+		$bilgiler = array(
+			"isim"      => $user->name,
+			"soyisim"   => $user->surname,
+			"dogumyili" => $_POST['birthyear'],
+			"tcno"      => $user->id_number
+		);
+		 
+		$sonuc = tcno_dogrula($bilgiler);
+		 
+		if ($sonuc == 'true')
+		{
+			login($user);
+		}
+		else
+		{
+			captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
+			$message = 'invalid_id_number';
+			$form = 'id_number_login';
+		}
+	}
+	// Kullanıcı adı ve şifre ile giriş
+	elseif (isset($_POST['user']['username']))
+	{
+		if ($user)
+		{
+			if ($user->password == $_POST['user']['password'])
+			{
+				if (password_expired($user))
+				{
+					$message = 'password_expired';
+				}
+				else
+				{
+					login($user);
+				}
+			}
+			else
+			{
+				captiveportal_logportalauth($user->gsm,$clientmac,$clientip,"FAILURE");
+				$user->password = '';
+				$message = 'invalid_password';
+			}
+		}
+		else
+		{
+			$message = 'user_not_found';
+		}
+		$form = 'manual_user_login';
+	}
+	
 	set('title', $settings['name'] . ' ' . t('welcome'));
 	set('color', $settings['color']);
 	set('message', $message);
@@ -254,7 +278,7 @@ function login($user)
 function t($key, $arg = '')
 {
 	$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'tr';
-	$messages = include dirname(__FILE__).'/lang/'.$lang.'.php';
+	$messages = include dirname(__FILE__).'/lang/'.$lang.'.inc';
 	return sprintf($messages[$key], $arg);
 }
 

@@ -1,9 +1,11 @@
 <?php
 
 return array (
-  'authentication' => 'sms',
-  'simple_screen' => '',
-  'username' => 'Kullanıcı Adı',
+  'authentication' => 
+  array (
+    'sms' => '1',
+  ),
+  'session_timeout' => '180',
   'valid_for' => '1',
   'daily_global_limit' => '200',
   'daily_limit' => '4',

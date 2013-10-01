@@ -72,8 +72,7 @@ if ($local_user['scope'] != 'system'):
 
 <?php endif; ?>
 
-<?php $hotspot = parse_ini_file('../hotspot.ini'); ?>
-<div class="returnlink"><a href="/<?=$hotspot['marka_url']?>/?settings">&#8629; <?=$hotspot['marka']?></a></div>
+<div class="returnlink"><a href="/">&#8629; pfSense</a></div>
 
 </body>
 </html>

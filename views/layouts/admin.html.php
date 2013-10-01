@@ -26,7 +26,7 @@
 		<a href="<?=url_for('sms')?>">SMS Raporu</a> | 
 	<? endif; ?>
 		<a href="<?=url_for('settings')?>">Ayarlar</a> | 
-		<a href="/<?=$hotspot['marka_url']?>/log_browser/">Loglar</a> | 
+		<a href="<?=url_for('lang/tr')?>">Dil</a> | 
 		<a href="/index.php?logout">Çıkış</a>
 	</div>
 	

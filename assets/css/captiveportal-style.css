@@ -35,18 +35,19 @@ body {
 	border: none;
 	outline: none;
 	cursor: pointer;
-	background-color: #888;
-	color: #fff;
+	background-color: #eee;
+	color: #333;
 	font-size: 18px;
 	padding: 6px 20px;
-	margin: 0 10px;
 }
 #form-selection .active {
-	background-color: #333;
+	color: #fff;
 }
 .form {
 	width: 300px;
 	margin: 0 auto;
+}
+.hide {
 	display: none;
 }
 .form .submit {

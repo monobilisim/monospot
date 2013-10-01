@@ -6,7 +6,7 @@ class User extends Model
 	public function defaults()
 	{
 		global $settings;
-		if ($settings['authentication'] == 'sms')
+		if (isset($settings['authentication']['sms']))
 		{
 			$this->daily_limit = $settings['daily_limit'];
 			$this->weekly_limit = $settings['weekly_limit'];

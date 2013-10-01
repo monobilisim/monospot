@@ -12,45 +12,29 @@
 	<fieldset>
 		<legend>Giriş Yöntemi</legend>
 		<p>
-			<input type="radio" name="authentication" id="sms" value="sms"<? echo $settings['authentication'] == 'sms' ? ' checked="checked"' : ''; ?>>
+			<input type="checkbox" name="authentication[sms]" id="sms" value="1"<? echo isset($settings['authentication']['sms']) ? ' checked="checked"' : ''; ?>>
 			<label for="sms">SMS ile şifre gönderimi</label>
 				<div class="secondary-setting">
 					<input type="checkbox" name="simple_screen" id="simple_screen" value="1"<? echo isset($settings['simple_screen']) ? ' checked="checked"' : ''; ?>>
 					<label for="simple_screen">Basitleştirilmiş Ekran</label>
 				</div>
+				<div class="secondary-setting">
+					<input type="checkbox" name="sms_fields[id_number]" id="sms_field_id_number" value="1"<? echo isset($settings['sms_fields']['id_number']) ? ' checked="checked"' : ''; ?>>
+					<label for="sms_field_id_number">TC Kimlik No doğrulaması yap</label>
+				</div>
 		</p>
 		<p>
-			<input type="radio" name="authentication" id="id_number" value="id_number"<? echo $settings['authentication'] == 'id_number' ? ' checked="checked"' : ''; ?>>
+			<input type="checkbox" name="authentication[id_number]" id="id_number" value="1"<? echo isset($settings['authentication']['id_number']) ? ' checked="checked"' : ''; ?>>
 			<label for="id_number">TC Kimlik No</label>
 		</p>
 		<p>
-			<input type="radio" name="authentication" id="id_number_passport" value="id_number_passport"<? echo $settings['authentication'] == 'id_number_passport' ? ' checked="checked"' : ''; ?>>
-			<label for="id_number_passport">TC Kimlik No veya Pasaport No</label>
-		</p>
-		<p>
-			<input type="radio" name="authentication" id="manual_password" value="manual_password"<? echo $settings['authentication'] == 'manual_password' ? ' checked="checked"' : ''; ?>>
-			<label for="manual_password">Elle kullanıcı açma</label>
-				<div class="secondary-setting">Kullanıcı adı alanı
-					<input type="text" class="large" name="username" value="<?=$settings['username']?>">
-				</div>
-		</p>
-	</fieldset>
-	
-	<fieldset>
-		<legend>Girilmesi İstenen Alanlar</legend>
-		<p>
-			<input type="checkbox" name="fields[id_number]" id="field_id_number" value="1"<? echo isset($settings['fields']['id_number']) ? ' checked="checked"' : ''; ?>>
-			<label for="field_id_number">TC Kimlik No (Giriş yöntemi TC Kimlik No seçilmemişse)</label>
+			<input type="checkbox" name="authentication[manual_user]" id="manual_user" value="1"<? echo isset($settings['authentication']['manual_user']) ? ' checked="checked"' : ''; ?>>
+			<label for="manual_user">Elle kullanıcı açma</label>
 		</p>
 	</fieldset>
 	
 	<fieldset>
 		<legend>Genel Ayarlar</legend>
-		<p>
-			<div class="label">Maksimum kullanıcı sayısı</div>
-			<input type="text" class="xsmall<?=isset($errors['max_timeout']) ? ' error' : ''?>" name="max_user" value="<?=$settings['max_user']?>">
-			(Boş = Sınırsız)
-		</p>
 		<p>
 			<div class="label">Oturum Geçerlilik Süresi</div>
 			<input type="text" class="xsmall<?=isset($errors['session_timeout']) ? ' error' : ''?>" name="session_timeout" value="<?=$settings['session_timeout']?>"> dakika
@@ -61,7 +45,7 @@
 		</p>
 	</fieldset>
 	
-	<fieldset<?=$settings['authentication'] == 'sms' ? '' : ' style="display:none"'?>>
+	<fieldset<?=isset($settings['authentication']['sms']) ? '' : ' style="display:none"'?>>
 		<legend>SMS Ayarları</legend>
 		<p>
 			<div class="label">Günlük Toplam SMS Limiti</div>

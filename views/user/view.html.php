@@ -1,7 +1,7 @@
 <h2>Kullanıcı ID:<?=$user->id?></h2>
 
 	<div id="user">
-<? if ($settings['authentication'] == 'id_number' || $settings['authentication'] == 'id_number_passport' || isset($settings['fields']['id_number'])): ?>
+<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
 	<p>
 		<div class="label">TC Kimlik No</div>
 		<span class="value"><?=$user->id_number?></span>
@@ -15,13 +15,7 @@
 		<span class="value"><?=$user->surname?></span>
 	</p>
 <? endif; ?>
-<? if ($settings['authentication'] == 'id_number_passport'): ?>
-	<p>
-		<div class="label">Pasaport No</div>
-		<span class="value"><?=$user->username?></span>
-	</p>
-<? endif; ?>
-<? if ($settings['authentication'] == 'sms'): ?>
+<? if (isset($settings['authentication']['sms'])): ?>
 	<p>
 		<div class="label">GSM</div>
 		<span class="value"><?=$user->gsm?></span>
@@ -47,9 +41,9 @@
 		<span class="value"><?=$user->yearly_limit?></span>
 	</p>
 <? endif; ?>
-<? if ($settings['authentication'] == 'manual_password'): ?>
+<? if (isset($settings['authentication']['manual_user'])): ?>
 	<p>
-		<div class="label"><?=$settings['username']?></div>
+		<div class="label">Kullanıcı adı</div>
 		<span class="value"><?=$user->username?></span>
 	</p>
 <? endif; ?>

@@ -21,6 +21,12 @@ require 'lib/paris.php';
 require 'lib/validate.class.php';
 require 'models/user.php';
 
+if (!file_exists(dirname(__FILE__) . '/settings.inc'))
+	copy(dirname(__FILE__) . '/settings.sample.inc', dirname(__FILE__) . '/settings.inc');
+if (!file_exists(dirname(__FILE__) . '/lang/tr.inc'))
+	copy(dirname(__FILE__) . '/lang/tr.sample.inc', dirname(__FILE__) . '/lang/tr.inc');
+if (!file_exists(dirname(__FILE__) . '/lang/en.inc'))
+	copy(dirname(__FILE__) . '/lang/en.sample.inc', dirname(__FILE__) . '/lang/en.inc');
 $settings = include 'settings.inc';
 $hotspot = parse_ini_file('hotspot.ini');
 
@@ -45,6 +51,13 @@ function home()
 	redirect_to('users');
 }
 
+dispatch('filter*', 'admin_user_filter');
+function admin_user_filter()
+{
+	unset($_GET['filter']);
+	redirect_to('users', $_GET);
+}
+
 dispatch('users*', 'admin_user_index');
 function admin_user_index()
 {
@@ -53,13 +66,13 @@ function admin_user_index()
 	parse_str(params(0), $get);
 	
 	$users = ORM::for_table('user');
-	if (isset($get['id_number'])) $users->where_like('id_number', '%'.$get['id_number'].'%');
-	if (isset($get['name'])) $users->where_like('name', '%'.$get['name'].'%');
-	if (isset($get['surname'])) $users->where_like('surname', '%'.$get['surname'].'%');
-	if (isset($get['gsm'])) $users->where_like('gsm', '%'.$get['gsm'].'%');
-	if (isset($get['last_sms'])) $users->where_raw("strftime('%d.%m.%Y', datetime(last_sms, 'unixepoch', 'localtime')) = ?", array($get['last_sms']));
-	if (isset($get['expires'])) $users->where_raw("strftime('%d.%m.%Y', datetime(expires, 'unixepoch', 'localtime')) = ?", array($get['expires']));
-	if (isset($get['username'])) $users->where_like('username', '%'.$get['username'].'%');
+	if (!empty($get['id_number'])) $users->where_like('id_number', '%'.$get['id_number'].'%');
+	if (!empty($get['name'])) $users->where_like('name', '%'.$get['name'].'%');
+	if (!empty($get['surname'])) $users->where_like('surname', '%'.$get['surname'].'%');
+	if (!empty($get['gsm'])) $users->where_like('gsm', '%'.$get['gsm'].'%');
+	if (!empty($get['last_sms'])) $users->where_raw("strftime('%d.%m.%Y', datetime(last_sms, 'unixepoch', 'localtime')) = ?", array($get['last_sms']));
+	if (!empty($get['expires'])) $users->where_raw("strftime('%d.%m.%Y', datetime(expires, 'unixepoch', 'localtime')) = ?", array($get['expires']));
+	if (!empty($get['username'])) $users->where_like('username', '%'.$get['username'].'%');
 	$total = $users->count();
 	
 	$users->select('user.*');
@@ -83,13 +96,13 @@ function admin_user_index()
 	$users->group_by('user.id');
 	
 	$columns = array('id_number', 'gsm', 'last_sms', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
-	if (isset($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
+	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
 	else $col = 'user.id';
-	if (isset($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
+	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
 	else $dir = 'asc';
 	
 	$offset = (int)$settings['items_per_page'];
-	if (!isset($get['page'])) $start = 0;
+	if (!!empty($get['page'])) $start = 0;
 	else $start = $offset * ($get['page'] - 1);
 	
 	$order_by_method = 'order_by_' . $dir;
@@ -100,7 +113,7 @@ function admin_user_index()
 	set('pager', pager($start, $offset, $total, 'users'));
 	set('get', $get);
 	set('settings', $settings);
-	set('rowspan', $settings['authentication'] == 'sms' ? 2 : 1);
+	set('rowspan', isset($settings['authentication']['sms']) ? 2 : 1);
 	return html('user/index.html.php');
 }
 
@@ -217,20 +230,20 @@ function admin_sms_index()
 	parse_str(params(0), $get);
 	
 	$orm = ORM::for_table('sms')->join('user', array('user.id', '=', 'sms.user_id'));
-	if (isset($get['gsm'])) $orm->where_like('user.gsm', '%'.$get['gsm'].'%');
-	if (isset($get['mac'])) $orm->where_like('mac', '%'.$get['mac'].'%');
-	if (isset($get['timestamp_1'])) $orm->where_raw("strftime('%d.%m.%Y', datetime(timestamp, 'unixepoch', 'localtime')) between ? and ?", array($get['timestamp_1'], $get['timestamp_2']));
+	if (!empty($get['gsm'])) $orm->where_like('user.gsm', '%'.$get['gsm'].'%');
+	if (!empty($get['mac'])) $orm->where_like('mac', '%'.$get['mac'].'%');
+	if (!empty($get['timestamp_1'])) $orm->where_raw("strftime('%d.%m.%Y', datetime(timestamp, 'unixepoch', 'localtime')) between ? and ?", array($get['timestamp_1'], $get['timestamp_2']));
 	
 	$total = $orm->count();
 	
 	$columns = array('gsm', 'timestamp');
-	if (isset($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
+	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
 	else $col = 'timestamp';
-	if (isset($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
+	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
 	else $dir = 'desc';
 	
 	$offset = (int)$settings['items_per_page'];
-	if (!isset($get['page'])) $start = 0;
+	if (!!empty($get['page'])) $start = 0;
 	else $start = $offset * ($get['page'] - 1);
 	
 	$order_by_method = 'order_by_' . $dir;
@@ -284,6 +297,37 @@ function admin_settings_save()
 	return html('settings.html.php');
 }
 
+dispatch('lang/*', 'admin_lang');
+function admin_lang($code)
+{
+	global $settings;
+	set('settings', $settings);
+	
+	$lang = include 'lang/' . $code . '.inc';
+	set('lang', $lang);
+	set('code', $code);
+	
+	return html('lang.html.php');
+}
+
+dispatch_post('lang/*', 'admin_lang_save');
+function admin_lang_save($code)
+{
+	global $settings;
+	set('settings', $settings);
+	
+	unset($_POST['__csrf_magic']);
+	file_put_contents('lang/' . $code . '.inc', '<?php' . "\n\n" . 'return ' . var_export($_POST, true) . ';');
+	
+	$lang = include 'lang/' . $code . '.inc';
+	set('lang', $lang);
+	set('code', $code);
+	
+	$_SESSION['message'] = 'Ayarlar kaydedildi.';
+	
+	return html('lang.html.php');
+}
+
 run();
 
 
@@ -325,8 +369,8 @@ function order_link($url, $column, $label)
 	);
 	parse_str(params(0), $get);
 	unset($get['page']);
-	$dir = isset($get['order']) && $get['order'] == $column ? $dir_reverse[$get['dir']] : 'asc';
-	$arrow = isset($get['order']) && $get['order'] == $column ? $dir_arrows[$dir] : '';
+	$dir = !empty($get['order']) && $get['order'] == $column ? $dir_reverse[$get['dir']] : 'asc';
+	$arrow = !empty($get['order']) && $get['order'] == $column ? $dir_arrows[$dir] : '';
 	$get['order'] = $column;
 	$get['dir'] = $dir;
 	$link = '<a href="' . url_for($url, $get) . '">' . $label . '</a>' . $arrow;
