@@ -21,6 +21,9 @@ require 'lib/paris.php';
 require 'lib/validate.class.php';
 require 'models/user.php';
 
+// örnek dosyalardan asıl dosyaları oluştur
+if (!file_exists(dirname(__FILE__) . '/db/hotspot.db'))
+	copy(dirname(__FILE__) . '/db/hotspot.sample.db', dirname(__FILE__) . '/db/hotspot.db');
 if (!file_exists(dirname(__FILE__) . '/settings.inc'))
 	copy(dirname(__FILE__) . '/settings.sample.inc', dirname(__FILE__) . '/settings.inc');
 if (!file_exists(dirname(__FILE__) . '/lang/tr.inc'))

@@ -14,6 +14,6 @@ return array (
   'yearly_limit' => '500',
   'min_interval' => '2',
   'name' => '',
-  'color' => '#000',
+  'color' => '#333',
   'items_per_page' => '100',
 );

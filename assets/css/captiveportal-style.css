@@ -11,7 +11,6 @@ body {
 	text-align: center;
 }
 #title {
-	font-weight: bold;
 	color: #fff;
 	padding: 10px;
 }
@@ -32,11 +31,11 @@ body {
 	margin: 20px;
 }
 #form-selection button {
-	border: none;
+	border: 1px solid #ddd;
 	outline: none;
 	cursor: pointer;
-	background-color: #eee;
-	color: #333;
+	background-color: #fff;
+	color: #666;
 	font-size: 18px;
 	padding: 6px 20px;
 }
@@ -46,8 +45,6 @@ body {
 .form {
 	width: 300px;
 	margin: 0 auto;
-}
-.hide {
 	display: none;
 }
 .form .submit {

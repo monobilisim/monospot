@@ -12,9 +12,6 @@
 <style>
 #title {background-color: <?=$color?>}
 #form-selection .active {background-color: <?=$color?>}
-<? if ($form): ?>
-#form_<?=$form?> {display: block}
-<? endif; ?>
 <? if (isset($settings['authentication']['sms']) && isset($settings['simple_screen'])): ?>
 #form-selection button {display: none}
 .form .description {display: none}
@@ -49,7 +46,7 @@ form {padding-top: 20px}
 		</div>
 		
 	<? if (isset($settings['authentication']['sms'])): ?>
-		<div class="form hide" id="form_sms_register">
+		<div class="form<?= $form == 'sms_register' ? ' active' : '' ?>" id="form_sms_register">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
 			<p class="description"><?=t('sms_register_desc')?></p>
@@ -81,7 +78,7 @@ form {padding-top: 20px}
 			</div>
 		</div>
 		
-		<div class="form hide" id="form_sms_login">
+		<div class="form<?= $form == 'sms_login' ? ' active' : '' ?>" id="form_sms_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
 			<p class="description"><?=t('login_desc_sms')?></p>
@@ -102,7 +99,7 @@ form {padding-top: 20px}
 	<? endif; ?>
 	
 	<? if (isset($settings['authentication']['id_number'])): ?>
-		<div class="form hide" id="form_id_number_login">
+		<div class="form<?= $form == 'id_number_login' ? ' active' : '' ?>" id="form_id_number_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
 			<p class="description"><?=t('login_desc_id_number')?></p>
@@ -129,7 +126,7 @@ form {padding-top: 20px}
 	<? endif; ?>
 	
 	<? if (isset($settings['authentication']['manual_user'])): ?>
-		<div class="form hide" id="form_manual_user_login">
+		<div class="form<?= $form != 'manual_user_login' ? ' active' : '' ?>" id="form_manual_user_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
 			<p class="description"><?=t('login_desc')?></p>

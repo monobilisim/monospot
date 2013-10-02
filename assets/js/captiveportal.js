@@ -1,43 +1,18 @@
 $(document).ready(function() {
-	$("#sms_register").click(function() {
+	$(".form.active").slideDown();
+	
+	$("button").click(function() {
+		$("button.active").removeClass("active");
 		$(this).addClass("active");
-		$("#sms_login").removeClass("active");
-		$("#id_number_login").removeClass("active");
-		$("#manual_password_login").removeClass("active");
-		$("#form_sms_login").addClass("hide");
-		$("#form_id_number_login").addClass("hide");
-		$("#form_manual_user_login").addClass("hide");
-		$("#form_sms_register").removeClass("hide");
-	});
-	$("#sms_login").click(function() {
-		$(this).addClass("active");
-		$("#sms_register").removeClass("active");
-		$("#id_number_login").removeClass("active");
-		$("#manual_user_login").removeClass("active");
-		$("#form_sms_register").addClass("hide");
-		$("#form_id_number_login").addClass("hide");
-		$("#form_manual_user_login").addClass("hide");
-		$("#form_sms_login").removeClass("hide");
-	});
-	$("#id_number_login").click(function() {
-		$(this).addClass("active");
-		$("#sms_register").removeClass("active");
-		$("#sms_login").removeClass("active");
-		$("#manual_user_login").removeClass("active");
-		$("#form_sms_register").addClass("hide");
-		$("#form_sms_login").addClass("hide");
-		$("#form_manual_user_login").addClass("hide");
-		$("#form_id_number_login").removeClass("hide");
-	});
-	$("#manual_user_login").click(function() {
-		$(this).addClass("active");
-		$("#sms_register").removeClass("active");
-		$("#sms_login").removeClass("active");
-		$("#id_number_login").removeClass("active");
-		$("#form_sms_register").addClass("hide");
-		$("#form_sms_login").addClass("hide");
-		$("#form_id_number_login").addClass("hide");
-		$("#form_manual_user_login").removeClass("hide");
+		var currentId = $(this).attr("id");
+		if ($(".form.active").length === 0) {
+			$("#form_" + currentId).addClass("active").slideDown();
+		}
+		else {
+			$(".form.active").removeClass("active").slideUp(function(){
+				$("#form_" + currentId).addClass("active").slideDown();
+			});
+		}
 	});
 });
 
