@@ -258,15 +258,11 @@ run();
 function login($user)
 {
 	global $settings, $clientmac, $clientip;
+	
 	// hangi alan username olarak alınacak?
-	if ($settings['authentication'] == 'sms') $field = 'gsm';
-	if ($settings['authentication'] == 'id_number') $field = 'id_number';
-	if ($settings['authentication'] == 'id_number_passport')
-	{
-		if (!empty($user->id_number)) $field = 'id_number';
-		if (!empty($user->username)) $field = 'username';
-	}
-	if ($settings['authentication'] == 'manual_password') $field = 'username';
+	if (!empty($user->gsm)) $field = 'gsm';
+	if (!empty($user->id_number)) $field = 'id_number';
+	if (!empty($user->username)) $field = 'username';
 	
 	$user->last_login = time();
 	$user->save();
