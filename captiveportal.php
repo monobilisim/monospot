@@ -12,15 +12,15 @@ $settings = include('settings.inc');
 $hotspot = parse_ini_file('hotspot.ini');
 
 function configure()
-{	
+{
 	$dir = dirname(__FILE__);
 
 	ORM::configure('sqlite:'.$dir.'/db/hotspot.db');
 
 	option('views_dir', $dir.'/views');
-	
-	error_layout('layouts/captiveportal.html.php');	
-	
+
+	error_layout('layouts/captiveportal.html.php');
+
 	global $hotspot;
 	set('hotspot', $hotspot);
 }
@@ -34,22 +34,22 @@ function welcome()
 		$demo_expired = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Hotspot demo süresi ' . $hotspot['demo_bitis'] . ' tarihinde dolmuştur.</div>';
 		return $demo_expired;
 	}
-	
+
 	// pfSense kodundan alındı: /usr/local/www/status_captiveportal.php
 	if (file_exists('/var/db/captiveportal.db')) {
 		$captiveportallck = lock('captiveportaldb');
 		$cpcontents = file("/var/db/captiveportal.db", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-		unlock($captiveportallck);	
+		unlock($captiveportallck);
 	} else
 		$cpcontents = array();
 	$concurrent = count($cpcontents);
-	
+
 	if ($hotspot['maksimum_kullanici'] && $concurrent >= $hotspot['maksimum_kullanici'])
 	{
 		$max_user_reached = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Maksimum kullanıcı sayısına ulaşıldı!</div>';
 		return $max_user_reached;
 	}
-	
+
 	global $settings;
 	$user = Model::factory('User')->create();
 	$user->defaults();
@@ -62,23 +62,23 @@ function welcome()
 
 dispatch_post('', 'welcome_post');
 function welcome_post()
-{	
+{
 	global $settings, $clientmac, $clientip;
 	if (isset($_POST['lang']))
 	{
 		$_SESSION['lang'] = strtolower($_POST['lang']);
 		redirect_to('');
 	}
-	
+
 	$user = null;
 	if (isset($_POST['user']['gsm'])) $field = 'gsm';
 	elseif (isset($_POST['user']['id_number'])) $field = 'id_number';
 	elseif (isset($_POST['user']['username'])) $field = 'username';
 	$user = Model::factory('User')->where($field, $_POST['user'][$field])->find_one();
-	
+
 	$form = '';
 	$arg = '';
-	
+
 	// SMS ile giriş
 	if (isset($_POST['user']['gsm']) && strlen($_POST['user']['gsm']) == 10)
 	{
@@ -89,21 +89,21 @@ function welcome_post()
 				$user = Model::factory('User')->create();
 				$user->defaults();
 				$user->fill($_POST['user']);
-				
+
 				if (isset($settings['sms_fields']['id_number']))
 				{
 					$user->name = tr_toUpper($user->name);
 					$user->surname = tr_toUpper($user->surname);
-					
+
 					$bilgiler = array(
 						"isim"      => $user->name,
 						"soyisim"   => $user->surname,
 						"dogumyili" => $_POST['birthyear'],
 						"tcno"      => $user->id_number
 					);
-					 
+
 					$sonuc = tcno_dogrula($bilgiler);
-					 
+
 					if ($sonuc != 'true')
 					{
 						captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
@@ -112,7 +112,7 @@ function welcome_post()
 					}
 				}
 			}
-				
+
 			if (!$form) // TC kimlik doğrulama varsa ondan geçmiş demektir
 			{
 				$message = password_request_check($user);
@@ -122,7 +122,10 @@ function welcome_post()
 					$user->password = $password;
 					$user->save();
 					if ($sent = send_sms($user, $password, $clientmac))
+					{
+						after_send_sms($user, $clientmac);
 						$message = 'password_sent';
+					}
 					else
 						$message = 'password_not_sent';
 					$form = 'sms_login';
@@ -147,7 +150,7 @@ function welcome_post()
 					}
 					else
 					{
-						login($user);
+						login($user, 'gsm');
 					}
 				}
 				else
@@ -167,7 +170,10 @@ function welcome_post()
 					$user->password = $password;
 					$user->save();
 					if ($sent = send_sms($user, $password, $clientmac))
+					{
+						after_send_sms($user, $clientmac);
 						$message = 'password_sent';
+					}
 					else
 						$message = 'password_not_sent';
 				}
@@ -190,19 +196,19 @@ function welcome_post()
 			$user->name = tr_toUpper($user->name);
 			$user->surname = tr_toUpper($user->surname);
 		}
-		
+
 		$bilgiler = array(
 			"isim"      => $user->name,
 			"soyisim"   => $user->surname,
 			"dogumyili" => $_POST['birthyear'],
 			"tcno"      => $user->id_number
 		);
-		 
+
 		$sonuc = tcno_dogrula($bilgiler);
-		 
+
 		if ($sonuc == 'true')
 		{
-			login($user);
+			login($user, 'id_number');
 		}
 		else
 		{
@@ -224,12 +230,12 @@ function welcome_post()
 				}
 				else
 				{
-					login($user);
+					login($user, 'username');
 				}
 			}
 			else
 			{
-				captiveportal_logportalauth($user->gsm,$clientmac,$clientip,"FAILURE");
+				captiveportal_logportalauth($user->username,$clientmac,$clientip,"FAILURE");
 				$user->password = '';
 				$message = 'invalid_password';
 			}
@@ -240,7 +246,7 @@ function welcome_post()
 		}
 		$form = 'manual_user_login';
 	}
-	
+
 	set('title', $settings['name'] . ' ' . t('welcome'));
 	set('color', $settings['color']);
 	set('message', $message);
@@ -255,15 +261,23 @@ run();
 
 /* Functions */
 
-function login($user)
+function after_send_sms($user, $clientmac)
+{
+	global $settings;
+	$sms = ORM::for_table('sms')->create();
+	$sms->user_id = $user->id;
+	$sms->mac = $clientmac;
+	$sms->timestamp = time();
+	$sms->save();
+	$user->last_sms = time();
+	$user->expires = strtotime('+' . $settings['valid_for'] . 'days');
+	$user->save();
+}
+
+function login($user, $field)
 {
 	global $settings, $clientmac, $clientip;
-	
-	// hangi alan username olarak alınacak?
-	if (!empty($user->gsm)) $field = 'gsm';
-	if (!empty($user->id_number)) $field = 'id_number';
-	if (!empty($user->username)) $field = 'username';
-	
+
 	$user->last_login = time();
 	$user->save();
 	captiveportal_logportalauth($user->$field,$clientmac,$clientip,"LOGIN");
@@ -292,37 +306,37 @@ function password_expired($user)
 function password_request_check($user)
 {
 	global $settings;
-	
+
 	# daily global limit
 	$daily_global_count = ORM::for_table('sms')->where_raw("strftime('%Y-%m-%d', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now')")->count();
 	if ($daily_global_count >= $settings['daily_global_limit']) return 'daily_global_limit';
-	
+
 	# minimum interval
 	$seconds = time() - $user->last_sms;
 	$minutes = floor($seconds/60);
 	if ($minutes < $settings['min_interval']) return 'min_interval';
-	
+
 	# daily limit
 	$daily_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y-%m-%d', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now')")->count();
 	if ($daily_count >= $user->daily_limit) return 'daily_limit';
-	
+
 	# weekly limit
 	$weekly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%W', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%W', 'now')")->count();
 	if ($weekly_count >= $user->weekly_limit) return 'weekly_limit';
-	
+
 	# monthly limit
 	$monthly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y-%m', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m', 'now')")->count();
 	if ($monthly_count >= $user->monthly_limit) return 'monthly_limit';
-	
+
 	# yearly limit
 	$yearly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y', 'now')")->count();
 	if ($yearly_count >= $user->yearly_limit) return 'yearly_limit';
-	
+
 	return false;
 }
 
 function tcno_dogrula($bilgiler) {
- 
+
 	$gonder = '<?xml version="1.0" encoding="utf-8"?>
 	<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 	<soap:Body>
@@ -334,7 +348,7 @@ function tcno_dogrula($bilgiler) {
 	</TCKimlikNoDogrula>
 	</soap:Body>
 	</soap:Envelope>';
-	 
+
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,            "https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx" );
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
@@ -351,7 +365,7 @@ function tcno_dogrula($bilgiler) {
 	));
 	$gelen = curl_exec($ch);
 	curl_close($ch);
-	 
+
 	return strip_tags($gelen);
 }
 

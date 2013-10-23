@@ -36,14 +36,14 @@ $hotspot = parse_ini_file('hotspot.ini');
 function configure()
 {
 	$dir = dirname(__FILE__);
-	
+
 	ORM::configure('sqlite:'.$dir.'/db/hotspot.db');
 
 	option('views_dir', $dir.'/views');
 
 	layout('layouts/admin.html.php');
 	error_layout('layouts/admin.html.php');
-	
+
 	global $hotspot;
 	set('hotspot', $hotspot);
 }
@@ -65,9 +65,9 @@ dispatch('users*', 'admin_user_index');
 function admin_user_index()
 {
 	global $settings;
-	
+
 	parse_str(params(0), $get);
-	
+
 	$users = ORM::for_table('user');
 	if (!empty($get['id_number'])) $users->where_like('id_number', '%'.$get['id_number'].'%');
 	if (!empty($get['name'])) $users->where_like('name', '%'.$get['name'].'%');
@@ -77,7 +77,7 @@ function admin_user_index()
 	if (!empty($get['expires'])) $users->where_raw("strftime('%d.%m.%Y', datetime(expires, 'unixepoch', 'localtime')) = ?", array($get['expires']));
 	if (!empty($get['username'])) $users->where_like('username', '%'.$get['username'].'%');
 	$total = $users->count();
-	
+
 	$users->select('user.*');
 	$users->select_expr("sum(case
 		when strftime('%Y-%m-%d', datetime(sms.timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now') then 1
@@ -97,21 +97,21 @@ function admin_user_index()
 		end)", 'sms_year');
 	$users->left_outer_join('sms', array('sms.user_id', '=', 'user.id'));
 	$users->group_by('user.id');
-	
+
 	$columns = array('id_number', 'gsm', 'last_sms', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
 	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
 	else $col = 'user.id';
 	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
 	else $dir = 'asc';
-	
+
 	$offset = (int)$settings['items_per_page'];
 	if (!!empty($get['page'])) $start = 0;
 	else $start = $offset * ($get['page'] - 1);
-	
+
 	$order_by_method = 'order_by_' . $dir;
 	$users->$order_by_method($col)->limit($start.','.$offset);
 	$users = $users->find_many();
-	
+
 	set('users', $users);
 	set('pager', pager($start, $offset, $total, 'users'));
 	set('get', $get);
@@ -197,7 +197,7 @@ function admin_user_update($id)
 	global $settings;
 	$user = Model::factory('User')->find_one($id);
 	$user->fill($_POST['user']);
-	
+
 	if ($errors = $user->validate($_POST['user']))
 	{
 		set('user', $user);
@@ -229,29 +229,29 @@ dispatch('sms*', 'admin_sms_index');
 function admin_sms_index()
 {
 	global $settings;
-	
+
 	parse_str(params(0), $get);
-	
+
 	$orm = ORM::for_table('sms')->join('user', array('user.id', '=', 'sms.user_id'));
 	if (!empty($get['gsm'])) $orm->where_like('user.gsm', '%'.$get['gsm'].'%');
 	if (!empty($get['mac'])) $orm->where_like('mac', '%'.$get['mac'].'%');
 	if (!empty($get['timestamp_1'])) $orm->where_raw("strftime('%d.%m.%Y', datetime(timestamp, 'unixepoch', 'localtime')) between ? and ?", array($get['timestamp_1'], $get['timestamp_2']));
-	
+
 	$total = $orm->count();
-	
+
 	$columns = array('gsm', 'timestamp');
 	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
 	else $col = 'timestamp';
 	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
 	else $dir = 'desc';
-	
+
 	$offset = (int)$settings['items_per_page'];
 	if (!!empty($get['page'])) $start = 0;
 	else $start = $offset * ($get['page'] - 1);
-	
+
 	$order_by_method = 'order_by_' . $dir;
 	$smss = $orm->$order_by_method($col)->limit($start.','.$offset)->find_many();
-	
+
 	set('smss', $smss);
 	set('pager', pager($start, $offset, $total, 'smss'));
 	set('get', $get);
@@ -287,11 +287,12 @@ function admin_settings_save()
 	else
 	{
 		global $config;
+		$interface = $config['captiveportal']['interface'];
 		$config['captiveportal']['timeout'] = $_POST['session_timeout'];
-		$config['dhcpd']['lan']['defaultleasetime'] = $_POST['session_timeout'] * 60;
-		$config['dhcpd']['lan']['maxleasetime'] = $_POST['session_timeout'] * 60 + 60;
+		$config['dhcpd'][$interface]['defaultleasetime'] = $_POST['session_timeout'] * 60;
+		$config['dhcpd'][$interface]['maxleasetime'] = $_POST['session_timeout'] * 60 + 60;
 		write_config();
-		
+
 		file_put_contents('settings.inc', '<?php' . "\n\n" . 'return ' . var_export($_POST, true) . ';');
 		$settings = include('settings.inc');
 		$_SESSION['message'] = 'Ayarlar kaydedildi.';
@@ -305,11 +306,11 @@ function admin_lang($code)
 {
 	global $settings;
 	set('settings', $settings);
-	
+
 	$lang = include 'lang/' . $code . '.inc';
 	set('lang', $lang);
 	set('code', $code);
-	
+
 	return html('lang.html.php');
 }
 
@@ -318,16 +319,16 @@ function admin_lang_save($code)
 {
 	global $settings;
 	set('settings', $settings);
-	
+
 	unset($_POST['__csrf_magic']);
 	file_put_contents('lang/' . $code . '.inc', '<?php' . "\n\n" . 'return ' . var_export($_POST, true) . ';');
-	
+
 	$lang = include 'lang/' . $code . '.inc';
 	set('lang', $lang);
 	set('code', $code);
-	
+
 	$_SESSION['message'] = 'Ayarlar kaydedildi.';
-	
+
 	return html('lang.html.php');
 }
 
@@ -344,7 +345,7 @@ function format_date($timestamp)
 function pager($start, $offset, $total, $url)
 {
 	parse_str(params(0), $get);
-	
+
 	$html = '<div id="pager">';
 	$html .= '<p>Toplam: ' . $total . '</p>';
 	if ($offset < $total)
@@ -383,16 +384,16 @@ function order_link($url, $column, $label)
 function validate_settings($post)
 {
 	global $settings;
-	
+
 	$val = new Validation;
-	
+
 	$fields = array(
 		'valid_for' => array(
 			'rules' => 'required|integer',
 			'label' => 'Oturum Geçerlilik Süresi',
 		),
 	);
-	
+
 	if ($settings['authentication'] == 'sms')
 	{
 		$fields['daily_global_limit'] = array(
@@ -420,7 +421,7 @@ function validate_settings($post)
 			'label' => 'İki SMS arası minimum süre',
 		);
 	}
-	
+
 	$errors = $val->validate($fields, $post);
 	return $errors;
 }
