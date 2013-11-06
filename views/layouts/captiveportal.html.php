@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <title><?=$title?></title>
-<link href="<?=$hotspot['marka_url']?>/assets/css/captiveportal-style.css" rel="stylesheet">
-<script src="<?=$hotspot['marka_url']?>/assets/js/captiveportal-jquery-1.9.1.js"></script>
+<link href="<?=$hotspot['_marka']?>/assets/css/captiveportal-style.css" rel="stylesheet">
+<script src="<?=$hotspot['_marka']?>/assets/js/captiveportal-jquery-1.9.1.js"></script>
 <script>
-<? include $hotspot['marka_url'] . '/assets/js/captiveportal.js'; ?>
-<? $settings = include $hotspot['marka_url'] . '/settings.inc'; ?>
+<? include $hotspot['_marka'] . '/assets/js/captiveportal.js'; ?>
+<? $settings = include $hotspot['_marka'] . '/settings.inc'; ?>
 </script>
 <style>
 #title {background-color: <?=$color?>}
@@ -21,11 +21,11 @@ form {padding-top: 20px}
 </head>
 
 <body>
-	
+
 	<div id="container">
 		<div id="title"><?=$title?></div>
 		<div id='logo'>
-			<img src="<?=$hotspot['marka_url']?>/assets/img/captiveportal-logo.png">
+			<img src="<?=$hotspot['_marka']?>/assets/img/captiveportal-logo.png">
 		</div>
 
 		<? if (isset($message)): ?>
@@ -44,7 +44,7 @@ form {padding-top: 20px}
 			<button id="manual_user_login"<?= $form == 'manual_user_login' ? ' class="active"' : '' ?>><?=t('manual_user_login')?></button>
 		<? endif; ?>
 		</div>
-		
+
 	<? if (isset($settings['authentication']['sms'])): ?>
 		<div class="form<?= $form == 'sms_register' ? ' active' : '' ?>" id="form_sms_register">
 			<div class="content">
@@ -77,7 +77,7 @@ form {padding-top: 20px}
 			</form>
 			</div>
 		</div>
-		
+
 		<div class="form<?= $form == 'sms_login' ? ' active' : '' ?>" id="form_sms_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
@@ -97,7 +97,7 @@ form {padding-top: 20px}
 			</div>
 		</div>
 	<? endif; ?>
-	
+
 	<? if (isset($settings['authentication']['id_number'])): ?>
 		<div class="form<?= $form == 'id_number_login' ? ' active' : '' ?>" id="form_id_number_login">
 			<div class="content">
@@ -124,7 +124,7 @@ form {padding-top: 20px}
 			</div>
 		</div>
 	<? endif; ?>
-	
+
 	<? if (isset($settings['authentication']['manual_user'])): ?>
 		<div class="form<?= $form != 'manual_user_login' ? ' active' : '' ?>" id="form_manual_user_login">
 			<div class="content">
@@ -143,10 +143,10 @@ form {padding-top: 20px}
 			</div>
 		</div>
 	<? endif; ?>
-	
+
 		<div id="lang">
 			<form method="post" action="">
-				<input type="submit" name="lang" value="TR"> | 
+				<input type="submit" name="lang" value="TR"> |
 				<input type="submit" name="lang" value="EN">
 			</form>
 		</div>
@@ -154,7 +154,7 @@ form {padding-top: 20px}
 	</div>
 
 	<div id="wifi-logo">
-		<img src="<?=$hotspot['marka_url']?>/assets/img/captiveportal-wifi.png">
+		<img src="<?=$hotspot['_marka']?>/assets/img/captiveportal-wifi.png">
 	</div>
 
 </body>

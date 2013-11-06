@@ -10,6 +10,7 @@ include 'sms.php';
 
 $settings = include('settings.inc');
 $hotspot = parse_ini_file('hotspot.ini');
+$hotspot['_marka'] = strtolower(str_replace(' ', '', $hotspot['marka']));
 
 function configure()
 {
