@@ -3,27 +3,18 @@
 function send_sms($user, $password, $clientmac)
 {
 	// JetSMS kullanıcı bilgileri
-	$kullanici_adi = '';
-	$sifre = '';
-	$alfanumerik = '';
+	$api_username = '';
+	$api_password = '';
+	$alphanumeric = '';
 
 	global $settings;
-	$xml = '<?xml version="1.0" encoding="iso-8859-9" ?><message-context type="smmgsd"><username>' . $kullanici_adi . '</username><password>' . $sifre . '</password><outbox-name>' . $alfanumerik . '</outbox-name><text>' . $settings['name'] . ' WiFi hizmeti icin sifreniz ' . $password . ' olarak tanimlanmistir.</text><gsmnos>' . $user->gsm . '</gsmnos></message-context>';
+	$xml = '<?xml version="1.0" encoding="iso-8859-9" ?><message-context type="smmgsd"><username>' . $api_username . '</username><password>' . $api_password . '</password><outbox-name>' . $alphanumeric . '</outbox-name><text>' . $settings['name'] . ' WiFi hizmeti icin sifreniz ' . $password . ' olarak tanimlanmistir.</text><gsmnos>' . $user->gsm . '</gsmnos></message-context>';
 	$url = 'http://bioweb.biotekno.biz:8080/SMS-Web/xmlsms';
 	$result = HTTPPoster($url, $xml);
 	if (substr($result, 0, 2) == '00')
-	{
-		$sms = ORM::for_table('sms')->create();
-		$sms->user_id = $user->id;
-		$sms->mac = $clientmac;
-		$sms->timestamp = time();
-		$sms->save();
-		$user->last_sms = time();
-		$user->expires = strtotime('+' . $settings['valid_for'] . 'days');
-		$user->save();
 		return true;
-	}
-	else return false;
+	else
+		return false;
 }
 
 function HTTPPoster($url, $data)

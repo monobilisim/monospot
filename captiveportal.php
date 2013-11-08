@@ -271,7 +271,6 @@ function after_send_sms($user, $clientmac)
 	$sms->timestamp = time();
 	$sms->save();
 	$user->last_sms = time();
-	$user->expires = strtotime('+' . $settings['valid_for'] . 'days');
 	$user->save();
 }
 
@@ -280,6 +279,7 @@ function login($user, $field)
 	global $settings, $clientmac, $clientip;
 
 	$user->last_login = time();
+	$user->expires = strtotime('+' . $settings['valid_for'] . 'days');
 	$user->save();
 	captiveportal_logportalauth($user->$field,$clientmac,$clientip,"LOGIN");
 	$attributes['session_terminate_time'] = $user->expires;

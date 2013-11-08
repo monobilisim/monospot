@@ -1,14 +1,20 @@
 <?php
 
-function send_sms($user, $password, $clientmac) {
+function send_sms($user, $password, $clientmac)
+{
+	// Kullanıcı bilgileri
+	$api_username = '';
+	$api_password = '';
+
 	global $settings;
 	$message = $settings['name'] . ' WiFi hizmeti icin sifreniz ' . $password . ' olarak tanimlanmistir.';
 	$xml = '';
 	$url = '';
 	$result = HTTPPoster($url, $xml);
-	$result_xml = new SimpleXMLElement($result);
-	if ($result_xml->sent === true) return true;
-	else return false;
+	if (...)
+		return true;
+	else
+		return false;
 }
 
 function HTTPPoster($url, $data)
