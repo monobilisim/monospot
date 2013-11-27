@@ -265,7 +265,7 @@ function admin_settings()
 	global $HTTP_SERVER_VARS;
 	$username = $HTTP_SERVER_VARS['AUTH_USER'];
 	$local_user = getUserEntry($username);
-	if ($local_user['scope'] != 'system')
+	if ($local_user['scope'] == 'user')
 	{
 		$_SESSION['message'] = 'Bu sayfaya erişim yetkiniz yok.';
 		redirect_to('users');
