@@ -1,7 +1,7 @@
 <?php
 
 return array(
-	
+
 	// Ana ekran
 	'welcome' => 'Wi-Fi Erişim Sayfasına Hoşgeldiniz',
 	'register' => 'Kayıt Ol',
@@ -20,7 +20,7 @@ return array(
 	'surname' => 'Soyad',
 	'birthyear' => 'Doğum Yılı',
 	'id_number' => 'TC Kimlik No',
-	'manual_user_name' => 'Kulanıcı adı',
+	'manual_user_name' => 'Kullanıcı adı',
 	'password' => 'Şifre',
 	'password_desc_gsm' => 'Şifrenizin geçerlilik süresi dolduysa<br>yeni şifre almak için boş bırakınız.',
 	'gsm_required' => 'Lütfen cep telefonu numaranızı giriniz.',
@@ -31,7 +31,7 @@ return array(
 	'invalid_id_number_js' => 'Lütfen TC kimlik numaranızı tekrar kontrol ediniz.',
 	'invalid_id_number' => 'TC kimlik bilgileriniz doğrulanamadı.',
 	'wait' => 'Lütfen Bekleyin...',
-	
+
 	// Mesajlar
 	'password_sent' => 'Şifreniz cep telefonunuza gönderilmiştir, giriş yapabilirsiniz.',
 	'password_not_sent' => 'Şifrenizin cep telefonunuza gönderimi sırasında bir hata oluştu,<br>lütfen tekrar deneyin.',
@@ -46,5 +46,5 @@ return array(
 	'monthly_limit' => 'Aylık yeni şifre oluşturma limitiniz dolmuştur.',
 	'yearly_limit' => 'Yıllık yeni şifre oluşturma limitiniz dolmuştur.',
 	'min_interval' => 'Tekrar yeni şifre almak için %d dakika beklemeniz gerekiyor.'
-	
+
 );
