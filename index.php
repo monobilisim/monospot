@@ -98,7 +98,7 @@ function admin_user_index()
 	$users->left_outer_join('sms', array('sms.user_id', '=', 'user.id'));
 	$users->group_by('user.id');
 
-	$columns = array('id_number', 'gsm', 'last_sms', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
+	$columns = array('id_number', 'gsm', 'last_sms', 'last_login', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
 	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
 	else $col = 'user.id';
 	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
