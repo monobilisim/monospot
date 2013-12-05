@@ -100,9 +100,9 @@ function admin_user_index()
 
 	$columns = array('id_number', 'gsm', 'last_sms', 'last_login', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
 	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
-	else $col = 'user.id';
+	else $col = 'user.last_login';
 	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
-	else $dir = 'asc';
+	else $dir = 'desc';
 
 	$offset = (int)$settings['items_per_page'];
 	if (!!empty($get['page'])) $start = 0;
@@ -373,12 +373,19 @@ function order_link($url, $column, $label)
 	);
 	parse_str(params(0), $get);
 	unset($get['page']);
-	$dir = !empty($get['order']) && $get['order'] == $column ? $dir_reverse[$get['dir']] : 'asc';
+	$dir = !empty($get['order']) && $get['order'] == $column ? $dir_reverse[$get['dir']] : default_sort($column);
 	$arrow = !empty($get['order']) && $get['order'] == $column ? $dir_arrows[$dir] : '';
 	$get['order'] = $column;
 	$get['dir'] = $dir;
 	$link = '<a href="' . url_for($url, $get) . '">' . $label . '</a>' . $arrow;
 	return $link;
+}
+
+function default_sort($column)
+{
+	$desc = array('expires', 'last_sms', 'timestamp');
+	if (in_array($column, $desc)) return 'desc'; // last_login zaten sayfa ilk açıldığında azalan olarak sıralanıyor
+	else return 'asc';
 }
 
 function validate_settings($post)

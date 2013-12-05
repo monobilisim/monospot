@@ -11,7 +11,7 @@
 <p><a href="<?=url_for('user/add')?>">Kullanıcı Ekle</a></p>
 
 <div id="list">
-	
+
 	<table>
 		<tr>
 		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
@@ -25,7 +25,7 @@
 			<th colspan="4">SMS Limiti</th>
 		<? endif; ?>
 		<? if (isset($settings['authentication']['manual_user'])): ?>
-			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'username', 'Kulanıcı adı')?></th>
+			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'username', 'Kullanıcı adı')?></th>
 		<? endif; ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_login', 'Son Oturum Açma')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'expires', 'Şifre Son Geçerlilik')?></th>
@@ -60,8 +60,8 @@
 			<td><?=format_date($user->last_login)?></td>
 			<td><?=format_date($user->expires)?></td>
 			<td>
-				<a href="<?=url_for('user', $user->id)?>">Görüntüle</a> | 
-				<a href="<?=url_for('user', $user->id, 'update')?>">Düzenle</a> | 
+				<a href="<?=url_for('user', $user->id)?>">Görüntüle</a> |
+				<a href="<?=url_for('user', $user->id, 'update')?>">Düzenle</a> |
 				<a href="<?=url_for('user', $user->id, 'delete')?>" onclick="if (confirm('Emin misiniz?')) { return true; } return false;">Sil</a>
 			</td>
 		</tr>
@@ -96,7 +96,7 @@
 	</div>
 	<div class="item">
 		Son Şifre Alma Tarihi<br>
-		<input type="text" class="small date" name="last_sms" value="<?=isset($get['last_sms']) ? $get['last_sms'] : ''?>">	
+		<input type="text" class="small date" name="last_sms" value="<?=isset($get['last_sms']) ? $get['last_sms'] : ''?>">
 	</div>
 <? endif; ?>
 <? if (isset($settings['authentication']['manual_user'])): ?>
@@ -107,7 +107,7 @@
 <? endif; ?>
 	<div class="item">
 		Şifre Son Geçerlilik Tarihi<br>
-		<input type="text" class="small date" name="expires" value="<?=isset($get['expires']) ? $get['expires'] : ''?>">	
+		<input type="text" class="small date" name="expires" value="<?=isset($get['expires']) ? $get['expires'] : ''?>">
 	</div>
 	<input type="submit" value="Filtrele">
 	</form>
