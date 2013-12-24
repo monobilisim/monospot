@@ -140,49 +140,57 @@ function welcome_post()
 		}
 		else // Giriş ekranı
 		{
-			if (strlen($_POST['user']['password']) > 0) // giriş denemesi
+			if (!$user) // kayıt olmadan giriş ekranına gelmiş olabilir
 			{
-				if ($user->password == $_POST['user']['password'])
+				$message = 'user_not_found';
+				$form = 'sms_register';
+			}
+			else
+			{
+				if (strlen($_POST['user']['password']) > 0) // giriş denemesi
 				{
-					if (password_expired($user))
+					if ($user->password == $_POST['user']['password'])
 					{
-						$message = 'password_expired_sms';
+						if (password_expired($user))
+						{
+							$message = 'password_expired_sms';
+							$form = 'sms_login';
+						}
+						else
+						{
+							login($user, 'gsm');
+						}
+					}
+					else
+					{
+						captiveportal_logportalauth($user->gsm,$clientmac,$clientip,"FAILURE");
+						$user->password = '';
+						$message = 'invalid_password';
 						$form = 'sms_login';
 					}
+				}
+				else // şifre isteği
+				{
+					$message = password_request_check($user);
+					if (!$message)
+					{
+						$password = generate_password();
+						$user->password = $password;
+						$user->save();
+						if ($sent = send_sms($user, $password, $clientmac))
+						{
+							after_send_sms($user, $clientmac);
+							$message = 'password_sent';
+						}
+						else
+							$message = 'password_not_sent';
+					}
 					else
 					{
-						login($user, 'gsm');
+						if ($message == 'min_interval') $arg = $settings['min_interval'];
 					}
-				}
-				else
-				{
-					captiveportal_logportalauth($user->gsm,$clientmac,$clientip,"FAILURE");
-					$user->password = '';
-					$message = 'invalid_password';
 					$form = 'sms_login';
 				}
-			}
-			else // şifre isteği
-			{
-				$message = password_request_check($user);
-				if (!$message)
-				{
-					$password = generate_password();
-					$user->password = $password;
-					$user->save();
-					if ($sent = send_sms($user, $password, $clientmac))
-					{
-						after_send_sms($user, $clientmac);
-						$message = 'password_sent';
-					}
-					else
-						$message = 'password_not_sent';
-				}
-				else
-				{
-					if ($message == 'min_interval') $arg = $settings['min_interval'];
-				}
-				$form = 'sms_login';
 			}
 		}
 	}
