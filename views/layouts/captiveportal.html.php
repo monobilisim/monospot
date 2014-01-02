@@ -126,7 +126,7 @@ form {padding-top: 20px}
 	<? endif; ?>
 
 	<? if (isset($settings['authentication']['manual_user'])): ?>
-		<div class="form<?= $form != 'manual_user_login' ? ' active' : '' ?>" id="form_manual_user_login">
+		<div class="form<?= $form == 'manual_user_login' ? ' active' : '' ?>" id="form_manual_user_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
 			<p class="description"><?=t('login_desc')?></p>
