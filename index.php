@@ -24,6 +24,8 @@ require 'models/user.php';
 // örnek dosyalardan asıl dosyaları oluştur
 if (!file_exists(dirname(__FILE__) . '/db/hotspot.db'))
 	copy(dirname(__FILE__) . '/db/hotspot.sample.db', dirname(__FILE__) . '/db/hotspot.db');
+if (!file_exists(dirname(__FILE__) . '/hotspot.ini'))
+	copy(dirname(__FILE__) . '/hotspot.sample.ini', dirname(__FILE__) . '/hotspot.ini');
 if (!file_exists(dirname(__FILE__) . '/settings.inc'))
 	copy(dirname(__FILE__) . '/settings.sample.inc', dirname(__FILE__) . '/settings.inc');
 if (!file_exists(dirname(__FILE__) . '/lang/tr.inc'))
@@ -262,10 +264,11 @@ function admin_sms_index()
 dispatch('settings', 'admin_settings');
 function admin_settings()
 {
-	global $HTTP_SERVER_VARS;
+	global $hotspot, $HTTP_SERVER_VARS;
 	$username = $HTTP_SERVER_VARS['AUTH_USER'];
-	$local_user = getUserEntry($username);
-	if ($local_user['scope'] == 'user')
+	$user = getUserEntry($username);
+	$groups = local_user_get_groups($user);
+	if (in_array($hotspot['kisitli_grup'], $groups))
 	{
 		$_SESSION['message'] = 'Bu sayfaya erişim yetkiniz yok.';
 		redirect_to('users');
