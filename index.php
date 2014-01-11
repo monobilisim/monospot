@@ -128,6 +128,7 @@ function admin_user_add_page()
 	global $settings;
 	$user = Model::factory('User')->create();
 	$user->defaults();
+	$user->password = mt_rand(100000, 999999);
 	set('user', $user);
 	set('settings', $settings);
 	set('title', 'Kullanıcı ekle');

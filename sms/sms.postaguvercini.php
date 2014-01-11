@@ -1,6 +1,6 @@
 <?php
 
-function send_sms($user, $password, $clientmac)
+function send_sms($user, $password)
 {
 	// Posta Güvercini kullanıcı bilgileri
 	$api_username = '';

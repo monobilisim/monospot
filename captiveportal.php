@@ -30,6 +30,7 @@ dispatch('', 'welcome');
 function welcome()
 {
 	global $hotspot;
+
 	if (date('Y', strtotime($hotspot['demo_bitis'])) != '2010' && time() > strtotime($hotspot['demo_bitis']))
 	{
 		$demo_expired = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Hotspot demo süresi ' . $hotspot['demo_bitis'] . ' tarihinde dolmuştur.</div>';
@@ -52,6 +53,7 @@ function welcome()
 	}
 
 	global $settings;
+
 	$user = Model::factory('User')->create();
 	$user->defaults();
 	set('title', $settings['name'] . ' ' . t('welcome'));
@@ -65,6 +67,7 @@ dispatch_post('', 'welcome_post');
 function welcome_post()
 {
 	global $settings, $clientmac, $clientip;
+
 	if (isset($_POST['lang']))
 	{
 		$_SESSION['lang'] = strtolower($_POST['lang']);
@@ -273,6 +276,7 @@ run();
 function after_send_sms($user, $clientmac)
 {
 	global $settings;
+
 	$sms = ORM::for_table('sms')->create();
 	$sms->user_id = $user->id;
 	$sms->mac = $clientmac;
