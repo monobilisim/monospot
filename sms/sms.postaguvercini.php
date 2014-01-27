@@ -11,6 +11,7 @@ function send_sms($user, $password)
 	$url = 'http://www.postaguvercini.com/api_xml/Sms_insreq.asp';
 	$result = HTTPPoster($url, $xml);
 	$result_xml = new SimpleXMLElement($result);
+
 	if (isset($result_xml->INSERT['id']))
 		return true;
 	else

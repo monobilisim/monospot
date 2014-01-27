@@ -1,7 +1,6 @@
 <h2>Kullanıcı ID:<?=$user->id?></h2>
 
 	<div id="user">
-<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
 	<p>
 		<div class="label">TC Kimlik No</div>
 		<span class="value"><?=$user->id_number?></span>
@@ -14,7 +13,6 @@
 		<div class="label">Soyad</div>
 		<span class="value"><?=$user->surname?></span>
 	</p>
-<? endif; ?>
 <? if (isset($settings['authentication']['sms'])): ?>
 	<p>
 		<div class="label">GSM</div>

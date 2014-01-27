@@ -23,7 +23,6 @@
 
 <form action="<?=$action?>" method="POST">
 	<div id="user">
-	<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
 		<p>
 			<div class="label">TC Kimlik No</div>
 			<input type="text" class="small<?=isset($errors['id_number']) ? ' error' : ''?>" name="user[id_number]" maxlength="11" value="<?=$user->id_number?>">
@@ -36,7 +35,6 @@
 			<div class="label">Soyad</div>
 			<input type="text" class="small" name="user[surname]" value="<?=$user->surname?>">
 		</p>
-	<? endif; ?>
 	<? if (isset($settings['authentication']['sms'])): ?>
 		<p>
 			<div class="label">GSM</div>
@@ -77,7 +75,7 @@
 			<div class="label">Şifre Son Geçerlilik Tarihi</div>
 			<input type="text" class="medium<?=isset($errors['expires']) ? ' error' : ''?>" name="user[expires]" id="expires" value="<?=format_date($user->expires)?>">
 		</p>
-		
+
 		<p class="actions">
 			<input type="submit" value="<?= empty($user->id) ? "Ekle" : "Güncelle" ?>">
 			<a href="<?= empty($user->id) ? url_for('user') : url_for('user', $user->id) ?>">İptal</a>

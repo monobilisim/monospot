@@ -27,6 +27,7 @@ function send_sms($user, $password)
 	$url = 'http://smsc.cmfcell.com/sections/service/api/xmlwebservice/xmlwebservice.aspx';
 	$result = HTTPPoster($url, $xml);
 	$result_xml = new SimpleXMLElement($result);
+
 	if (!isset($result_xml->error))
 		return true;
 	else
