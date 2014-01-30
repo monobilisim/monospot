@@ -71,10 +71,12 @@
 			<input type="text" class="small" name="user[password]" value="<?=$user->password?>">
 		</p>
 	<? endif; ?>
+	<? if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user'])): ?>
 		<p>
 			<div class="label">Şifre Son Geçerlilik Tarihi</div>
 			<input type="text" class="medium<?=isset($errors['expires']) ? ' error' : ''?>" name="user[expires]" id="expires" value="<?=format_date($user->expires)?>">
 		</p>
+	<? endif; ?>
 
 		<p class="actions">
 			<input type="submit" value="<?= empty($user->id) ? "Ekle" : "Güncelle" ?>">

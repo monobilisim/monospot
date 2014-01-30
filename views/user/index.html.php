@@ -26,7 +26,9 @@
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'username', 'Kullanıcı adı')?></th>
 		<? endif; ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_login', 'Son Oturum Açma')?></th>
+		<? if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'expires', 'Şifre Son Geçerlilik')?></th>
+		<? endif; ?>
 			<th rowspan="<?=$rowspan?>">İşlem</th>
 		</tr>
 	<? if (isset($settings['authentication']['sms'])): ?>
@@ -56,7 +58,9 @@
 			<td><?=$user->username?></td>
 		<? endif; ?>
 			<td><?=format_date($user->last_login)?></td>
+		<? if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user'])): ?>
 			<td><?=format_date($user->expires)?></td>
+		<? endif; ?>
 			<td>
 				<a href="<?=url_for('user', $user->id)?>">Görüntüle</a> |
 				<a href="<?=url_for('user', $user->id, 'update')?>">Düzenle</a> |

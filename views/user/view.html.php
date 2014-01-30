@@ -49,10 +49,12 @@
 		<div class="label">Son Oturum Açma Tarihi</div>
 		<span class="value"><?=format_date($user->last_login)?></span>
 	</p>
+<? if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user'])): ?>
 	<p>
 		<div class="label">Şifre Son Geçerlilik Tarihi</div>
 		<span class="value"><?=format_date($user->expires)?></span>
 	</p>
+<? endif; ?>
 	<p>
 		<a href="<?= url_for('user', $user->id, 'update'); ?>">Düzenle</a> |
 		<a href="<?= url_for('user', $user->id, 'delete'); ?>" onclick="if (confirm('Emin misiniz?')) { return true; } return false;">Sil</a>

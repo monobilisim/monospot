@@ -13,18 +13,21 @@ class User extends Model
 			$this->monthly_limit = $settings['monthly_limit'];
 			$this->yearly_limit = $settings['yearly_limit'];
 		}
-		$this->expires = strtotime('+' . $settings['valid_for'] . 'days');
+		if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user']))
+		{
+			$this->expires = strtotime('+' . $settings['valid_for'] . 'days');
+		}
 	}
 
 	public function fill($post)
 	{
 		global $settings;
-		
+
 		if (isset($post['expires'])) // posted from admin screen, we need to sanitize data
 		{
 			if (isset($post['gsm']))
 				$post['gsm'] = ltrim(trim($post['gsm']), '0');
-			
+
 			if ($post['expires'])
 				$post['expires'] = strtotime(str_replace('-', '', $post['expires']));
 			else
@@ -35,15 +38,15 @@ class User extends Model
 			$this->$column = $value;
 		}
 	}
-	
+
 	public function validate($post)
 	{
 		global $settings;
-		
+
 		$val = new Validation;
-		
+
 		$fields = array();
-		
+
 		if ($settings['authentication'] == 'sms')
 		{
 			$fields['gsm'] = array(
@@ -71,7 +74,7 @@ class User extends Model
 				'label' => 'Yıllık SMS limiti',
 			);
 		}
-		
+
 		if ($settings['authentication'] == 'id_number')
 		{
 			$fields['id_number'] = array(
@@ -79,7 +82,7 @@ class User extends Model
 				'label' => 'TC Kimlik No',
 			);
 		}
-		
+
 		$errors = $val->validate($fields, $post);
 		return $errors;
 	}

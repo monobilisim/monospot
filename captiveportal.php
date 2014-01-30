@@ -292,9 +292,13 @@ function login($user, $field)
 	global $settings, $clientmac, $clientip;
 
 	$user->last_login = time();
+	// Giriş yöntemi sonradan değiştirilirse user kaydında expires sütunu tanımlı kalmış olabilir, bunu mutlaka null yapmak gerekiyor
+	if ($field == 'id_number') $user->expires = null;
 	$user->save();
 	captiveportal_logportalauth($user->$field,$clientmac,$clientip,"LOGIN");
-	$attributes['session_terminate_time'] = $user->expires;
+	$attributes = array();
+	// Şifre geçerlilik süresinin hard timeout'tan daha kısa olduğu durumlar için kullanıcıya özel olarak bu değeri atıyoruz
+	if ($user->expires) $attributes['session_terminate_time'] = $user->expires;
 	portal_allow($clientip, $clientmac, $user->$field, $password = null, $attributes);
 }
 
