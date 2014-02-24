@@ -81,6 +81,7 @@ function admin_user_index()
 	$total = $users->count();
 
 	$users->select('user.*');
+	/*
 	$users->select_expr("sum(case
 		when strftime('%Y-%m-%d', datetime(sms.timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now') then 1
 		else 0
@@ -99,6 +100,7 @@ function admin_user_index()
 		end)", 'sms_year');
 	$users->left_outer_join('sms', array('sms.user_id', '=', 'user.id'));
 	$users->group_by('user.id');
+	*/
 
 	$columns = array('id_number', 'gsm', 'last_sms', 'last_login', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
 	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
@@ -113,6 +115,30 @@ function admin_user_index()
 	$order_by_method = 'order_by_' . $dir;
 	$users->$order_by_method($col)->limit($start.','.$offset);
 	$users = $users->find_many();
+
+	foreach($users as $user)
+	{
+		$sms = ORM::for_table('sms');
+		$sms->select_expr("sum(case
+			when strftime('%Y-%m-%d', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now') then 1
+			else 0
+			end)", 'day');
+		$sms->select_expr("sum(case
+			when strftime('%W', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%W', 'now') then 1
+			else 0
+			end)", 'week');
+		$sms->select_expr("sum(case
+			when strftime('%Y-%m', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m', 'now') then 1
+			else 0
+			end)", 'month');
+		$sms->select_expr("sum(case
+			when strftime('%Y', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y', 'now') then 1
+			else 0
+			end)", 'year');
+		$sms->where('user_id', $user->id);
+		$sms = $sms->find_one();
+		$user->sms = $sms;
+	}
 
 	set('users', $users);
 	set('pager', pager($start, $offset, $total, 'users'));

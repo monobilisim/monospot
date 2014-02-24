@@ -14,9 +14,11 @@
 
 	<table>
 		<tr>
+		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'name', 'Ad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'surname', 'Soyad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'id_number', 'TC Kimlik No')?></th>
+		<? endif; ?>
 		<? if (isset($settings['authentication']['sms'])): ?>
 			<th rowspan="2"><?=order_link('users', 'gsm', 'GSM')?></th>
 			<th rowspan="2"><?=order_link('users', 'last_sms', 'Son Şifre Alma')?></th>
@@ -49,10 +51,10 @@
 		<? if (isset($settings['authentication']['sms'])): ?>
 			<td><?=$user->gsm?></td>
 			<td><?=format_date($user->last_sms)?></td>
-			<td><?=$user->sms_day.'/'.$user->daily_limit?></td>
-			<td><?=$user->sms_week.'/'.$user->weekly_limit?></td>
-			<td><?=$user->sms_month.'/'.$user->monthly_limit?></td>
-			<td><?=$user->sms_year.'/'.$user->yearly_limit?></td>
+			<td><?=$user->sms->day.'/'.$user->daily_limit?></td>
+			<td><?=$user->sms->week.'/'.$user->weekly_limit?></td>
+			<td><?=$user->sms->month.'/'.$user->monthly_limit?></td>
+			<td><?=$user->sms->year.'/'.$user->yearly_limit?></td>
 		<? endif; ?>
 		<? if (isset($settings['authentication']['manual_user'])): ?>
 			<td><?=$user->username?></td>

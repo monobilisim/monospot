@@ -13,11 +13,15 @@
 		<div class="label">Soyad</div>
 		<span class="value"><?=$user->surname?></span>
 	</p>
-<? if (isset($settings['authentication']['sms'])): ?>
+	<p>
+		<div class="label">E-posta</div>
+		<span class="value"><?=$user->email?></span>
+	</p>
 	<p>
 		<div class="label">GSM</div>
 		<span class="value"><?=$user->gsm?></span>
 	</p>
+<? if (isset($settings['authentication']['sms'])): ?>
 	<p>
 		<div class="label">Son Şifre Alma Tarihi</div>
 		<span class="value"><?=format_date($user->last_sms)?></span>

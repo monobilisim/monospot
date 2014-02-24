@@ -5,9 +5,9 @@
 <script>
 	$(function() {
 		$("#expires").datetimepicker({
-		dateFormat: "dd.mm.yy -",
-		regional: "tr",
-	});
+			dateFormat: "dd.mm.yy -",
+			regional: "tr",
+		});
 	});
 </script>
 
@@ -35,11 +35,15 @@
 			<div class="label">Soyad</div>
 			<input type="text" class="small" name="user[surname]" value="<?=$user->surname?>">
 		</p>
-	<? if (isset($settings['authentication']['sms'])): ?>
+		<p>
+			<div class="label">E-posta</div>
+			<input type="text" class="small" name="user[email]" value="<?=$user->email?>">
+		</p>
 		<p>
 			<div class="label">GSM</div>
 			<input type="text" class="small<?=isset($errors['gsm']) ? ' error' : ''?>" name="user[gsm]" value="<?=$user->gsm?>">
 		</p>
+	<? if (isset($settings['authentication']['sms'])): ?>
 		<p>
 			<div class="label">Şifre</div>
 			<input type="text" class="small<?=isset($errors['password']) ? ' error' : ''?>" name="user[password]" value="<?=$user->password?>">
