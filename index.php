@@ -12,7 +12,7 @@ if (!session_auth()) {
 }
 /* ------------------- */
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 date_default_timezone_set('Europe/Istanbul');
 
 require 'lib/limonade.php';
@@ -81,26 +81,6 @@ function admin_user_index()
 	$total = $users->count();
 
 	$users->select('user.*');
-	/*
-	$users->select_expr("sum(case
-		when strftime('%Y-%m-%d', datetime(sms.timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now') then 1
-		else 0
-		end)", 'sms_day');
-	$users->select_expr("sum(case
-		when strftime('%W', datetime(sms.timestamp, 'unixepoch', 'localtime')) = strftime('%W', 'now') then 1
-		else 0
-		end)", 'sms_week');
-	$users->select_expr("sum(case
-		when strftime('%Y-%m', datetime(sms.timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m', 'now') then 1
-		else 0
-		end)", 'sms_month');
-	$users->select_expr("sum(case
-		when strftime('%Y', datetime(sms.timestamp, 'unixepoch', 'localtime')) = strftime('%Y', 'now') then 1
-		else 0
-		end)", 'sms_year');
-	$users->left_outer_join('sms', array('sms.user_id', '=', 'user.id'));
-	$users->group_by('user.id');
-	*/
 
 	$columns = array('id_number', 'gsm', 'last_sms', 'last_login', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
 	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
