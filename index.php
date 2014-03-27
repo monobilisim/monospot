@@ -297,8 +297,9 @@ function admin_settings_save()
 	else
 	{
 		global $config;
-		$interface = $config['captiveportal']['interface'];
-		$config['captiveportal']['timeout'] = $_POST['session_timeout'];
+		$cpzone = key($config['captiveportal']);
+		$interface = $config['captiveportal'][$cpzone]['interface'];
+		$config['captiveportal'][$cpzone]['timeout'] = $_POST['session_timeout'];
 		$config['dhcpd'][$interface]['defaultleasetime'] = $_POST['session_timeout'] * 60;
 		$config['dhcpd'][$interface]['maxleasetime'] = $_POST['session_timeout'] * 60 + 60;
 		write_config();

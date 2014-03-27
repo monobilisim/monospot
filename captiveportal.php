@@ -37,19 +37,15 @@ function welcome()
 		return $demo_expired;
 	}
 
-	// pfSense kodundan alındı: /usr/local/www/status_captiveportal.php
-	if (file_exists('/var/db/captiveportal.db')) {
-		$captiveportallck = lock('captiveportaldb');
-		$cpcontents = file("/var/db/captiveportal.db", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-		unlock($captiveportallck);
-	} else
-		$cpcontents = array();
-	$concurrent = count($cpcontents);
-
-	if ($hotspot['maksimum_kullanici'] && $concurrent >= $hotspot['maksimum_kullanici'])
+	if ($hotspot['maksimum_kullanici'])
 	{
-		$max_user_reached = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Maksimum kullanıcı sayısına ulaşıldı!</div>';
-		return $max_user_reached;
+		$cpdb = captiveportal_read_db();
+		$concurrent = count($cpdb);
+		if ($concurrent >= $hotspot['maksimum_kullanici'])
+		{
+			$max_user_reached = '<meta charset="utf-8"><div style="color:#e00;font-weight:bold;text-align:center">Maksimum kullanıcı sayısına ulaşıldı!</div>';
+			return $max_user_reached;
+		}
 	}
 
 	global $settings;
