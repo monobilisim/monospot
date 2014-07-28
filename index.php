@@ -124,7 +124,7 @@ function admin_user_index()
 	set('pager', pager($start, $offset, $total, 'users'));
 	set('get', $get);
 	set('settings', $settings);
-	set('rowspan', isset($settings['authentication']['sms']) ? 2 : 1);
+	set('rowspan', (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false) ? 2 : 1);
 	return html('user/index.html.php');
 }
 
@@ -135,6 +135,7 @@ function admin_user_add_page()
 	$user = Model::factory('User')->create();
 	$user->defaults();
 	$user->password = mt_rand(100000, 999999);
+	$user->expires = strtotime('+' . $settings['valid_for'] . ' days');
 	set('user', $user);
 	set('settings', $settings);
 	set('title', 'Kullanıcı ekle');
@@ -147,6 +148,7 @@ function admin_user_add()
 	global $settings;
 	$user = Model::factory('User')->create();
 	$user->fill($_POST['user']);
+
 
 	if ($errors = $user->validate($_POST['user']))
 	{
@@ -288,26 +290,86 @@ function admin_settings()
 dispatch_post('settings', 'admin_settings_save');
 function admin_settings_save()
 {
+	$halt = false;
+
 	unset($_POST['__csrf_magic']);
 	if ($errors = validate_settings($_POST))
 	{
 		set('errors', $errors);
-		set('settings', $_POST);
+		$halt = true;
 	}
-	else
+
+	if (!$halt)
 	{
 		global $config;
 		$cpzone = key($config['captiveportal']);
-		$interface = $config['captiveportal'][$cpzone]['interface'];
-		$config['captiveportal'][$cpzone]['timeout'] = $_POST['session_timeout'];
-		$config['dhcpd'][$interface]['defaultleasetime'] = $_POST['session_timeout'] * 60;
-		$config['dhcpd'][$interface]['maxleasetime'] = $_POST['session_timeout'] * 60 + 60;
-		write_config();
+		if (!$cpzone)
+		{
+			$message = 'Captive Portal için "zone" kaydı oluşturulmamış!';
+			$halt = true;
+		}
+	}
 
+	if (!$halt)
+	{
+		if (!isset($config['captiveportal'][$cpzone]['interface']))
+		{
+			$message = 'Captive Portal için "interface" belirlenmemiş!';
+			$halt = true;
+		}
+	}
+
+	if (!$halt)
+	{
+		$interfaces = explode(',', $config['captiveportal'][$cpzone]['interface']);
+		$config['captiveportal'][$cpzone]['timeout'] = $_POST['session_timeout'];
+		foreach ($interfaces as $interface)
+		{
+			$config['dhcpd'][$interface]['defaultleasetime'] = $_POST['session_timeout'] * 60;
+			$config['dhcpd'][$interface]['maxleasetime'] = $_POST['session_timeout'] * 60 + 60;
+		}
+		write_config();
+	}
+
+	if ($_POST['custom_fields'])
+	{
+		$orm = ORM::for_table('')->raw_query('PRAGMA table_info(user)')->find_many();
+		$columns = array();
+		foreach ($orm as $column) $columns[] = $column->name;
+
+		$custom_fields = str_replace("\r\n", "\n", $_POST['custom_fields']);
+
+		foreach (explode("\n", $custom_fields) as $field)
+		{
+			$field = explode('|', $field);
+			if (!in_array($field[0], $columns))
+				$orm = ORM::for_table('user')->raw_execute('ALTER TABLE user ADD COLUMN ' . $field[0] . ' TEXT');
+
+			foreach(array('tr', 'en') as $code)
+			{
+				$lang = include 'lang/' . $code . '.inc';
+				if (!array_key_exists($field[0], $lang)) $lang[$field[0]] = $field[1];
+				file_put_contents('lang/' . $code . '.inc', '<?php' . "\n\n" . 'return ' . var_export($lang, true) . ';');
+			}
+		}
+	}
+
+	if (!$halt)
+	{
 		file_put_contents('settings.inc', '<?php' . "\n\n" . 'return ' . var_export($_POST, true) . ';');
 		$settings = include('settings.inc');
-		$_SESSION['message'] = 'Ayarlar kaydedildi.';
 		set('settings', $settings);
+		set('message', 'Ayarlar kaydedildi.');
+		set('status', 'success');
+	}
+	else
+	{
+		set('settings', $_POST);
+		if ($message)
+		{
+			set('message', $message);
+			set('status', 'error');
+		}
 	}
 	return html('settings.html.php');
 }

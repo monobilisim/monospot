@@ -14,12 +14,20 @@
 
 	<table>
 		<tr>
+		<? if ($settings['custom_fields']): ?>
+			<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
+				<? $field = explode('|', $field); ?>
+				<? if ($field[0] != 'gsm'): ?>
+				<th rowspan="<?=$rowspan?>"><?=order_link('users', $field[0], $field[1])?></th>
+				<? endif; ?>
+			<? endforeach; ?>
+		<? endif; ?>
 		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'name', 'Ad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'surname', 'Soyad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'id_number', 'TC Kimlik No')?></th>
 		<? endif; ?>
-		<? if (isset($settings['authentication']['sms'])): ?>
+		<? if (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false): ?>
 			<th rowspan="2"><?=order_link('users', 'gsm', 'GSM')?></th>
 			<th rowspan="2"><?=order_link('users', 'last_sms', 'Son Şifre Alma')?></th>
 			<th colspan="4">SMS Limiti</th>
@@ -27,13 +35,11 @@
 		<? if (isset($settings['authentication']['manual_user'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'username', 'Kullanıcı adı')?></th>
 		<? endif; ?>
-			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_login', 'Son Oturum Açma')?></th>
-		<? if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'expires', 'Şifre Son Geçerlilik')?></th>
-		<? endif; ?>
+			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_login', 'Son Oturum Açma')?></th>
 			<th rowspan="<?=$rowspan?>">İşlem</th>
 		</tr>
-	<? if (isset($settings['authentication']['sms'])): ?>
+	<? if (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false): ?>
 		<tr>
 			<th><?=order_link('users', 'daily_limit', 'Günlük')?></th>
 			<th><?=order_link('users', 'weekly_limit', 'Haftalık')?></th>
@@ -41,14 +47,23 @@
 			<th><?=order_link('users', 'yearly_limit', 'Yıllık')?></th>
 		</tr>
 	<? endif; ?>
+
 	<? foreach($users as $user): ?>
 		<tr>
+		<? if ($settings['custom_fields']): ?>
+			<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
+				<? $field = explode('|', $field); ?>
+				<? if ($field[0] != 'gsm'): ?>
+				<td><?=$user->$field[0]?></td>
+				<? endif; ?>
+			<? endforeach; ?>
+		<? endif; ?>
 		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
 			<td class="left"><?=$user->name?></td>
 			<td class="left"><?=$user->surname?></td>
 			<td><?=$user->id_number?></td>
 		<? endif; ?>
-		<? if (isset($settings['authentication']['sms'])): ?>
+		<? if (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false): ?>
 			<td><?=$user->gsm?></td>
 			<td><?=format_date($user->last_sms)?></td>
 			<td><?=$user->sms->day.'/'.$user->daily_limit?></td>
@@ -59,10 +74,8 @@
 		<? if (isset($settings['authentication']['manual_user'])): ?>
 			<td><?=$user->username?></td>
 		<? endif; ?>
-			<td><?=format_date($user->last_login)?></td>
-		<? if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user'])): ?>
 			<td><?=format_date($user->expires)?></td>
-		<? endif; ?>
+			<td><?=format_date($user->last_login)?></td>
 			<td>
 				<a href="<?=url_for('user', $user->id)?>">Görüntüle</a> |
 				<a href="<?=url_for('user', $user->id, 'update')?>">Düzenle</a> |
@@ -108,6 +121,14 @@
 		Kullanıcı adı<br>
 		<input type="text" class="large" name="username" value="<?=isset($get['username']) ? $get['username'] : ''?>">
 	</div>
+<? endif; ?>
+<? if ($settings['custom_fields']): ?>
+	<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
+		<? $field = explode('|', $field); ?>
+			<div class="item">
+			<?=$field[1]?><br>
+			<input type="text" class="large" name="<?=$field[0]?>" value="<?=isset($get[$field[0]]) ? $get[$field[0]] : ''?>">
+	<? endforeach; ?>
 <? endif; ?>
 	<div class="item">
 		Şifre Son Geçerlilik Tarihi<br>

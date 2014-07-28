@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$(".form.active").slideDown();
-	
+
 	$("button").click(function() {
 		$("button.active").removeClass("active");
 		$(this).addClass("active");
@@ -44,7 +44,7 @@ function validateForm(form) {
 				errors[i] = "<?=t('username_required')?>";
 			}
 		}
-		
+
 		/* id_number validation */
 		if (el.name == "user[id_number]") {
 		console.log('id');
@@ -79,7 +79,7 @@ function checkphone(input, event) {
 var validateTurkishIdentificationNumber = function(n) {
     if(n.length != 11)
         return false;
-    
+
     var evens = odds = all = 0;
     for (i = 0, l = n.length; i < l; i++) {
         var num = Number(n[i]);
@@ -89,11 +89,11 @@ var validateTurkishIdentificationNumber = function(n) {
                 if(i % 2)
                     odds += num
                 else
-                    evens += num 
+                    evens += num
             }
-        } 
+        }
     }
- 
+
     if(((evens * 7) - odds) % 10 == n[9] && all % 10 == n[10])
         return true;
     else

@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'authentication' => 
+  'authentication' =>
   array (
     'sms' => '1',
   ),
@@ -16,4 +16,5 @@ return array (
   'name' => '',
   'color' => '#333',
   'items_per_page' => '100',
+  'custom_fields' => '',
 );

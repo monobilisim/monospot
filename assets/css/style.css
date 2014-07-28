@@ -85,12 +85,23 @@ table td.left {
 	padding: 0 10px;
 }
 
+.item {
+	margin: 10px 0;
+}
+
 .label {
 	font-weight: bold;
 	width: 200px;
 	display: inline-block;
 	text-align: right;
 	padding-right: 10px;
+	vertical-align: top;
+	margin-top: 5px;
+}
+
+.value {
+	display: inline-block;
+	margin-top: 5px;
 }
 
 input {
@@ -123,8 +134,9 @@ input.error {
 	color: red;
 }
 
-p.actions {
+div.actions {
 	text-align: right;
+	margin: 10px 0;
 }
 
 fieldset {
@@ -140,7 +152,12 @@ fieldset {
 .message {
 	margin: 20px 0;
 	font-weight: bold;
+}
+.message .success {
 	color: #018501;
+}
+.message .error {
+	color: #e00;
 }
 
 footer {

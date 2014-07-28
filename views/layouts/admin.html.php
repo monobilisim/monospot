@@ -30,16 +30,16 @@
 		<a href="/">pfSense</a>
 	</div>
 
-	<? if (isset($_SESSION['message'])): ?>
-		<div class="message"><?=$_SESSION['message']?></div>
-	<? unset($_SESSION['message']); endif; ?>
+	<? if (isset($message)): ?>
+		<div class="message"><span class="<?=$status?>"><?=$message?></div>
+	<? endif; ?>
 
 	<div class="content">
 		<?= $content; ?>
 	</div>
 
 	<footer>
-		<p>© <?=$hotspot['firma']?> 2013</p>
+		<p>© 2014 <?=$hotspot['firma']?></p>
 	</footer>
 
 	</div>

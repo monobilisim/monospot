@@ -13,17 +13,18 @@
 #title {background-color: <?=$color?>}
 #form-selection .active {background-color: <?=$color?>}
 <? if (isset($settings['authentication']['sms']) && isset($settings['simple_screen'])): ?>
-#form-selection button {display: none}
+button#sms_register, button#sms_login {display: none}
+.form .content {border-width: 1px}
 .form .description {display: none}
-form {padding-top: 20px}
 <? endif; ?>
 </style>
 </head>
 
 <body>
 
+	<div id="title"><?=$title?></div>
+
 	<div id="container">
-		<div id="title"><?=$title?></div>
 		<div id='logo'>
 			<img src="<?=$hotspot['_marka']?>/assets/img/captiveportal-logo.png">
 		</div>
@@ -32,20 +33,8 @@ form {padding-top: 20px}
 		<div class="message <?= $message == 'password_sent' ? 'success' : 'error'?>"><?=t($message, $arg)?></div>
 		<? endif; ?>
 
-		<div id="form-selection">
-		<? if (isset($settings['authentication']['sms'])): ?>
-			<button id="sms_register"<?= $form == 'sms_register' ? ' class="active"' : '' ?>><?=t('sms_register')?></button>
-			<button id="sms_login"<?= $form == 'sms_login' ? ' class="active"' : '' ?>><?=t('sms_login')?></button>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['id_number'])): ?>
-			<button id="id_number_login"<?= $form == 'id_number_login' ? ' class="active"' : '' ?>><?=t('id_number_login')?></button>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['manual_user'])): ?>
-			<button id="manual_user_login"<?= $form == 'manual_user_login' ? ' class="active"' : '' ?>><?=t('manual_user_login')?></button>
-		<? endif; ?>
-		</div>
-
 	<? if (isset($settings['authentication']['sms'])): ?>
+		<button id="sms_register"<?= $form == 'sms_register' ? ' class="active"' : '' ?>><?=t('sms_register')?></button>
 		<div class="form<?= $form == 'sms_register' ? ' active' : '' ?>" id="form_sms_register">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
@@ -55,7 +44,7 @@ form {padding-top: 20px}
 			<input name="user[gsm]" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)">
 			<div class="item-description"><?=t('gsm_desc')?></div>
 			</div>
-		<? if (isset($settings['sms_fields']['id_number'])): ?>
+		<? if (isset($settings['sms_fields']['id_number']) && $lang == 'tr'): ?>
 			<div class="item">
 			<label><?=t('name')?>:</label>
 			<input name="user[name]" type="text" maxlength="40" value="<?=$user->name?>">
@@ -73,11 +62,13 @@ form {padding-top: 20px}
 			<input name="user[id_number]" type="text" maxlength="11" value="<?=$user->id_number?>">
 			</div>
 		<? endif; ?>
+			<input name="form_id" type="hidden" value="sms_register">
 			<input class="submit" name="submit" type="submit" value="<?=t('register')?> &#187;">
 			</form>
 			</div>
 		</div>
 
+		<button id="sms_login"<?= $form == 'sms_login' ? ' class="active"' : '' ?>><?=t('sms_login')?></button>
 		<div class="form<?= $form == 'sms_login' ? ' active' : '' ?>" id="form_sms_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
@@ -89,16 +80,18 @@ form {padding-top: 20px}
 			</div>
 			<div class="item">
 			<label><?=t('password')?>:</label>
-			<input name="user[password]" type="password">
+			<input name="password" type="password">
 			<div class="item-description"><?=t('password_desc_gsm')?></div>
 			</div>
+			<input name="form_id" type="hidden" value="sms_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
 			</div>
 		</div>
 	<? endif; ?>
 
-	<? if (isset($settings['authentication']['id_number'])): ?>
+	<? if (isset($settings['authentication']['id_number']) && $lang == 'tr'): ?>
+		<button id="id_number_login"<?= $form == 'id_number_login' ? ' class="active"' : '' ?>><?=t('id_number_login')?></button>
 		<div class="form<?= $form == 'id_number_login' ? ' active' : '' ?>" id="form_id_number_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
@@ -119,6 +112,7 @@ form {padding-top: 20px}
 			<label><?=t('id_number')?>:</label>
 			<input name="user[id_number]" type="text" maxlength="11" value="<?=$user->id_number?>">
 			</div>
+			<input name="form_id" type="hidden" value="id_number_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
 			</div>
@@ -126,23 +120,27 @@ form {padding-top: 20px}
 	<? endif; ?>
 
 	<? if (isset($settings['authentication']['manual_user'])): ?>
+		<button id="manual_user_login"<?= $form == 'manual_user_login' ? ' class="active"' : '' ?>><?=t('manual_user_login')?></button>
 		<div class="form<?= $form == 'manual_user_login' ? ' active' : '' ?>" id="form_manual_user_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
-			<p class="description"><?=t('login_desc')?></p>
+			<div class="description"><?=t('login_desc')?></div>
 			<div class="item">
 			<label><?=t('manual_user_name')?>:</label>
 			<input name="user[username]" type="text" maxlength="11" value="<?=$user->username?>">
 			</div>
 			<div class="item">
 			<label><?=t('password')?>:</label>
-			<input name="user[password]" type="password">
+			<input name="password" type="password">
 			</div>
+			<input name="form_id" type="hidden" value="manual_user_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
 			</div>
 		</div>
 	<? endif; ?>
+
+	<? include dirname(__FILE__) . '/captiveportal_custom.html.php'; ?>
 
 		<div id="lang">
 			<form method="post" action="">

@@ -6,17 +6,10 @@ class User extends Model
 	public function defaults()
 	{
 		global $settings;
-		if (isset($settings['authentication']['sms']))
-		{
-			$this->daily_limit = $settings['daily_limit'];
-			$this->weekly_limit = $settings['weekly_limit'];
-			$this->monthly_limit = $settings['monthly_limit'];
-			$this->yearly_limit = $settings['yearly_limit'];
-		}
-		if (isset($settings['authentication']['sms']) || isset($settings['authentication']['manual_user']))
-		{
-			$this->expires = strtotime('+' . $settings['valid_for'] . 'days');
-		}
+		$this->daily_limit = $settings['daily_limit'];
+		$this->weekly_limit = $settings['weekly_limit'];
+		$this->monthly_limit = $settings['monthly_limit'];
+		$this->yearly_limit = $settings['yearly_limit'];
 	}
 
 	public function fill($post)

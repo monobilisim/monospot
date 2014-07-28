@@ -2,23 +2,27 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 16px;
 	background-color: #666;
+	color: #333;
 }
 #container {
-	width: 640px;
-	margin: 0 auto;
-	padding: 4px 4px 20px 4px;
+	padding: 20px;
 	background-color: #fff;
-	text-align: center;
 }
 #title {
 	color: #fff;
-	padding: 10px;
+	padding: 20px;
+}
+#title, #container {
+	width: 400px;
+	margin: 0 auto;
+	text-align: center;
 }
 #logo {
-	padding: 20px;
+	margin-bottom: 20px;
 }
 .message {
 	margin-bottom: 20px;
+	padding: 0 20px;
 	font-weight: bold;
 }
 .error {
@@ -30,41 +34,39 @@ body {
 #form-selection {
 	margin: 20px;
 }
-#form-selection button {
-	border: 1px solid #ddd;
+button {
+	border: 1px solid #ccc;
 	outline: none;
 	cursor: pointer;
-	background-color: #fff;
-	color: #666;
-	font-size: 18px;
-	padding: 6px 20px;
-}
-#form-selection .active {
+	background-color: #333;
 	color: #fff;
+	font-size: 18px;
+	width: 300px;
+	margin: 4px auto 0;
+	display: block;
+	padding: 6px 20px;
 }
 .form {
 	width: 300px;
-	margin: 0 auto;
+	margin: 0 auto 4px;
 	display: none;
-}
-.form .submit {
-	background-color: #333;
-	color: #fff;
 }
 .form .title {
 	font-size: 18px;
 	text-shadow: -1px -1px 0 #000;
-	padding: 8px;	
+	padding: 8px;
 }
 .form .content {
-	border: 1px solid #ddd;
-	color: #333;
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	border-color: #ccc;
+	padding: 20px;
 }
 .form .item {
 	margin-bottom: 10px;
 }
 .form .description {
-	margin: 20px;
+	padding-bottom: 10px;
 	font-size: 15px;
 }
 .form label {
@@ -73,6 +75,7 @@ body {
 }
 .form .item-description {
 	font-size: 12px;
+	margin-top: 5px;
 }
 .form input {
 	padding: 4px;
@@ -92,18 +95,20 @@ body {
 	font-size: 14px;
 }
 .form .submit {
-	margin: 5px auto 20px;
+	background-color: #333;
+	color: #fff;
 	padding: 6px 12px;
 	cursor: pointer;
 	font-size: 15px;
 	border: none;
+	margin: 5px auto 2px;
 }
 .form .submit:active {
-	margin: 7px auto 18px;
+	margin: 7px auto 0px;
 }
 #lang {
-	text-align: left;
-	margin-bottom: -16px;
+	text-align: center;
+	margin-top: 20px;
 	font-size: 10px;
 }
 #lang input {
