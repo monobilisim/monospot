@@ -77,7 +77,7 @@
 	<? if (isset($settings['authentication']['manual_user'])): ?>
 		<div class="item">
 			<div class="label">Kullanıcı adı</div>
-			<input type="text" class="small" name="user[username]" value="<?=$user->username?>">
+			<input type="text" class="small<?=isset($errors['username']) ? ' error' : ''?>" name="user[username]" value="<?=$user->username?>">
 		</div>
 	<? endif; ?>
 		<div class="item">

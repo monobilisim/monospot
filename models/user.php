@@ -77,6 +77,13 @@ class User extends Model
 		}
 
 		$errors = $val->validate($fields, $post);
+
+		if (isset($post['username']))
+		{
+			$user = Model::factory('User')->where_equal('username', $_POST['user']['username'])->find_one();
+			if ($user) $errors['username'] = 'Aynı kullanıcı adına sahip bir kullanıcı zaten var.';
+		}
+
 		return $errors;
 	}
 
