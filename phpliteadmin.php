@@ -36,7 +36,7 @@
 //////////////////////////////
 
 //password to gain access
-$password = "monospot#2013";
+$password = "hotspot.db";
 
 //directory relative to this file to search for databases (if false, manually list databases in the $databases variable)
 $directory = "db";
@@ -79,7 +79,7 @@ function mydate($value)
 }
 function myreplace($value)
 {
-	return ereg_replace("[^A-Za-z0-9]", "", strval($value));	
+	return ereg_replace("[^A-Za-z0-9]", "", strval($value));
 }
 
 //changing the following variable allows multiple phpLiteAdmin installs to work under the same domain.
@@ -88,7 +88,7 @@ $cookie_name = 'pla3412';
 //whether or not to put the app in debug mode where errors are outputted
 $debug = false;
 
-// the user is allowed to create databases with only these extensions 
+// the user is allowed to create databases with only these extensions
 $allowed_extensions = array('db','db3','sqlite','sqlite3');
 
 ////////////////////////////
@@ -187,7 +187,7 @@ function explode_sql($delimiter, $sql)
 					$i++;
 				}
 				continue 2;
-			}		
+			}
 		}
 		$i++;
 	}
@@ -232,7 +232,7 @@ function dir_tree($dir)
 //the function echo the help [?] links to the documentation
 function helpLink($name)
 {
-	return "<a href='javascript:void' onclick='openHelp(\"".$name."\");' class='helpq' title='Help: ".$name."'>[?]</a>";	
+	return "<a href='javascript:void' onclick='openHelp(\"".$name."\");' class='helpq' title='Help: ".$name."'>[?]</a>";
 }
 
 // function to encode value into HTML just like htmlentities, but with adjusted default settings
@@ -248,7 +248,7 @@ function deQuoteSQL($s)
 	return trim(trim($s), "'");
 }
 
-// checks the (new) name of a database file  
+// checks the (new) name of a database file
 function checkDbName($name)
 {
 	global $allowed_extensions;
@@ -371,7 +371,7 @@ class Database
 						for($i=0; $i<sizeof($cfns); $i++)
 						{
 							$this->db->sqliteCreateFunction($cfns[$i], $cfns[$i], 1);
-							$this->addUserFunction($cfns[$i]);	
+							$this->addUserFunction($cfns[$i]);
 						}
 						break;
 					}
@@ -383,7 +383,7 @@ class Database
 						for($i=0; $i<sizeof($cfns); $i++)
 						{
 							$this->db->createFunction($cfns[$i], $cfns[$i], 1);
-							$this->addUserFunction($cfns[$i]);	
+							$this->addUserFunction($cfns[$i]);
 						}
 						$this->type = "SQLite3";
 						break;
@@ -396,7 +396,7 @@ class Database
 						for($i=0; $i<sizeof($cfns); $i++)
 						{
 							$this->db->createFunction($cfns[$i], $cfns[$i], 1);
-							$this->addUserFunction($cfns[$i]);	
+							$this->addUserFunction($cfns[$i]);
 						}
 						$this->type = "SQLiteDatabase";
 						break;
@@ -412,23 +412,23 @@ class Database
 			exit();
 		}
 	}
-	
+
 	public function getUserFunctions()
 	{
-		return $this->fns;	
+		return $this->fns;
 	}
-	
+
 	public function addUserFunction($name)
 	{
-		array_push($this->fns, $name);	
+		array_push($this->fns, $name);
 	}
-	
+
 	public function getError()
 	{
 		if($this->type=="PDO")
 		{
 			$e = $this->db->errorInfo();
-			return $e[2];	
+			return $e[2];
 		}
 		else if($this->type=="SQLite3")
 		{
@@ -439,7 +439,7 @@ class Database
 			return sqlite_error_string($this->db->lastError());
 		}
 	}
-	
+
 	public function showError()
 	{
 		$classPDO = class_exists("PDO");
@@ -690,7 +690,7 @@ class Database
 		}
 	}
 
-	
+
 	// SQlite supports multiple ways of surrounding names in quotes:
 	// single-quotes, double-quotes, backticks, square brackets.
 	// As sqlite does not keep this strict, we also need to be flexible here.
@@ -708,14 +708,14 @@ class Database
 		else
 		{
 			if($preg_quote) $name = preg_quote($name,"/");
-			
+
 			$nameSingle = str_replace("'","''",$name);
 			$nameDouble = str_replace('"','""',$name);
 			$nameBacktick = str_replace('`','``',$name);
 			$nameSquare = str_replace(']',']]',$name);
 			$nameNo = $name;
 		}
-		
+
 		$preg =	"(?:'".$nameSingle."'|".   // single-quote surrounded or not in quotes (correct SQL for values/new names)
 				$nameNo."|".               // not surrounded (correct SQL if not containing reserved words, spaces or some special chars)
 				"\"".$nameDouble."\"|".    // double-quote surrounded (correct SQL for identifiers)
@@ -723,7 +723,7 @@ class Database
 				"\[".$nameSquare."\])";    // square-bracket surrounded (MS Access/SQL server-Style)
 		return $preg;
 	}
-	
+
 	// function that is called for an alter table statement in a query
 	// code borrowed with permission from http://code.jenseng.com/db/
 	// this has been completely debugged / rewritten by Christopher Kramer
@@ -761,7 +761,7 @@ class Database
 					$createindexsql = array();
 					preg_match_all("/(?:DROP|ADD|CHANGE|RENAME TO)\s+(?:\"(?:[^\"]|\"\")+\"|'(?:[^']|'')+')((?:[^,')]|'[^']*')+)?/i",$alterdefs,$matches);
 					$defs = $matches[0];
-					
+
 					$get_oldcols_query = "PRAGMA table_info(".$this->quote_id($table).")";
 					$result_oldcols = $this->selectArray($get_oldcols_query);
 					$newcols = array();
@@ -802,11 +802,11 @@ class Database
 							return false;
 						}
 						$action = strtolower($matches[1]);
-						if($action == 'add' || $action == 'rename to')	
+						if($action == 'add' || $action == 'rename to')
 							$column = str_replace("''","'",$matches[3]);		// enclosed in ''
 						else
 							$column = str_replace('""','"',$matches[2]);		// enclosed in ""
-							
+
 						$column_escaped = str_replace("'","''",$column);
 
 						if($debug) echo "action=($action), column=($column), column_escaped=($column_escaped)<hr />";
@@ -828,7 +828,7 @@ class Database
 									"(?:".
 										"$preg_column_definiton,\s*".		// column definition + comma
 									")*".								// there might be any number of such columns here
-									$preg_column_definiton.				// last column definition 
+									$preg_column_definiton.				// last column definition
 								")".			// end of group $2
 								",\s*"			// the last comma of the last column before the column to change. Do not keep it!
 							.")?";    // there might be no columns before
@@ -837,7 +837,7 @@ class Database
 												// we could remove the comma using $6 instead of $5, but then we might have no comma at all.
 												// Keeping it leaves a problem if we drop the first column, so we fix that case in another regex.
 						$table_new = $table;
-	
+
 						switch($action)
 						{
 							case 'add':
@@ -883,7 +883,7 @@ class Database
 									echo $createtesttableSQL."<hr />";
 									echo $newSQL."<hr />";
 									echo $preg_pattern_change."<hr />";
-									
+
 								}
 								if($newSQL==$createtesttableSQL || $newSQL=="") // pattern did not match, so column removal did not succed
 									return false;
@@ -944,7 +944,7 @@ class Database
 			$alter_transaction .= $copytonewsql.'; ';        //copy back to original table
 			$alter_transaction .= $droptempsql.'; ';         //drop temp table
 
-			$preg_index="/^\s*(CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:".$this->sqlite_surroundings_preg("+",false," '\"\[`")."\s*)*ON\s+)(".$this->sqlite_surroundings_preg($table).")(\s*\((?:".$this->sqlite_surroundings_preg("+",false," '\"\[`")."\s*)*\)\s*;)\s*$/i";				
+			$preg_index="/^\s*(CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:".$this->sqlite_surroundings_preg("+",false," '\"\[`")."\s*)*ON\s+)(".$this->sqlite_surroundings_preg($table).")(\s*\((?:".$this->sqlite_surroundings_preg("+",false," '\"\[`")."\s*)*\)\s*;)\s*$/i";
 			for($i=0; $i<sizeof($recreateQueries); $i++)
 			{
 				// recreate triggers / indexes
@@ -964,10 +964,10 @@ class Database
 					} else
 					{
 						// the CREATE INDEX regex did not match, so we try if it's a CREATE TRIGGER
-						
+
 					    $recreate_queryTrigger = $recreateQueries[$i];
 						// TODO: IMPLEMENT
-					    
+
 						$alter_transaction .= $recreate_queryTrigger;
 					}
 				}
@@ -1002,7 +1002,7 @@ class Database
 		}
 		else
 		{
-			return true;	
+			return true;
 		}
 	}
 
@@ -1045,7 +1045,7 @@ class Database
 	{
 		return $this->multiQuery($query);
 	}
-	
+
 	//import csv
 	public function import_csv($filename, $table, $field_terminate, $field_enclosed, $field_escaped, $null, $fields_in_first_row)
 	{
@@ -1059,11 +1059,11 @@ class Database
 		if($field_escaped=="") $field_escaped='\\';
 		while(!feof($csv_handle))
 		{
-			$csv_data = fgetcsv($csv_handle, 0, $field_terminate, $field_enclosed, $field_escaped); 
+			$csv_data = fgetcsv($csv_handle, 0, $field_terminate, $field_enclosed, $field_escaped);
 			if($csv_data[0] != NULL || count($csv_data)>1)
 			{
 				$csv_number_of_rows++;
-				if($fields_in_first_row && $csv_number_of_rows==1) continue; 
+				if($fields_in_first_row && $csv_number_of_rows==1) continue;
 				$csv_col_number = count($csv_data);
 				$csv_insert .= "INSERT INTO ".$this->quote_id($table)." VALUES (";
 				foreach($csv_data as $csv_col => $csv_cell)
@@ -1077,11 +1077,11 @@ class Database
 					{
 						// the CSV row ends with the separator (like old phpliteadmin exported)
 						break;
-					} 
+					}
 					if($csv_col < $csv_col_number-1) $csv_insert .= ",";
 				}
 				$csv_insert .= ");\n";
-				
+
 				if($csv_number_of_rows > 5000)
 				{
 					$csv_insert .= "COMMIT;\nBEGIN;\n";
@@ -1094,7 +1094,7 @@ class Database
 		return $this->multiQuery($csv_insert);
 
 	}
-	
+
 	//export csv
 	public function export_csv($tables, $field_terminate, $field_enclosed, $field_escaped, $null, $crlf, $fields_in_first_row)
 	{
@@ -1125,7 +1125,7 @@ class Database
 						if($z < sizeof($cols)-1)
 							echo $field_terminate;
 					}
-					echo "\r\n";	
+					echo "\r\n";
 				}
 				$query = "SELECT * FROM ".$this->quote_id($result[$i]['tbl_name']);
 				$arr = $this->selectArray($query, "assoc");
@@ -1143,7 +1143,7 @@ class Database
 						$cell = str_replace($field_enclosed,$field_escaped.$field_enclosed,$cell);
 						// do not enclose NULLs
 						if($cell == NULL)
-							echo $null;  
+							echo $null;
 						else
 							echo $field_enclosed.$cell.$field_enclosed;
 						// do not terminate the last column!
@@ -1151,14 +1151,14 @@ class Database
 							echo $field_terminate;
 					}
 					if($z<sizeof($arr)-1)
-						echo "\r\n";	
+						echo "\r\n";
 				}
 				if($i<sizeof($result)-1)
 					echo "\r\n";
 			}
 		}
 	}
-	
+
 	//export sql
 	public function export_sql($tables, $drop, $structure, $data, $transaction, $comments)
 	{
@@ -1281,7 +1281,7 @@ if($auth->isAuthorized())
 		$dbpath = $str;
 		if(checkDbName($dbname))
 		{
-			$tdata = array();	
+			$tdata = array();
 			$tdata['name'] = $dbname;
 			$tdata['path'] = $directory.DIRECTORY_SEPARATOR.$dbpath;
 			$td = new Database($tdata);
@@ -1292,14 +1292,14 @@ if($auth->isAuthorized())
 			else $extension_not_allowed=true;
 		}
 	}
-	
+
 
 	//if the user wants to scan a directory for databases, do so
 	if($directory!==false)
 	{
 		if($directory[strlen($directory)-1]==DIRECTORY_SEPARATOR) //if user has a trailing slash in the directory, remove it
 			$directory = substr($directory, 0, strlen($directory)-1);
-			
+
 		if(is_dir($directory)) //make sure the directory is valid
 		{
 			if($subdirectories===true)
@@ -1312,7 +1312,7 @@ if($auth->isAuthorized())
 			{
 				if($subdirectories===false)
 					$arr[$i] = $directory.DIRECTORY_SEPARATOR.$arr[$i];
-				
+
 				if(!is_file($arr[$i])) continue;
 				$con = file_get_contents($arr[$i], NULL, NULL, 0, 60);
 				if(strpos($con, "** This file contains an SQLite 2.1 database **", 0)!==false || strpos($con, "SQLite format 3", 0)!==false)
@@ -1379,7 +1379,7 @@ if($auth->isAuthorized())
 		}
 		sort($databases);
 	}
-	
+
 	//user is deleting a database
 	if(isset($_GET['database_delete']))
 	{
@@ -1393,7 +1393,7 @@ if($auth->isAuthorized())
 			unset($databases[$checkDB]);
 		} else die('You can only delete databases managed by this tool!');
 	}
-	
+
 	//user is renaming a database
 	if(isset($_GET['database_rename']))
 	{
@@ -1418,7 +1418,7 @@ if($auth->isAuthorized())
 			}
 			else die('You either tried to move the database into a directory where it cannot be managed anylonger, or the check if you did this failed because of missing rights.');
 		}
-		
+
 		if(checkDbName($newpath))
 		{
 			$checkDB = isManagedDB($oldpath);
@@ -1428,7 +1428,7 @@ if($auth->isAuthorized())
 				unlink($oldpath);
 				$databases[$checkDB]['path'] = $newpath;
 				$databases[$checkDB]['name'] = basename($newpath);
-				$_SESSION[COOKIENAME.'currentDB'] = $databases[$checkDB]; 
+				$_SESSION[COOKIENAME.'currentDB'] = $databases[$checkDB];
 				$justrenamed = true;
 			}
 			else die('You can only rename databases managed by this tool!');
@@ -1436,10 +1436,10 @@ if($auth->isAuthorized())
 		else
 		{
 			if(is_file($newpath) || is_dir($newpath)) $dbexists = true;
-			else $extension_not_allowed = true;	
+			else $extension_not_allowed = true;
 		}
 	}
-	
+
 
 	//user is downloading the exported database file
 	if(isset($_POST['export']))
@@ -1487,7 +1487,7 @@ if($auth->isAuthorized())
 		}
 		exit();
 	}
-	
+
 	//user is importing a file
 	if(isset($_POST['import']))
 	{
@@ -1553,7 +1553,7 @@ hr
 	border: 0;
 	color: #bbb;
 	background-color: #bbb;
-	width: 100%;	
+	width: 100%;
 }
 /* logo text containing name of project */
 h1
@@ -1620,7 +1620,7 @@ input, select, textarea
 /* just input buttons */
 input.btn
 {
-	cursor:pointer;	
+	cursor:pointer;
 }
 input.btn:hover
 {
@@ -1781,7 +1781,7 @@ fieldset
 .helpq
 {
 	font-size:11px;
-	font-weight:normal;	
+	font-weight:normal;
 }
 #help_container
 {
@@ -1802,13 +1802,13 @@ fieldset
 .help_list
 {
 	padding:10px;
-	height:auto;	
+	height:auto;
 }
 
 .headd
 {
 	font-size:14px;
-	font-weight:bold;	
+	font-weight:bold;
 	display:block;
 	padding:10px;
 	background-color:#e0ebf6;
@@ -1820,14 +1820,14 @@ fieldset
 }
 .help_inner
 {
-	padding:10px;	
+	padding:10px;
 }
 .help_top
 {
 	display:block;
 	position:absolute;
 	right:10px;
-	bottom:10px;	
+	bottom:10px;
 }
 </style>
 <!-- end the customizable stylesheet/theme -->
@@ -1842,23 +1842,23 @@ if(isset($_GET['help'])) //this page is used as the popup help section
 	//help section array
 	$help = array
 	(
-		'SQLite Library Extensions' => 
+		'SQLite Library Extensions' =>
 			'phpLiteAdmin uses PHP library extensions that allow interaction with SQLite databases. Currently, phpLiteAdmin supports PDO, SQLite3, and SQLiteDatabase. Both PDO and SQLite3 deal with version 3 of SQLite, while SQLiteDatabase deals with version 2. So, if your PHP installation includes more than one SQLite library extension, PDO and SQLite3 will take precedence to make use of the better technology. However, if you have existing databases that are of version 2 of SQLite, phpLiteAdmin will be forced to use SQLiteDatabase for only those databases. Not all databases need to be of the same version. During the database creation, however, the most advanced extension will be used.',
-		'Creating a New Database' => 
+		'Creating a New Database' =>
 			'When you create a new database, the name you entered will be appended with the appropriate file extension (.db, .db3, .sqlite, etc.) if you do not include it yourself. The database will be created in the directory you specified as the $directory variable.',
-		'Tables vs. Views' => 
+		'Tables vs. Views' =>
 			'On the main database page, there is a list of tables and views. Since views are read-only, certain operations will be disabled. These disabled operations will be apparent by their omission in the location where they should appear on the row for a view. If you want to change the data for a view, you need to drop that view and create a new view with the appropriate SELECT statement that queries other existing tables. For more information, see <a href="http://en.wikipedia.org/wiki/View_(database)" target="_blank">http://en.wikipedia.org/wiki/View_(database)</a>',
-		'Writing a Select Statement for a New View' => 
+		'Writing a Select Statement for a New View' =>
 			'When you create a new view, you must write an SQL SELECT statement that it will use as its data. A view is simply a read-only table that can be accessed and queried like a regular table, except it cannot be modified through insertion, column editing, or row editing. It is only used for conveniently fetching data.',
-		'Export Structure to SQL File' => 
+		'Export Structure to SQL File' =>
 			'During the process for exporting to an SQL file, you may choose to include the queries that create the table and columns.',
-		'Export Data to SQL File' => 
+		'Export Data to SQL File' =>
 			'During the process for exporting to an SQL file, you may choose to include the queries that populate the table(s) with the current records of the table(s).',
-		'Add Drop Table to Exported SQL File' => 
+		'Add Drop Table to Exported SQL File' =>
 			'During the process for exporting to an SQL file, you may choose to include queries to DROP the existing tables before adding them so that problems do not occur when trying to create tables that already exist.',
-		'Add Transaction to Exported SQL File' => 
+		'Add Transaction to Exported SQL File' =>
 			'During the process for exporting to an SQL file, you may choose to wrap the queries around a TRANSACTION so that if an error occurs at any time during the importation process using the exported file, the database can be reverted to its previous state, preventing partially updated data from populating the database.',
-		'Add Comments to Exported SQL File' => 
+		'Add Comments to Exported SQL File' =>
 			'During the process for exporting to an SQL file, you may choose to include comments that explain each step of the process so that a human can better understand what is happening.',
 	);
 	?>
@@ -1889,7 +1889,7 @@ if(isset($_GET['help'])) //this page is used as the popup help section
 	</body>
 	</html>
 	<?php
-	exit();		
+	exit();
 }
 ?>
 <!-- JavaScript Support -->
@@ -2024,40 +2024,40 @@ function disableText(checker, textie)
 	if(checker.checked)
 	{
 		document.getElementById(textie).value = "";
-		document.getElementById(textie).disabled = true;	
+		document.getElementById(textie).disabled = true;
 	}
 	else
 	{
-		document.getElementById(textie).disabled = false;	
+		document.getElementById(textie).disabled = false;
 	}
 }
 
 function toggleExports(val)
 {
-	document.getElementById("exportoptions_sql").style.display = "none";	
-	document.getElementById("exportoptions_csv").style.display = "none";	
-	
-	document.getElementById("exportoptions_"+val).style.display = "block";	
+	document.getElementById("exportoptions_sql").style.display = "none";
+	document.getElementById("exportoptions_csv").style.display = "none";
+
+	document.getElementById("exportoptions_"+val).style.display = "block";
 }
 
 function toggleImports(val)
 {
-	document.getElementById("importoptions_sql").style.display = "none";	
-	document.getElementById("importoptions_csv").style.display = "none";	
-	
-	document.getElementById("importoptions_"+val).style.display = "block";	
+	document.getElementById("importoptions_sql").style.display = "none";
+	document.getElementById("importoptions_csv").style.display = "none";
+
+	document.getElementById("importoptions_"+val).style.display = "block";
 }
 
 function openHelp(section)
 {
-	PopupCenter('<?php echo PAGE."?help=1"; ?>#'+section, "Help Section");	
+	PopupCenter('<?php echo PAGE."?help=1"; ?>#'+section, "Help Section");
 }
 var helpsec = false;
 function PopupCenter(pageURL, title)
 {
 	helpsec = window.open(pageURL, title, "toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=400,height=300");
-} 
-/* ]]> */ 
+}
+/* ]]> */
 </script>
 </head>
 <body>
@@ -2111,7 +2111,7 @@ else //user is authorized - display the main application
 		{
 			echo "<div class='confirm' style='margin:20px;'>";
 			echo "Welcome to phpLiteAdmin. It appears that you have selected to scan a directory for databases to manage. However, phpLiteAdmin could not find any valid SQLite databases. You may use the form below to create your first database.";
-			echo "</div>";	
+			echo "</div>";
 
 			if(isset($extension_not_allowed))
 			{
@@ -2133,7 +2133,7 @@ else //user is authorized - display the main application
 		{
 			echo "<div class='confirm' style='margin:20px;'>";
 			echo "Error: The directory you specified does not contain any existing databases to manage, and the directory is not writable. This means you can't create any new databases using phpLiteAdmin. Either make the directory writable or manually upload databases to the directory.";
-			echo "</div><br/>";	
+			echo "</div><br/>";
 		}
 		exit();
 	}
@@ -2197,7 +2197,7 @@ else //user is authorized - display the main application
 						{
 							if(count($primary_keys)==1)
 							{
-								$query .= "PRIMARY KEY "; 
+								$query .= "PRIMARY KEY ";
 								if(isset($_POST[$i.'_autoincrement']))
 									$query .=  "AUTOINCREMENT ";
 							}
@@ -2282,10 +2282,10 @@ else //user is authorized - display the main application
 				$num = $_POST['numRows'];
 				$fields = explode(":", $_POST['fields']);
 				$z = 0;
-				
+
 				$query = "PRAGMA table_info(".$db->quote_id($_GET['table']).")";
 				$result = $db->selectArray($query);
-				
+
 				for($i=0; $i<$num; $i++)
 				{
 					if(!isset($_POST[$i.":ignore"]))
@@ -2301,7 +2301,7 @@ else //user is authorized - display the main application
 						{
 							// PHP replaces space with underscore
 							$fields[$j] = str_replace(" ","_",$fields[$j]);
-							
+
 							$null = isset($_POST[$i.":".$fields[$j]."_null"]);
 							if(!$null)
 							{
@@ -2310,7 +2310,7 @@ else //user is authorized - display the main application
 									echo "MISSING POST INDEX (".$i.":".$fields[$j].")<br><pre />";
 									var_dump($_POST);
 									echo "</pre><hr />";
-								} 
+								}
 								$value = $_POST[$i.":".$fields[$j]];
 							}
 							else
@@ -2360,12 +2360,12 @@ else //user is authorized - display the main application
 			case "row_edit":
 				$pks = explode(":", $_GET['pk']);
 				$fields = explode(":", $_POST['fieldArray']);
-				
+
 				$z = 0;
-				
+
 				$query = "PRAGMA table_info(".$db->quote_id($_GET['table']).")";
 				$result = $db->selectArray($query);
-				
+
 				if(isset($_POST['new_row']))
 					$completed = "";
 				else
@@ -2636,7 +2636,7 @@ else //user is authorized - display the main application
 	if($j==0)
 		echo "No tables in database.";
 	echo "</fieldset>";
-	
+
 	if($directory!==false && is_writable($directory))
 	{
 		echo "<fieldset style='margin:15px;'><legend><b>Create New Database</b> ".helpLink("Creating a New Database")."</legend>";
@@ -2645,7 +2645,7 @@ else //user is authorized - display the main application
 		echo "</form>";
 		echo "</fieldset>";
 	}
-	
+
 	echo "<div style='text-align:center;'>";
 	echo "<form action='".PAGE."' method='post'>";
 	echo "<input type='submit' value='Log Out' name='logout' class='btn'/>";
@@ -3008,7 +3008,7 @@ else //user is authorized - display the main application
 				echo "<input type='radio' name='export_type' checked='checked' value='sql' onclick='toggleExports(\"sql\");'/> SQL";
 				echo "<br/><input type='radio' name='export_type' value='csv' onclick='toggleExports(\"csv\");'/> CSV";
 				echo "</fieldset>";
-				
+
 				echo "<fieldset style='float:left; max-width:350px;' id='exportoptions_sql'><legend><b>Options</b></legend>";
 				echo "<input type='checkbox' checked='checked' name='structure'/> Export with structure ".helpLink("Export Structure to SQL File")."<br/>";
 				echo "<input type='checkbox' checked='checked' name='data'/> Export with data ".helpLink("Export Data to SQL File")."<br/>";
@@ -3016,7 +3016,7 @@ else //user is authorized - display the main application
 				echo "<input type='checkbox' checked='checked' name='transaction'/> Add TRANSACTION ".helpLink("Add Transaction to Exported SQL File")."<br/>";
 				echo "<input type='checkbox' checked='checked' name='comments'/> Comments ".helpLink("Add Comments to Exported SQL File")."<br/>";
 				echo "</fieldset>";
-				
+
 				echo "<fieldset style='float:left; max-width:350px; display:none;' id='exportoptions_csv'><legend><b>Options</b></legend>";
 				echo "<div style='float:left;'>Fields terminated by</div>";
 				echo "<input type='text' value=';' name='export_csv_fieldsterminated' style='float:right;'/>";
@@ -3033,7 +3033,7 @@ else //user is authorized - display the main application
 				echo "<input type='checkbox' name='export_csv_crlf'/> Remove CRLF characters within fields<br/>";
 				echo "<input type='checkbox' checked='checked' name='export_csv_fieldnames'/> Put field names in first row";
 				echo "</fieldset>";
-				
+
 				echo "<div style='clear:both;'></div>";
 				echo "<br/><br/>";
 				echo "<fieldset style='float:left;'><legend><b>Save As</b></legend>";
@@ -3059,11 +3059,11 @@ else //user is authorized - display the main application
 				echo "<input type='radio' name='import_type' checked='checked' value='sql' onclick='toggleImports(\"sql\");'/> SQL";
 				echo "<br/><input type='radio' name='import_type' value='csv' onclick='toggleImports(\"csv\");'/> CSV";
 				echo "</fieldset>";
-				
+
 				echo "<fieldset style='float:left; max-width:350px;' id='importoptions_sql'><legend><b>Options</b></legend>";
 				echo "No options";
 				echo "</fieldset>";
-				
+
 				echo "<fieldset style='float:left; max-width:350px; display:none;' id='importoptions_csv'><legend><b>Options</b></legend>";
 				echo "<input type='hidden' value='".htmlencode($_GET['table'])."' name='single_table'/>";
 				echo "<div style='float:left;'>Fields terminated by</div>";
@@ -3080,10 +3080,10 @@ else //user is authorized - display the main application
 				echo "<div style='clear:both;'>";
 				echo "<input type='checkbox' checked='checked' name='import_csv_fieldnames'/> Field names in first row";
 				echo "</fieldset>";
-				
+
 				echo "<div style='clear:both;'></div>";
 				echo "<br/><br/>";
-				
+
 				echo "<fieldset><legend><b>File to import</b></legend>";
 				echo "<input type='file' value='Choose File' name='file' style='background-color:transparent; border-style:none;'/> <input type='submit' value='Import' name='import' class='btn'/>";
 				echo "</fieldset>";
@@ -3175,7 +3175,7 @@ else //user is authorized - display the main application
 						}
 						echo "</table><br/><br/>";
 					}
-					
+
 					if(!isset($_GET['view']))
 						echo "<a href='".PAGE."?table=".urlencode($_GET['table'])."&amp;action=table_search'>Do Another Search</a>";
 					else
@@ -3185,12 +3185,12 @@ else //user is authorized - display the main application
 				{
 					$query = "PRAGMA table_info(".$db->quote_id($_GET['table']).")";
 					$result = $db->selectArray($query);
-					
+
 					if(!isset($_GET['view']))
 						echo "<form action='".PAGE."?table=".urlencode($_GET['table'])."&amp;action=table_search&amp;done=1' method='post'>";
 					else
 						echo "<form action='".PAGE."?table=".urlencode($_GET['table'])."&amp;action=table_search&amp;view=1&amp;done=1' method='post'>";
-						
+
 					echo "<table border='0' cellpadding='2' cellspacing='1' class='viewTable'>";
 					echo "<tr>";
 					echo "<td class='tdheader'>Field</td>";
@@ -3263,17 +3263,17 @@ else //user is authorized - display the main application
 
 				if(!isset($_SESSION[COOKIENAME.'numRows']))
 					$_SESSION[COOKIENAME.'numRows'] = 30;
-				
+
 				if(isset($_SESSION[COOKIENAME.'currentTable']) && $_SESSION[COOKIENAME.'currentTable']!=$_GET['table'])
 				{
 					unset($_SESSION[COOKIENAME.'sort']);
-					unset($_SESSION[COOKIENAME.'order']);	
+					unset($_SESSION[COOKIENAME.'order']);
 				}
 				if(isset($_POST['viewtype']))
 				{
-					$_SESSION[COOKIENAME.'viewtype'] = $_POST['viewtype'];	
+					$_SESSION[COOKIENAME.'viewtype'] = $_POST['viewtype'];
 				}
-				
+
 				$query = "SELECT Count(*) FROM ".$db->quote_id($_GET['table']);
 				$rowCount = $db->select($query);
 				$rowCount = intval($rowCount[0]);
@@ -3281,7 +3281,7 @@ else //user is authorized - display the main application
 				$remainder = intval($rowCount % $_SESSION[COOKIENAME.'numRows']);
 				if($remainder==0)
 					$remainder = $_SESSION[COOKIENAME.'numRows'];
-				
+
 				echo "<div style='overflow:hidden;'>";
 				//previous button
 				if($_POST['startRow']>0)
@@ -3301,7 +3301,7 @@ else //user is authorized - display the main application
 					echo "</form>";
 					echo "</div>";
 				}
-				
+
 				//show certain number buttons
 				echo "<div style='float:left; overflow:hidden;'>";
 				echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table'])."' method='post'>";
@@ -3327,7 +3327,7 @@ else //user is authorized - display the main application
 				echo "</select>";
 				echo "</form>";
 				echo "</div>";
-				
+
 				//next button
 				if(intval($_POST['startRow']+$_SESSION[COOKIENAME.'numRows'])<$rowCount)
 				{
@@ -3348,7 +3348,7 @@ else //user is authorized - display the main application
 				}
 				echo "<div style='clear:both;'></div>";
 				echo "</div>";
-				
+
 				if(!isset($_GET['sort']))
 					$_GET['sort'] = NULL;
 				if(!isset($_GET['order']))
@@ -3390,17 +3390,17 @@ else //user is authorized - display the main application
 					echo "<b>Showing rows ".$startRow." - ".($startRow + sizeof($arr)-1)." (".$total." total, Query took ".$time." sec)</b><br/>";
 					echo "<span style='font-size:11px;'>".htmlencode($queryDisp)."</span>";
 					echo "</div><br/>";
-					
+
 					if(isset($_GET['view']))
 					{
-						echo "'".htmlencode($_GET['table'])."' is a view, which means it is a SELECT statement treated as a read-only table. You may not edit or insert records. <a href='http://en.wikipedia.org/wiki/View_(database)' target='_blank'>http://en.wikipedia.org/wiki/View_(database)</a>"; 
-						echo "<br/><br/>";	
+						echo "'".htmlencode($_GET['table'])."' is a view, which means it is a SELECT statement treated as a read-only table. You may not edit or insert records. <a href='http://en.wikipedia.org/wiki/View_(database)' target='_blank'>http://en.wikipedia.org/wiki/View_(database)</a>";
+						echo "<br/><br/>";
 					}
-					
+
 					$query = "PRAGMA table_info(".$db->quote_id($table).")";
 					$result = $db->selectArray($query);
 					$rowidColumn = sizeof($result);
-					
+
 					if(!isset($_SESSION[COOKIENAME.'viewtype']) || $_SESSION[COOKIENAME.'viewtype']=="table")
 					{
 						echo "<form action='".PAGE."?action=row_editordelete&amp;table=".urlencode($table)."' method='post' name='checkForm'>";
@@ -3408,7 +3408,7 @@ else //user is authorized - display the main application
 						echo "<tr>";
 						if(!isset($_GET['view']))
 							echo "<td colspan='3'></td>";
-	
+
 						for($i=0; $i<sizeof($result); $i++)
 						{
 							echo "<td class='tdheader'>";
@@ -3427,7 +3427,7 @@ else //user is authorized - display the main application
 							echo "</td>";
 						}
 						echo "</tr>";
-	
+
 						for($i=0; $i<sizeof($arr); $i++)
 						{
 							// -g-> $pk will always be the last column in each row of the array because we are doing a "SELECT *, ROWID FROM ..."
@@ -3488,7 +3488,7 @@ else //user is authorized - display the main application
 						}
 						if(!isset($_SESSION[COOKIENAME.'chartlabels']))
 							$_SESSION[COOKIENAME.'chartlabels'] = 0;
-							
+
 						if(!isset($_SESSION[COOKIENAME.$_GET['table'].'chartvalues']))
 						{
 							for($i=0; $i<sizeof($result); $i++)
@@ -3497,13 +3497,13 @@ else //user is authorized - display the main application
 									$_SESSION[COOKIENAME.$_GET['table'].'chartvalues'] = $i;
 							}
 						}
-						
+
 						if(!isset($_SESSION[COOKIENAME.'charttype']))
 							$_SESSION[COOKIENAME.'charttype'] = "bar";
-							
+
 						if(isset($_POST['chartsettings']))
 						{
-							$_SESSION[COOKIENAME.'charttype'] = $_POST['charttype'];	
+							$_SESSION[COOKIENAME.'charttype'] = $_POST['charttype'];
 							$_SESSION[COOKIENAME.$_GET['table'].'chartlabels'] = $_POST['chartlabels'];
 							$_SESSION[COOKIENAME.$_GET['table'].'chartvalues'] = $_POST['chartvalues'];
 						}
@@ -3524,10 +3524,10 @@ else //user is authorized - display the main application
 							{
 								$label = str_replace("'", "", htmlencode($arr[$i][$_SESSION[COOKIENAME.$_GET['table'].'chartlabels']]));
 								$value = htmlencode($arr[$i][$_SESSION[COOKIENAME.$_GET['table'].'chartvalues']]);
-								
+
 								if($value==NULL || $value=="")
 									$value = 0;
-									
+
 								echo "['".$label."', ".$value."]";
 								if($i<sizeof($arr)-1)
 									echo ",";
@@ -3544,8 +3544,8 @@ else //user is authorized - display the main application
 							var chartWidth = document.getElementById("content").offsetWidth - document.getElementById("chartsettingsbox").offsetWidth - 100;
 							if(chartWidth>1000)
 								chartWidth = 1000;
-								
-							var options = 
+
+							var options =
 							{
 								'width':chartWidth,
 								'height':<?php echo $height; ?>,
@@ -3928,10 +3928,10 @@ else //user is authorized - display the main application
 					echo "Add <input type='text' name='tablefields' style='width:30px;' value='1'/> field(s) at end of table <input type='submit' value='Go' name='addfields' class='btn'/>";
 					echo "</form>";
 				}
-				
+
 				$query = "SELECT sql FROM sqlite_master WHERE name=".$db->quote($_GET['table']);
 				$master = $db->selectArray($query);
-				
+
 				echo "<br/>";
 				if(!isset($_GET['view']))
 					$typ = "table";
@@ -3968,11 +3968,11 @@ else //user is authorized - display the main application
 								$unique = "no";
 							else
 								$unique = "yes";
-	
+
 							$query = "PRAGMA index_info(".$db->quote_id($result[$i]['name']).")";
 							$info = $db->selectArray($query);
 							$span = sizeof($info);
-	
+
 							$tdWithClass = "<td class='td".($i%2 ? "1" : "2")."'>";
 							$tdWithClassLeft = "<td class='td".($i%2 ? "1" : "2")."' style='text-align:left;'>";
 							$tdWithClassSpan = "<td class='td".($i%2 ? "1" : "2")."' rowspan='".$span."'>";
@@ -4005,7 +4005,7 @@ else //user is authorized - display the main application
 						}
 						echo "</table><br/><br/>";
 					}
-					
+
 					$query = "SELECT * FROM sqlite_master WHERE type='trigger' AND tbl_name=".$db->quote($_GET['table'])." ORDER BY name";
 					$result = $db->selectArray($query);
 					//print_r($result);
@@ -4035,14 +4035,14 @@ else //user is authorized - display the main application
 						}
 						echo "</table><br/><br/>";
 					}
-					
+
 					echo "<form action='".PAGE."?table=".urlencode($_GET['table'])."&amp;action=index_create' method='post'>";
 					echo "<input type='hidden' name='tablename' value='".htmlencode($_GET['table'])."'/>";
 					echo "<br/><div class='tdheader'>";
 					echo "Create an index on <input type='text' name='numcolumns' style='width:30px;' value='1'/> columns <input type='submit' value='Go' name='addindex' class='btn'/>";
 					echo "</div>";
 					echo "</form>";
-					
+
 					echo "<form action='".PAGE."?table=".urlencode($_GET['table'])."&amp;action=trigger_create' method='post'>";
 					echo "<input type='hidden' name='tablename' value='".htmlencode($_GET['table'])."'/>";
 					echo "<br/><div class='tdheader'>";
@@ -4117,7 +4117,7 @@ else //user is authorized - display the main application
 				elseif(isset($_GET['pk']))
 					$pks = array($_GET['pk']);
 				else $pks = array();
-				
+
 				if(sizeof($pks)==0) //nothing was selected so show an error
 				{
 					echo "<div class='confirm'>";
@@ -4168,7 +4168,7 @@ else //user is authorized - display the main application
 							break;
 						}
 					}
-					
+
 					$name = $_GET['table'];
 					echo "<form action='".PAGE."?table=".urlencode($name)."&amp;action=column_edit&amp;confirm=1' method='post'>";
 					echo "<input type='hidden' name='tablename' value='".htmlencode($name)."'/>";
@@ -4180,7 +4180,7 @@ else //user is authorized - display the main application
       			for($k=0; $k<count($headings); $k++)
 						echo "<td class='tdheader'>".$headings[$k]."</td>";
 					echo "</tr>";
-				
+
 					$i = 0;
 					$tdWithClass = "<td class='td" . ($i%2 ? "1" : "2") . "'>";
 					echo "<tr>";
@@ -4339,9 +4339,9 @@ else //user is authorized - display the main application
 		}
 		echo "</div>";
 	}
-	
+
 	$view = "structure";
-		
+
 	if(!isset($_GET['table']) && !isset($_GET['confirm']) && (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action']!="table_create"))) //the absence of these fields means we are viewing the database homepage
 	{
 		if(isset($_GET['view']))
@@ -4387,7 +4387,7 @@ else //user is authorized - display the main application
 			else
 				echo "class='tab'";
 			echo ">Rename Database</a>";
-			
+
 			echo "<a href='".PAGE."?view=delete' style='color:red;' ";
 			if($view=="delete")
 				echo "class='tab_pressed'";
@@ -4403,14 +4403,14 @@ else //user is authorized - display the main application
 			$query = "SELECT sqlite_version() AS sqlite_version";
 			$queryVersion = $db->select($query);
 			$realVersion = $queryVersion['sqlite_version'];
-			
+
 			if(isset($dbexists))
 			{
 				echo "<div class='confirm' style='margin:10px 20px;'>";
 				echo "Error: A database, other file or directory of the name '".htmlencode($dbname)."' already exists.";
 				echo "</div><br/>";
 			}
-			
+
 			if(isset($extension_not_allowed))
 			{
 				echo "<div class='confirm' style='margin:10px 20px;'>";
@@ -4421,14 +4421,14 @@ else //user is authorized - display the main application
 				echo "</div><br/>";
 			}
 
-			
+
 			if(SYSTEMPASSWORD=="admin")
 			{
 				echo "<div class='confirm' style='margin:20px;'>";
 				echo "You are using the default password, which can be dangerous. You can change it easily at the top of phpliteadmin.php<br />You have been warned.";
 				echo "</div>";
 			}
-			
+
 			echo "<b>Database name</b>: ".htmlencode($db->getName())."<br/>";
 			echo "<b>Path to database</b>: ".htmlencode($db->getPath())."<br/>";
 			echo "<b>Size of database</b>: ".$db->getSize()."<br/>";
@@ -4436,7 +4436,7 @@ else //user is authorized - display the main application
 			echo "<b>SQLite version</b>: ".$realVersion."<br/>";
 			echo "<b>SQLite extension</b> ".helpLink("SQLite Library Extensions").": ".$db->getType()."<br/>";
 			echo "<b>PHP version</b>: ".phpversion()."<br/><br/>";
-			
+
 			if(isset($_GET['sort']))
 				$_SESSION[COOKIENAME.'sort'] = $_GET['sort'];
 			else
@@ -4445,7 +4445,7 @@ else //user is authorized - display the main application
 				$_SESSION[COOKIENAME.'order'] = $_GET['order'];
 			else
 				unset($_SESSION[COOKIENAME.'order']);
-					
+
 			$query = "SELECT type, name FROM sqlite_master WHERE type='table' OR type='view'";
 			$queryAdd = "";
 			if(isset($_SESSION[COOKIENAME.'sort']))
@@ -4466,7 +4466,7 @@ else //user is authorized - display the main application
 			{
 				echo "<table border='0' cellpadding='2' cellspacing='1' class='viewTable'>";
 				echo "<tr>";
-				
+
 				echo "<td class='tdheader'>";
 				echo "<a href='".PAGE."?sort=type";
 				if(isset($_SESSION[COOKIENAME.'sort']))
@@ -4478,7 +4478,7 @@ else //user is authorized - display the main application
 				if(isset($_SESSION[COOKIENAME.'sort']) && $_SESSION[COOKIENAME.'sort']=="type")
 					echo (($_SESSION[COOKIENAME.'order']=="ASC") ? " <b>&uarr;</b>" : " <b>&darr;</b>");
 				echo "</td>";
-				
+
 				echo "<td class='tdheader'>";
 				echo "<a href='".PAGE."?sort=name";
 				if(isset($_SESSION[COOKIENAME.'sort']))
@@ -4490,11 +4490,11 @@ else //user is authorized - display the main application
 				if(isset($_SESSION[COOKIENAME.'sort']) && $_SESSION[COOKIENAME.'sort']=="name")
 					echo (($_SESSION[COOKIENAME.'order']=="ASC") ? " <b>&uarr;</b>" : " <b>&darr;</b>");
 				echo "</td>";
-				
+
 				echo "<td class='tdheader' colspan='10'>Action</td>";
 				echo "<td class='tdheader'>Records</td>";
 				echo "</tr>";
-				
+
 				$totalRecords = 0;
 				for($i=0; $i<sizeof($result); $i++)
 				{
@@ -4504,7 +4504,7 @@ else //user is authorized - display the main application
 						$totalRecords += $records;
 						$tdWithClass = "<td class='td".($i%2 ? "1" : "2")."'>";
 						$tdWithClassLeft = "<td class='td".($i%2 ? "1" : "2")."' style='text-align:left;'>";
-						
+
 						if($result[$i]['type']=="table")
 						{
 							echo "<tr>";
@@ -4752,7 +4752,7 @@ else //user is authorized - display the main application
 			echo "<input type='radio' name='export_type' checked='checked' value='sql' onclick='toggleExports(\"sql\");'/> SQL";
 			echo "<br/><input type='radio' name='export_type' value='csv' onclick='toggleExports(\"csv\");'/> CSV";
 			echo "</fieldset>";
-			
+
 			echo "<fieldset style='float:left; max-width:350px;' id='exportoptions_sql'><legend><b>Options</b></legend>";
 			echo "<input type='checkbox' checked='checked' name='structure'/> Export with structure ".helpLink("Export Structure to SQL File")."<br/>";
 			echo "<input type='checkbox' checked='checked' name='data'/> Export with data ".helpLink("Export Data to SQL File")."<br/>";
@@ -4760,7 +4760,7 @@ else //user is authorized - display the main application
 			echo "<input type='checkbox' checked='checked' name='transaction'/> Add TRANSACTION ".helpLink("Add Transaction to Exported SQL File")."<br/>";
 			echo "<input type='checkbox' checked='checked' name='comments'/> Comments ".helpLink("Add Comments to Exported SQL File")."<br/>";
 			echo "</fieldset>";
-			
+
 			echo "<fieldset style='float:left; max-width:350px; display:none;' id='exportoptions_csv'><legend><b>Options</b></legend>";
 			echo "<div style='float:left;'>Fields terminated by</div>";
 			echo "<input type='text' value=';' name='export_csv_fieldsterminated' style='float:right;'/>";
@@ -4777,7 +4777,7 @@ else //user is authorized - display the main application
 			echo "<input type='checkbox' name='export_csv_crlf'/> Remove CRLF characters within fields<br/>";
 			echo "<input type='checkbox' checked='checked' name='export_csv_fieldnames'/> Put field names in first row";
 			echo "</fieldset>";
-			
+
 			echo "<div style='clear:both;'></div>";
 			echo "<br/><br/>";
 			echo "<fieldset style='float:left;'><legend><b>Save As</b></legend>";
@@ -4798,17 +4798,17 @@ else //user is authorized - display the main application
 					echo $importSuccess;
 				echo "</div><br/>";
 			}
-			
+
 			echo "<form method='post' action='".PAGE."?view=import' enctype='multipart/form-data'>";
 			echo "<fieldset style='float:left; width:260px; margin-right:20px;'><legend><b>Import</b></legend>";
 			echo "<input type='radio' name='import_type' checked='checked' value='sql' onclick='toggleImports(\"sql\");'/> SQL";
 			echo "<br/><input type='radio' name='import_type' value='csv' onclick='toggleImports(\"csv\");'/> CSV";
 			echo "</fieldset>";
-			
+
 			echo "<fieldset style='float:left; max-width:350px;' id='importoptions_sql'><legend><b>Options</b></legend>";
 			echo "No options";
 			echo "</fieldset>";
-			
+
 			echo "<fieldset style='float:left; max-width:350px; display:none;' id='importoptions_csv'><legend><b>Options</b></legend>";
 			echo "<div style='float:left;'>Table that CSV pertains to</div>";
 			echo "<select name='single_table' style='float:right;'>";
@@ -4835,10 +4835,10 @@ else //user is authorized - display the main application
 			echo "<div style='clear:both;'>";
 			echo "<input type='checkbox' checked='checked' name='import_csv_fieldnames'/> Field names in first row";
 			echo "</fieldset>";
-			
+
 			echo "<div style='clear:both;'></div>";
 			echo "<br/><br/>";
-			
+
 			echo "<fieldset><legend><b>File to import</b></legend>";
 			echo "<input type='file' value='Choose File' name='file' style='background-color:transparent; border-style:none;'/> <input type='submit' value='Import' name='import' class='btn'/>";
 			echo "</fieldset>";
@@ -4872,7 +4872,7 @@ else //user is authorized - display the main application
 			echo "<form action='".PAGE."?view=rename&amp;database_rename=1' method='post'>";
 			echo "<input type='hidden' name='oldname' value='".htmlencode($db->getPath())."'/>";
 			echo "Rename database '".htmlencode($db->getPath())."' to <input type='text' name='newname' style='width:200px;' value='".htmlencode($db->getPath())."'/> <input type='submit' value='Rename' name='rename' class='btn'/>";
-			echo "</form>";	
+			echo "</form>";
 		}
 		else if($view=="delete")
 		{
@@ -4883,7 +4883,7 @@ else //user is authorized - display the main application
 			echo "<input type='submit' value='Confirm' class='btn'/> ";
 			echo "<a href='".PAGE."'>Cancel</a>";
 			echo "</div>";
-			echo "</form>";	
+			echo "</form>";
 		}
 
 		echo "</div>";

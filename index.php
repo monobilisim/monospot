@@ -149,7 +149,7 @@ function admin_user_add()
 	$user = Model::factory('User')->create();
 	$user->fill($_POST['user']);
 
-	if ($errors = $user->validate($_POST['user']))
+	if ($errors = $user->validate($_POST['user'], true))
 	{
 		set('errors', $errors);
 		set('user', $user);

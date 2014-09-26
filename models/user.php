@@ -32,7 +32,7 @@ class User extends Model
 		}
 	}
 
-	public function validate($post)
+	public function validate($post, $new = false)
 	{
 		global $settings;
 
@@ -78,7 +78,7 @@ class User extends Model
 
 		$errors = $val->validate($fields, $post);
 
-		if (isset($post['username']))
+		if (isset($post['username']) && $new)
 		{
 			$user = Model::factory('User')->where_equal('username', $_POST['user']['username'])->find_one();
 			if ($user) $errors['username'] = 'Aynı kullanıcı adına sahip bir kullanıcı zaten var.';
