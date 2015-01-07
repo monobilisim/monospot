@@ -13,13 +13,10 @@ a, a:visited {
 	font-size: 14px;
 }
 
-#list {
-	float: left;
-}
-
 table {
 	border-collapse: collapse;
 	background-color: #fff;
+	float: left;
 }
 
 table th {

@@ -10,7 +10,7 @@
 <h2>Kullanıcı Listesi</h2>
 <p><a href="<?=url_for('user/add')?>">Kullanıcı Ekle</a></p>
 
-<div id="list">
+<div>
 
 	<table>
 		<tr>
@@ -85,55 +85,55 @@
 	<? endforeach?>
 	</table>
 
+	<div id="filter">
+		<form action="" method="GET">
+		<input type="hidden" name="filter" value="1">
+	<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
+		<div class="item">
+			Ad<br>
+			<input type="text" class="large" name="name" value="<?=isset($get['name']) ? $get['name'] : ''?>">
+		</div>
+		<div class="item">
+			Soyad<br>
+			<input type="text" class="large" name="surname" value="<?=isset($get['surname']) ? $get['surname'] : ''?>">
+		</div>
+		<div class="item">
+			TC Kimlik No<br>
+			<input type="text" class="large" name="id_number" value="<?=isset($get['id_number']) ? $get['id_number'] : ''?>">
+		</div>
+	<? endif; ?>
+	<? if (isset($settings['authentication']['sms'])): ?>
+		<div class="item">
+			GSM<br>
+			<input type="text" class="small" name="gsm" value="<?=isset($get['gsm']) ? $get['gsm'] : ''?>">
+		</div>
+		<div class="item">
+			Son Şifre Alma Tarihi<br>
+			<input type="text" class="small date" name="last_sms" value="<?=isset($get['last_sms']) ? $get['last_sms'] : ''?>">
+		</div>
+	<? endif; ?>
+	<? if (isset($settings['authentication']['manual_user'])): ?>
+		<div class="item">
+			Kullanıcı adı<br>
+			<input type="text" class="large" name="username" value="<?=isset($get['username']) ? $get['username'] : ''?>">
+		</div>
+	<? endif; ?>
+	<? if ($settings['custom_fields']): ?>
+		<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
+			<? $field = explode('|', $field); ?>
+				<div class="item">
+				<?=$field[1]?><br>
+				<input type="text" class="large" name="<?=$field[0]?>" value="<?=isset($get[$field[0]]) ? $get[$field[0]] : ''?>">
+		<? endforeach; ?>
+	<? endif; ?>
+		<div class="item">
+			Şifre Son Geçerlilik Tarihi<br>
+			<input type="text" class="small date" name="expires" value="<?=isset($get['expires']) ? $get['expires'] : ''?>">
+		</div>
+		<input type="submit" value="Filtrele">
+		</form>
+	</div>
+
 	<?=$pager?>
 
-</div>
-
-<div id="filter">
-	<form action="" method="GET">
-	<input type="hidden" name="filter" value="1">
-<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
-	<div class="item">
-		Ad<br>
-		<input type="text" class="large" name="name" value="<?=isset($get['name']) ? $get['name'] : ''?>">
-	</div>
-	<div class="item">
-		Soyad<br>
-		<input type="text" class="large" name="surname" value="<?=isset($get['surname']) ? $get['surname'] : ''?>">
-	</div>
-	<div class="item">
-		TC Kimlik No<br>
-		<input type="text" class="large" name="id_number" value="<?=isset($get['id_number']) ? $get['id_number'] : ''?>">
-	</div>
-<? endif; ?>
-<? if (isset($settings['authentication']['sms'])): ?>
-	<div class="item">
-		GSM<br>
-		<input type="text" class="small" name="gsm" value="<?=isset($get['gsm']) ? $get['gsm'] : ''?>">
-	</div>
-	<div class="item">
-		Son Şifre Alma Tarihi<br>
-		<input type="text" class="small date" name="last_sms" value="<?=isset($get['last_sms']) ? $get['last_sms'] : ''?>">
-	</div>
-<? endif; ?>
-<? if (isset($settings['authentication']['manual_user'])): ?>
-	<div class="item">
-		Kullanıcı adı<br>
-		<input type="text" class="large" name="username" value="<?=isset($get['username']) ? $get['username'] : ''?>">
-	</div>
-<? endif; ?>
-<? if ($settings['custom_fields']): ?>
-	<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
-		<? $field = explode('|', $field); ?>
-			<div class="item">
-			<?=$field[1]?><br>
-			<input type="text" class="large" name="<?=$field[0]?>" value="<?=isset($get[$field[0]]) ? $get[$field[0]] : ''?>">
-	<? endforeach; ?>
-<? endif; ?>
-	<div class="item">
-		Şifre Son Geçerlilik Tarihi<br>
-		<input type="text" class="small date" name="expires" value="<?=isset($get['expires']) ? $get['expires'] : ''?>">
-	</div>
-	<input type="submit" value="Filtrele">
-	</form>
 </div>
