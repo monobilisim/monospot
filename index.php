@@ -100,19 +100,19 @@ function admin_user_index()
 	{
 		$sms = ORM::for_table('sms');
 		$sms->select_expr("sum(case
-			when strftime('%Y-%m-%d', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now') then 1
+			when date(timestamp, 'unixepoch', 'localtime') = date('now') then 1
 			else 0
 			end)", 'day');
 		$sms->select_expr("sum(case
-			when strftime('%W', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%W', 'now') then 1
+			when date(timestamp, 'unixepoch', 'localtime') >= date('now', 'weekday 0', '-7 days') then 1
 			else 0
 			end)", 'week');
 		$sms->select_expr("sum(case
-			when strftime('%Y-%m', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m', 'now') then 1
+			when strftime('%Y-%m', date(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m', 'now') then 1
 			else 0
 			end)", 'month');
 		$sms->select_expr("sum(case
-			when strftime('%Y', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y', 'now') then 1
+			when strftime('%Y', date(timestamp, 'unixepoch', 'localtime')) = strftime('%Y', 'now') then 1
 			else 0
 			end)", 'year');
 		$sms->where('user_id', $user->id);

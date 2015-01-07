@@ -317,7 +317,7 @@ function password_request_check($user)
 	global $settings;
 
 	# daily global limit
-	$daily_global_count = ORM::for_table('sms')->where_raw("strftime('%Y-%m-%d', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now')")->count();
+	$daily_global_count = ORM::for_table('sms')->where_raw("strftime('%Y-%m-%d', date(timestamp, 'unixepoch', 'localtime')) = date('now')")->count();
 	if ($daily_global_count >= $settings['daily_global_limit']) return 'daily_global_limit';
 
 	# minimum interval
@@ -326,19 +326,19 @@ function password_request_check($user)
 	if ($minutes < $settings['min_interval']) return 'min_interval';
 
 	# daily limit
-	$daily_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y-%m-%d', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m-%d', 'now')")->count();
+	$daily_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("date(timestamp, 'unixepoch', 'localtime') = date('now')")->count();
 	if ($daily_count >= $user->daily_limit) return 'daily_limit';
 
 	# weekly limit
-	$weekly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%W', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%W', 'now')")->count();
+	$weekly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("date(timestamp, 'unixepoch', 'localtime') >= date('now', 'weekday 0', '-7 days')")->count();
 	if ($weekly_count >= $user->weekly_limit) return 'weekly_limit';
 
 	# monthly limit
-	$monthly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y-%m', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m', 'now')")->count();
+	$monthly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y-%m', date(timestamp, 'unixepoch', 'localtime')) = strftime('%Y-%m', 'now')")->count();
 	if ($monthly_count >= $user->monthly_limit) return 'monthly_limit';
 
 	# yearly limit
-	$yearly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y', datetime(timestamp, 'unixepoch', 'localtime')) = strftime('%Y', 'now')")->count();
+	$yearly_count = ORM::for_table('sms')->where('user_id', $user->id)->where_raw("strftime('%Y', date(timestamp, 'unixepoch', 'localtime')) = strftime('%Y', 'now')")->count();
 	if ($yearly_count >= $user->yearly_limit) return 'yearly_limit';
 
 	return false;
