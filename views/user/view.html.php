@@ -70,6 +70,14 @@
 		<div class="label">Son Oturum Açma Tarihi</div>
 		<span class="value"><?=format_date($user->last_login)?></span>
 	</div>
+	<div class="item">
+		<div class="label">GSM İzin</div>
+		<span class="value"><?=$user->gsm_permission === '1' ? 'Evet' : ($user->gsm_permission === '0' ? 'Hayır' : '')?></span>
+	</div>
+	<div class="item">
+		<div class="label">E-posta İzin</div>
+		<span class="value"><?=$user->email_permission === '1' ? 'Evet' : ($user->email_permission === '0' ? 'Hayır' : '')?></span>
+	</div>
 	<div class="actions">
 		<a href="<?= url_for('user', $user->id, 'update'); ?>">Düzenle</a> |
 		<a href="<?= url_for('user', $user->id, 'delete'); ?>" onclick="if (confirm('Emin misiniz?')) { return true; } return false;">Sil</a>

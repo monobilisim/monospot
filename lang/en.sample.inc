@@ -36,4 +36,10 @@ return array(
   'min_interval' => 'You must wait for %d minute(s) to request another password',
   'custom_login' => 'Login',
   'custom_error' => 'Record not found',
+  'email' => 'E-mail',
+  'email_error' => 'Please enter a valid e-mail address.',
+  'email_permission' => 'I agree that this e-mail address can be used for contact purposes.',
+  'email_permission_required' => 'You have to give authorization for correspondence via e-mail in order to use Wi-Fi services.',
+  'gsm_permission' => 'I agree that this mobile number can be used for contact purposes.',
+  'gsm_permission_required' => 'You have to give authorization for correspondence via mobile phone in order to use Wi-Fi services.',
 );

@@ -41,27 +41,30 @@ button#sms_register, button#sms_login {display: none}
 			<p class="description"><?=t('sms_register_desc')?></p>
 			<div class="item">
 			<label><?=t('gsm')?>:</label>
-			<input name="user[gsm]" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)">
+			<input name="user[gsm]" class="text" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)">
 			<div class="item-description"><?=t('gsm_desc')?></div>
 			</div>
 		<? if (isset($settings['sms_fields']['id_number']) && $lang == 'tr'): ?>
 			<div class="item">
 			<label><?=t('name')?>:</label>
-			<input name="user[name]" type="text" maxlength="40" value="<?=$user->name?>">
+			<input name="user[name]" class="text" type="text" maxlength="40" value="<?=$user->name?>">
 			</div>
 			<div class="item">
 			<label><?=t('surname')?>:</label>
-			<input name="user[surname]" type="text" maxlength="40" value="<?=$user->surname?>">
+			<input name="user[surname]" class="text" type="text" maxlength="40" value="<?=$user->surname?>">
 			</div>
 			<div class="item">
 			<label><?=t('birthyear')?>:</label>
-			<input name="birthyear" type="text" maxlength="4" value="<?=$_POST['birthyear']?>">
+			<input name="birthyear" class="text" type="text" maxlength="4" value="<?=$_POST['birthyear']?>">
 			</div>
 			<div class="item">
 			<label><?=t('id_number')?>:</label>
-			<input name="user[id_number]" type="text" maxlength="11" value="<?=$user->id_number?>">
+			<input name="user[id_number]" class="text" type="text" maxlength="11" value="<?=$user->id_number?>">
 			</div>
 		<? endif; ?>
+
+		<?php $method = 'sms'; $_form = 'sms_register'; include 'captiveportal_permissions.html.php'; ?>
+
 			<input name="form_id" type="hidden" value="sms_register">
 			<input class="submit" name="submit" type="submit" value="<?=t('register')?> &#187;">
 			</form>
@@ -75,12 +78,12 @@ button#sms_register, button#sms_login {display: none}
 			<p class="description"><?=t('login_desc_sms')?></p>
 			<div class="item">
 			<label><?=t('gsm')?>:</label>
-			<input name="user[gsm]" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)"/>
+			<input name="user[gsm]" class="text" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)"/>
 			<div class="item-description"><?=t('gsm_desc')?></div>
 			</div>
 			<div class="item">
 			<label><?=t('password')?>:</label>
-			<input name="password" type="password">
+			<input name="password" class="text" type="password">
 			<div class="item-description"><?=t('password_desc_gsm')?></div>
 			</div>
 			<input name="form_id" type="hidden" value="sms_login">
@@ -98,20 +101,23 @@ button#sms_register, button#sms_login {display: none}
 			<p class="description"><?=t('login_desc_id_number')?></p>
 			<div class="item">
 			<label><?=t('name')?>:</label>
-			<input name="user[name]" type="text" maxlength="40" value="<?=$user->name?>">
+			<input name="user[name]" class="text" type="text" maxlength="40" value="<?=$user->name?>">
 			</div>
 			<div class="item">
 			<label><?=t('surname')?>:</label>
-			<input name="user[surname]" type="text" maxlength="40" value="<?=$user->surname?>">
+			<input name="user[surname]" class="text" type="text" maxlength="40" value="<?=$user->surname?>">
 			</div>
 			<div class="item">
 			<label><?=t('birthyear')?>:</label>
-			<input name="birthyear" type="text" maxlength="4" value="<?=$_POST['birthyear']?>">
+			<input name="birthyear" class="text" type="text" maxlength="4" value="<?=$_POST['birthyear']?>">
 			</div>
 			<div class="item">
 			<label><?=t('id_number')?>:</label>
-			<input name="user[id_number]" type="text" maxlength="11" value="<?=$user->id_number?>">
+			<input name="user[id_number]" class="text" type="text" maxlength="11" value="<?=$user->id_number?>">
 			</div>
+
+			<?php $method = 'id_number'; $_form = 'id_number_login'; include 'captiveportal_permissions.html.php'; ?>
+
 			<input name="form_id" type="hidden" value="id_number_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
@@ -127,12 +133,15 @@ button#sms_register, button#sms_login {display: none}
 			<div class="description"><?=t('login_desc')?></div>
 			<div class="item">
 			<label><?=t('manual_user_name')?>:</label>
-			<input name="user[username]" type="text" maxlength="11" value="<?=$user->username?>">
+			<input name="user[username]" class="text" type="text" maxlength="11" value="<?=$user->username?>">
 			</div>
 			<div class="item">
 			<label><?=t('password')?>:</label>
-			<input name="password" type="password">
+			<input name="password" class="text" type="password">
 			</div>
+
+			<?php $method = 'manual_user'; $_form = 'manual_user_login'; include 'captiveportal_permissions.html.php'; ?>
+
 			<input name="form_id" type="hidden" value="manual_user_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
@@ -157,3 +166,18 @@ button#sms_register, button#sms_login {display: none}
 
 </body>
 </html>
+
+<?php
+function permission_checked($method, $_form, $field) {
+	global $settings;
+	// varsayılan değer
+	if (isset($settings['authentication'][$method]['contact']["{$field}_permission_checked"])) $checked = true;
+	else $checked = false;
+	// eğer form gönderilmişse sadece o form için
+	if ($_POST && $_POST['form_id'] == $_form) {
+		if (isset($_POST["{$field}_permission"])) $checked = true;
+		else $checked = false;
+	}
+	return $checked;
+}
+?>

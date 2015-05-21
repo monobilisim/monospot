@@ -117,9 +117,18 @@ function welcome_post()
 
 			if (!$form) // TC kimlik doğrulama varsa ondan geçmiş demektir
 			{
-				$message = send_password($user);
-				if ($message == 'min_interval') $arg = $settings['min_interval'];
-				$form = 'sms_login';
+				$message = permission_process($user, 'sms');
+				if ($message)
+				{
+					$form = 'sms_register';
+				}
+				else
+				{
+					$user->save();
+					$message = send_password($user);
+					if ($message == 'min_interval') $arg = $settings['min_interval'];
+					$form = 'sms_login';
+				}
 			}
 		}
 	}
@@ -189,14 +198,18 @@ function welcome_post()
 
 		if ($sonuc == 'true')
 		{
-			login($user, 'id_number');
+			$message = permission_process($user, 'id_number');
+			if (!$message)
+			{
+				login($user, 'id_number');
+			}
 		}
 		else
 		{
 			captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
 			$message = 'invalid_id_number';
-			$form = 'id_number_login';
 		}
+		$form = 'id_number_login';
 	}
 
 	// Kullanıcı adı ve şifre ile giriş
@@ -206,6 +219,7 @@ function welcome_post()
 
 		if ($user)
 		{
+			$user->fill($_POST['user']);
 			if ($user->password == $_POST['password'])
 			{
 				if (password_expired($user))
@@ -214,7 +228,11 @@ function welcome_post()
 				}
 				else
 				{
-					login($user, 'username');
+					$message = permission_process($user, 'manual_user');
+					if (!$message)
+					{
+						login($user, 'username');
+					}
 				}
 			}
 			else
@@ -249,6 +267,50 @@ run();
 
 /* Functions */
 
+function permission_process(&$user, $method)
+{
+	global $settings, $clientmac, $clientip;
+	$message = '';
+
+	// izin vermek zorunlu ise izin verilmiş mi kontrol et (javascript'te de kontrol var ama teorik olarak aşılabilir)
+	if (isset($settings['authentication'][$method]['contact']['gsm_permission_required']))
+	{
+		if (!isset($_POST['gsm_permission'])) $message = 'gsm_permission_required';
+	}
+	if (isset($settings['authentication'][$method]['contact']['email_permission_required']))
+	{
+		if (!isset($_POST['email_permission'])) $message =  'email_permission_required';
+	}
+
+	// izinleri kaydet
+	if (!$message)
+	{
+		// izin istenmişse 1 ya da 0 değerlerini ata, istenmemişse veritabanına NULL yazılacak
+		if (isset($_POST['gsm_permission_asked']))
+		{
+			if (isset($_POST['gsm_permission'])) $user->gsm_permission = 1;
+			else $user->gsm_permission = 0;
+		}
+		if (isset($_POST['email_permission_asked']))
+		{
+			if (isset($_POST['email_permission'])) $user->email_permission = 1;
+			else $user->email_permission = 0;
+		}
+
+		if (isset($_POST['gsm_permission']) || isset($_POST['email_permission']))
+		{
+			$permission = ORM::for_table('permission')->create();
+			if (isset($_POST['gsm_permission'])) $permission->gsm = $user->gsm;
+			if (isset($_POST['email_permission'])) $permission->email = $user->email;
+			$permission->mac = $clientmac;
+			$permission->ip = $clientip;
+			$permission->timestamp = time();
+			$permission->save();
+		}
+	}
+
+	return $message;
+}
 function send_password($user)
 {
 	global $settings, $clientmac;
@@ -289,7 +351,9 @@ function login($user, $field)
 	$attributes = array();
 	// Şifre geçerlilik süresinin oturum geçerlilik süresinden (hard timeout) daha kısa olduğu durumlar için kullanıcıya özel olarak bu değeri atıyoruz
 	if ($user->expires && $user->expires < strtotime('+' . $settings['session_timeout'] . ' minutes'))
+	{
 		$attributes['session_terminate_time'] = $user->expires;
+	}
 	portal_allow($clientip, $clientmac, $user->$field, $password = null, $attributes);
 	exit();
 }

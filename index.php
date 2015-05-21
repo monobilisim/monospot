@@ -51,19 +51,32 @@ function configure()
 }
 
 dispatch('/', 'home');
+dispatch('users*', 'admin_user_index');
+dispatch('filter*', 'admin_user_filter');
+dispatch('permissions*', 'admin_permission_index');
+dispatch('user/add', 'admin_user_add_page');
+dispatch_post('user/add', 'admin_user_add');
+dispatch('user/:id', 'admin_user_view');
+dispatch('user/:id/update', 'admin_user_update_page');
+dispatch_post('/user/:id/update', 'admin_user_update');
+dispatch('user/:id/delete', 'admin_user_delete');
+dispatch('sms*', 'admin_sms_index');
+dispatch('settings', 'admin_settings');
+dispatch_post('settings', 'admin_settings_save');
+dispatch('lang/*', 'admin_lang');
+dispatch_post('lang/*', 'admin_lang_save');
+
 function home()
 {
 	redirect_to('users');
 }
 
-dispatch('filter*', 'admin_user_filter');
 function admin_user_filter()
 {
 	unset($_GET['filter']);
 	redirect_to('users', $_GET);
 }
 
-dispatch('users*', 'admin_user_index');
 function admin_user_index()
 {
 	global $settings;
@@ -78,6 +91,8 @@ function admin_user_index()
 	if (!empty($get['last_sms'])) $users->where_raw("strftime('%d.%m.%Y', datetime(last_sms, 'unixepoch', 'localtime')) = ?", array($get['last_sms']));
 	if (!empty($get['expires'])) $users->where_raw("strftime('%d.%m.%Y', datetime(expires, 'unixepoch', 'localtime')) = ?", array($get['expires']));
 	if (!empty($get['username'])) $users->where_like('username', '%'.$get['username'].'%');
+	if (isset($get['gsm_permission']) && strlen($get['gsm_permission']) == 1) $users->where('gsm_permission', $get['gsm_permission']);
+	if (isset($get['email_permission']) && strlen($get['email_permission']) == 1) $users->where('email_permission', $get['email_permission']);
 	$total = $users->count();
 
 	$users->select('user.*');
@@ -128,7 +143,6 @@ function admin_user_index()
 	return html('user/index.html.php');
 }
 
-dispatch('user/add', 'admin_user_add_page');
 function admin_user_add_page()
 {
 	global $settings;
@@ -142,7 +156,6 @@ function admin_user_add_page()
 	return html('user/_form.html.php');
 }
 
-dispatch_post('user/add', 'admin_user_add');
 function admin_user_add()
 {
 	global $settings;
@@ -167,7 +180,6 @@ function admin_user_add()
 	}
 }
 
-dispatch('user/:id', 'admin_user_view');
 function admin_user_view($id)
 {
 	global $settings;
@@ -184,7 +196,6 @@ function admin_user_view($id)
 	}
 }
 
-dispatch('user/:id/update', 'admin_user_update_page');
 function admin_user_update_page($id)
 {
 	global $settings;
@@ -201,7 +212,6 @@ function admin_user_update_page($id)
 	}
 }
 
-dispatch_post('/user/:id/update', 'admin_user_update');
 function admin_user_update($id)
 {
 	global $settings;
@@ -226,7 +236,6 @@ function admin_user_update($id)
 	}
 }
 
-dispatch('user/:id/delete', 'admin_user_delete');
 function admin_user_delete($id)
 {
 	$user = Model::factory('User')->find_one($id);
@@ -235,7 +244,6 @@ function admin_user_delete($id)
 	redirect_to('users');
 }
 
-dispatch('sms*', 'admin_sms_index');
 function admin_sms_index()
 {
 	global $settings;
@@ -256,7 +264,7 @@ function admin_sms_index()
 	else $dir = 'desc';
 
 	$offset = (int)$settings['items_per_page'];
-	if (!!empty($get['page'])) $start = 0;
+	if (empty($get['page'])) $start = 0;
 	else $start = $offset * ($get['page'] - 1);
 
 	$order_by_method = 'order_by_' . $dir;
@@ -269,7 +277,41 @@ function admin_sms_index()
 	return html('sms/index.html.php');
 }
 
-dispatch('settings', 'admin_settings');
+function admin_permission_index()
+{
+	global $settings;
+
+	parse_str(params(0), $get);
+
+	$orm = ORM::for_table('permission');
+	if (!empty($get['gsm'])) $orm->where_like('gsm', '%'.$get['gsm'].'%');
+	if (!empty($get['email'])) $orm->where_like('email', '%'.$get['email'].'%');
+	if (!empty($get['mac'])) $orm->where_like('mac', '%'.$get['mac'].'%');
+	if (!empty($get['ip'])) $orm->where_like('ip', '%'.$get['ip'].'%');
+	if (!empty($get['timestamp_1'])) $orm->where_raw("strftime('%d.%m.%Y', datetime(timestamp, 'unixepoch', 'localtime')) between ? and ?", array($get['timestamp_1'], $get['timestamp_2']));
+
+	$total = $orm->count();
+
+	$columns = array('gsm', 'email', 'timestamp');
+	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
+	else $col = 'timestamp';
+	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
+	else $dir = 'desc';
+
+	$offset = (int)$settings['items_per_page'];
+	if (empty($get['page'])) $start = 0;
+	else $start = $offset * ($get['page'] - 1);
+
+	$order_by_method = 'order_by_' . $dir;
+	$permissions = $orm->$order_by_method($col)->limit($start.','.$offset)->find_many();
+
+	set('permissions', $permissions);
+	set('pager', pager($start, $offset, $total, 'permissions'));
+	set('get', $get);
+	set('settings', $settings);
+	return html('permission/index.html.php');
+}
+
 function admin_settings()
 {
 	global $hotspot, $HTTP_SERVER_VARS;
@@ -281,12 +323,13 @@ function admin_settings()
 		$_SESSION['message'] = 'Bu sayfaya erişim yetkiniz yok.';
 		redirect_to('users');
 	}
+
 	global $settings;
+	require 'update.php';
 	set('settings', $settings);
 	return html('settings.html.php');
 }
 
-dispatch_post('settings', 'admin_settings_save');
 function admin_settings_save()
 {
 	$halt = false;
@@ -332,9 +375,9 @@ function admin_settings_save()
 
 	if ($_POST['custom_fields'])
 	{
-		$orm = ORM::for_table('')->raw_query('PRAGMA table_info(user)')->find_many();
+		$result = ORM::for_table('')->raw_query('PRAGMA table_info(user)')->find_many();
 		$columns = array();
-		foreach ($orm as $column) $columns[] = $column->name;
+		foreach ($result as $column) $columns[] = $column->name;
 
 		$custom_fields = str_replace("\r\n", "\n", $_POST['custom_fields']);
 
@@ -342,7 +385,7 @@ function admin_settings_save()
 		{
 			$field = explode('|', $field);
 			if (!in_array($field[0], $columns))
-				$orm = ORM::for_table('user')->raw_execute('ALTER TABLE user ADD COLUMN ' . $field[0] . ' TEXT');
+				$result = ORM::for_table('user')->raw_execute('ALTER TABLE user ADD COLUMN ' . $field[0] . ' TEXT');
 
 			foreach(array('tr', 'en') as $code)
 			{
@@ -373,7 +416,6 @@ function admin_settings_save()
 	return html('settings.html.php');
 }
 
-dispatch('lang/*', 'admin_lang');
 function admin_lang($code)
 {
 	global $settings;
@@ -386,7 +428,6 @@ function admin_lang($code)
 	return html('lang.html.php');
 }
 
-dispatch_post('lang/*', 'admin_lang_save');
 function admin_lang_save($code)
 {
 	global $settings;

@@ -37,9 +37,11 @@
 		<? endif; ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'expires', 'Şifre Son Geçerlilik')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_login', 'Son Oturum Açma')?></th>
-			<th rowspan="<?=$rowspan?>">İşlem</th>
+			<th rowspan="<?=$rowspan?>">GSM İzin</th>
+			<th rowspan="<?=$rowspan?>">E-posta İzin</th>
+			<th rowspan="<?=$rowspan?>" style="width:140px">İşlem</th>
 		</tr>
-	<? if (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false): ?>
+	<? if (isset($settings['authentication']['sms'])): ?>
 		<tr>
 			<th><?=order_link('users', 'daily_limit', 'Günlük')?></th>
 			<th><?=order_link('users', 'weekly_limit', 'Haftalık')?></th>
@@ -63,19 +65,21 @@
 			<td class="left"><?=$user->surname?></td>
 			<td><?=$user->id_number?></td>
 		<? endif; ?>
-		<? if (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false): ?>
+		<? if (isset($settings['authentication']['sms'])): ?>
 			<td><?=$user->gsm?></td>
 			<td><?=format_date($user->last_sms)?></td>
-			<td><?=$user->sms->day.'/'.$user->daily_limit?></td>
-			<td><?=$user->sms->week.'/'.$user->weekly_limit?></td>
-			<td><?=$user->sms->month.'/'.$user->monthly_limit?></td>
-			<td><?=$user->sms->year.'/'.$user->yearly_limit?></td>
+			<td><?=$user->sms->day ? $user->sms->day.'/'.$user->daily_limit : ''?></td>
+			<td><?=$user->sms->week ? $user->sms->week.'/'.$user->weekly_limit : ''?></td>
+			<td><?=$user->sms->month ? $user->sms->month.'/'.$user->monthly_limit : ''?></td>
+			<td><?=$user->sms->year ? $user->sms->year.'/'.$user->yearly_limit : ''?></td>
 		<? endif; ?>
 		<? if (isset($settings['authentication']['manual_user'])): ?>
 			<td><?=$user->username?></td>
 		<? endif; ?>
 			<td><?=format_date($user->expires)?></td>
 			<td><?=format_date($user->last_login)?></td>
+			<td><?=$user->gsm_permission === '1' ? 'Evet' : ($user->gsm_permission === '0' ? 'Hayır' : '')?></td>
+			<td><?=$user->email_permission === '1' ? 'Evet' : ($user->email_permission === '0' ? 'Hayır' : '')?></td>
 			<td>
 				<a href="<?=url_for('user', $user->id)?>">Görüntüle</a> |
 				<a href="<?=url_for('user', $user->id, 'update')?>">Düzenle</a> |
@@ -129,6 +133,22 @@
 		<div class="item">
 			Şifre Son Geçerlilik Tarihi<br>
 			<input type="text" class="small date" name="expires" value="<?=isset($get['expires']) ? $get['expires'] : ''?>">
+		</div>
+		<div class="item">
+			GSM İzin<br>
+			<select name="gsm_permission">
+				<option value=""></option>
+				<option value="1"<?=isset($get['gsm_permission']) && $get['gsm_permission'] === '1' ? ' selected="selected"' : ''?>>Evet</option>
+				<option value="0"<?=isset($get['gsm_permission']) && $get['gsm_permission'] === '0' ? ' selected="selected"' : ''?>>Hayır</option>
+			</select>
+		</div>
+		<div class="item">
+			E-posta İzin<br>
+			<select name="email_permission">
+				<option value=""></option>
+				<option value="1"<?=isset($get['email_permission']) && $get['email_permission'] === '1' ? ' selected="selected"' : ''?>>Evet</option>
+				<option value="0"<?=isset($get['email_permission']) && $get['email_permission'] === '0' ? ' selected="selected"' : ''?>>Hayır</option>
+			</select>
 		</div>
 		<input type="submit" value="Filtrele">
 		</form>

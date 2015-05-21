@@ -11,9 +11,11 @@
 	<script src="assets/js/jquery-ui-timepicker-addon.js"></script>
 </head>
 <body>
-	<div class="container">
+	<div id="container">
 
 	<h1><?=$hotspot['marka']?> Yönetim Paneli</h1>
+
+	<a id="back-to-pfsense" href="/">&#8629; pfSense</a>
 
 	<?php
 	if (date('Y', strtotime($hotspot['demo_bitis'])) != '2010')
@@ -25,9 +27,9 @@
 	<? if (isset($settings['authentication']['sms'])): ?>
 		<a href="<?=url_for('sms')?>">SMS Raporu</a> |
 	<? endif; ?>
+		<a href="<?=url_for('permissions')?>">İzin Raporu</a> |
 		<a href="<?=url_for('settings')?>">Ayarlar</a> |
-		<a href="<?=url_for('lang/tr')?>">Dil</a> |
-		<a href="/">pfSense</a>
+		<a href="<?=url_for('lang/tr')?>">Dil</a>
 	</div>
 
 	<? if (isset($message)): ?>

@@ -8,29 +8,47 @@
 </ul>
 <? endif; ?>
 
+<!--
+<script>
+$(document).ready(function() {
+	$('#sms').change(function() {
+		if ($(this).prop('checked')) {
+			$('#gsm').prop('checked', true);
+		}
+		else {
+			$('#gsm').prop('checked', false);
+		}
+	})
+})
+</script>
+-->
+
 <form action="<?=url_for('settings')?>" method="POST">
 	<fieldset>
 		<legend>Giriş Yöntemi</legend>
 		<div class="item">
 			<input type="checkbox" name="authentication[sms]" id="sms" value="1"<? echo isset($settings['authentication']['sms']) ? ' checked="checked"' : ''; ?>>
 			<label for="sms">SMS ile şifre gönderimi</label>
-				<div class="secondary-setting">
+				<div class="secondary-item">
 					<input type="checkbox" name="simple_screen" id="simple_screen" value="1"<? echo isset($settings['simple_screen']) ? ' checked="checked"' : ''; ?>>
 					<label for="simple_screen">Basitleştirilmiş Ekran</label>
 				</div>
-				<div class="secondary-setting">
+				<div class="secondary-item">
 					<input type="checkbox" name="sms_fields[id_number]" id="sms_field_id_number" value="1"<? echo isset($settings['sms_fields']['id_number']) ? ' checked="checked"' : ''; ?>>
 					<label for="sms_field_id_number">TC Kimlik No doğrulaması yap</label>
 				</div>
+		<?php $method = 'sms'; include 'settings_permissions.html.php'; ?>
 		</div>
 		<div class="item">
 			<input type="checkbox" name="authentication[id_number]" id="id_number" value="1"<? echo isset($settings['authentication']['id_number']) ? ' checked="checked"' : ''; ?>>
 			<label for="id_number">TC Kimlik No</label>
 		</div>
+		<?php $method = 'id_number'; include 'settings_permissions.html.php'; ?>
 		<div class="item">
 			<input type="checkbox" name="authentication[manual_user]" id="manual_user" value="1"<? echo isset($settings['authentication']['manual_user']) ? ' checked="checked"' : ''; ?>>
 			<label for="manual_user">Elle kullanıcı açma</label>
 		</div>
+		<?php $method = 'manual_user'; include 'settings_permissions.html.php'; ?>
 	</fieldset>
 
 	<fieldset>

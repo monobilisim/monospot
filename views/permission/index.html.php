@@ -11,7 +11,7 @@ $(function() {
 			if (items[i].value.length > 0)
 				get += "&" + items[i].name + "=" + items[i].value;
 		}
-		window.location = "<?=url_for('sms')?>" + get;
+		window.location = "<?=url_for('permissions')?>" + get;
 	});
 });
 
@@ -22,20 +22,24 @@ $(function() {
 });
 </script>
 
-<h2>SMS Raporu</h2>
+<h2>İzin Raporu</h2>
 <div>
 
 	<table>
 		<tr>
-			<th><?=order_link('sms', 'gsm', 'GSM')?></th>
+			<th><?=order_link('permissions', 'gsm', 'GSM')?></th>
+			<th><?=order_link('permissions', 'email', 'E-posta')?></th>
 			<th>MAC Adresi</th>
-			<th><?=order_link('sms', 'timestamp', 'Tarih')?></th>
+			<th>IP Adresi</th>
+			<th><?=order_link('permissions', 'timestamp', 'Tarih')?></th>
 		</tr>
-	<? foreach($smss as $sms): ?>
+	<? foreach($permissions as $permission): ?>
 		<tr>
-			<td><a href="<?=url_for('user', $sms->user_id)?>"><?=$sms->gsm?></a></td>
-			<td><?=$sms->mac?></td>
-			<td><?=format_date($sms->timestamp)?></td>
+			<td><?=$permission->gsm?></td>
+			<td><?=$permission->email?></td>
+			<td><?=$permission->mac?></td>
+			<td><?=$permission->ip?></td>
+			<td><?=format_date($permission->timestamp)?></td>
 		</tr>
 	<? endforeach; ?>
 	</table>
@@ -46,8 +50,16 @@ $(function() {
 			<input type="text" class="small" name="gsm" value="<?=isset($get['gsm']) ? $get['gsm'] : ''?>">
 		</div>
 		<div class="item">
+			E-posta<br>
+			<input type="text" class="large" name="email" value="<?=isset($get['email']) ? $get['email'] : ''?>">
+		</div>
+		<div class="item">
 			MAC Adresi<br>
 			<input type="text" class="small" name="mac" value="<?=isset($get['mac']) ? $get['mac'] : ''?>">
+		</div>
+		<div class="item">
+			IP Adresi<br>
+			<input type="text" class="small" name="ip" value="<?=isset($get['ip']) ? $get['ip'] : ''?>">
 		</div>
 		<div class="item">
 			Tarih<br>
