@@ -27,6 +27,7 @@ $(function() {
 
 	<table>
 		<tr>
+			<th><?=order_link('permissions', 'user_id', 'Kullanıcı ID')?></th>
 			<th><?=order_link('permissions', 'gsm', 'GSM')?></th>
 			<th><?=order_link('permissions', 'email', 'E-posta')?></th>
 			<th>MAC Adresi</th>
@@ -35,6 +36,7 @@ $(function() {
 		</tr>
 	<? foreach($permissions as $permission): ?>
 		<tr>
+			<td><a href="<?=url_for('user', $permission->user_id)?>"><?=$permission->user_id?></a></td>
 			<td><?=$permission->gsm?></td>
 			<td><?=$permission->email?></td>
 			<td><?=$permission->mac?></td>
