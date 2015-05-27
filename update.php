@@ -6,7 +6,7 @@ if (!$result) {
 	try {
 		ORM::for_table('user')->raw_execute('ALTER TABLE user ADD gsm_permission INTEGER');
 		ORM::for_table('user')->raw_execute('ALTER TABLE user ADD email_permission INTEGER');
-		ORM::for_table('user')->raw_execute("CREATE TABLE 'permission' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'gsm' TEXT, 'email' TEXT, 'mac' TEXT, 'ip' TEXT, 'timestamp' INTEGER)");
+		ORM::for_table('user')->raw_execute("CREATE TABLE 'permission' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'user_id' INTEGER, 'gsm' TEXT, 'email' TEXT, 'mac' TEXT, 'ip' TEXT, 'timestamp' INTEGER)");
 	} catch (Exception $e) {
 		die('Veritabani guncellemesi sirasinda bir hata olustu: ' .$e->getMessage());
 	}

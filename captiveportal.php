@@ -111,8 +111,17 @@ function welcome_post()
 			}
 			else
 			{
-				$message = 'user_already_registered';
-				$form = 'sms_login';
+				// daha önce kayıt olmuşsa bile gsm/e-posta izin bilgileri güncellensin
+				$message = permission_process($user, 'sms');
+				if ($message)
+				{
+					$form = 'sms_register';
+				}
+				else
+				{
+					$message = 'user_already_registered';
+					$form = 'sms_login';
+				}
 			}
 
 			if (!$form) // TC kimlik doğrulama varsa ondan geçmiş demektir
@@ -124,7 +133,6 @@ function welcome_post()
 				}
 				else
 				{
-					$user->save();
 					$message = send_password($user);
 					if ($message == 'min_interval') $arg = $settings['min_interval'];
 					$form = 'sms_login';
@@ -293,13 +301,19 @@ function permission_process(&$user, $method)
 		}
 		if (isset($_POST['email_permission_asked']))
 		{
+			$user->email = $_POST['user']['email'];
 			if (isset($_POST['email_permission'])) $user->email_permission = 1;
 			else $user->email_permission = 0;
 		}
 
+		if (isset($_POST['user']['gsm'])) $user->gsm = $_POST['user']['gsm'];
+		if (isset($_POST['user']['email'])) $user->email = $_POST['user']['email'];
+		$user->save();
+
 		if (isset($_POST['gsm_permission']) || isset($_POST['email_permission']))
 		{
 			$permission = ORM::for_table('permission')->create();
+			$permission->user_id = $user->id;
 			if (isset($_POST['gsm_permission'])) $permission->gsm = $user->gsm;
 			if (isset($_POST['email_permission'])) $permission->email = $user->email;
 			$permission->mac = $clientmac;
