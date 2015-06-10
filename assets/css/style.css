@@ -8,9 +8,21 @@ a, a:visited {
 	color: #333;
 }
 
+#container {
+	position: relative;
+}
+
 #nav {
 	padding: 10px;
 	font-size: 14px;
+}
+
+#back-to-pfsense {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 16px;
+	text-decoration: none;
 }
 
 table {
@@ -123,9 +135,13 @@ input.xlarge {
 input.xxlarge {
 	width: 300px;
 }
+input.numeric {
+	text-align: right;
+}
 input.error {
 	border: 1px solid red;
 }
+
 
 .errors li {
 	color: red;
@@ -142,8 +158,15 @@ fieldset {
 	border: 1px solid #ccc;
 }
 
-.secondary-setting {
+fieldset.permission {
+	margin-top: 10px;
 	margin-left: 30px;
+	width: 50%;
+}
+
+.secondary-item {
+	margin-left: 30px;
+	margin-top: 4px;
 }
 
 .message {

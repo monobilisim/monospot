@@ -22,7 +22,7 @@
 				<? endif; ?>
 			<? endforeach; ?>
 		<? endif; ?>
-		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
+		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'name', 'Ad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'surname', 'Soyad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'id_number', 'TC Kimlik No')?></th>
@@ -60,7 +60,7 @@
 				<? endif; ?>
 			<? endforeach; ?>
 		<? endif; ?>
-		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
+		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
 			<td class="left"><?=$user->name?></td>
 			<td class="left"><?=$user->surname?></td>
 			<td><?=$user->id_number?></td>
@@ -92,7 +92,7 @@
 	<div id="filter">
 		<form action="" method="GET">
 		<input type="hidden" name="filter" value="1">
-	<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
+	<? if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
 		<div class="item">
 			Ad<br>
 			<input type="text" class="large" name="name" value="<?=isset($get['name']) ? $get['name'] : ''?>">

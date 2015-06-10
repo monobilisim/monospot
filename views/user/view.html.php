@@ -12,7 +12,7 @@
 		<? endif; ?>
 	<? endforeach; ?>
 <? endif; ?>
-<? if (isset($settings['authentication']['id_number']) || isset($settings['sms_fields']['id_number'])): ?>
+<? if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
 	<div class="item">
 		<div class="label">Ad</div>
 		<span class="value"><?=$user->name?></span>

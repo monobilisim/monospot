@@ -72,17 +72,31 @@ button {
 .form label {
 	display: block;
 	font-weight: bold;
+	padding: 4px;
+}
+.form .permission input {
+	display: inline-block;
+	vertical-align: middle;
+}
+.form .permission label {
+	font-size: 12px;
+	font-weight: normal;
+	display: inline-block;
+	text-align: left;
+	vertical-align: middle;
+	width: 190px;
+	padding-left: 0;
 }
 .form .item-description {
 	font-size: 12px;
 	margin-top: 5px;
 }
-.form input {
+.form input.text {
 	padding: 4px;
 	font-size: 15px;
 	border: 1px solid #ccc;
 }
-.form input:focus{
+.form input.text:focus {
 	outline: none;
 	box-shadow: 0 0 10px #ccc;
 }

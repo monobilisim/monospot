@@ -12,7 +12,7 @@
 <style>
 #title {background-color: <?=$color?>}
 #form-selection .active {background-color: <?=$color?>}
-<? if (isset($settings['authentication']['sms']) && isset($settings['simple_screen'])): ?>
+<? if (isset($settings['authentication']['sms']) && isset($settings['sms']['simple_screen'])): ?>
 button#sms_register, button#sms_login {display: none}
 .form .content {border-width: 1px}
 .form .description {display: none}
@@ -44,7 +44,7 @@ button#sms_register, button#sms_login {display: none}
 			<input name="user[gsm]" class="text" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)">
 			<div class="item-description"><?=t('gsm_desc')?></div>
 			</div>
-		<? if (isset($settings['sms_fields']['id_number']) && $lang == 'tr'): ?>
+		<? if (isset($settings['sms']['id_number']) && $lang == 'tr'): ?>
 			<div class="item">
 			<label><?=t('name')?>:</label>
 			<input name="user[name]" class="text" type="text" maxlength="40" value="<?=$user->name?>">
@@ -166,18 +166,3 @@ button#sms_register, button#sms_login {display: none}
 
 </body>
 </html>
-
-<?php
-function permission_checked($method, $_form, $field) {
-	global $settings;
-	// varsayılan değer
-	if (isset($settings['authentication'][$method]['contact']["{$field}_permission_checked"])) $checked = true;
-	else $checked = false;
-	// eğer form gönderilmişse sadece o form için
-	if ($_POST && $_POST['form_id'] == $_form) {
-		if (isset($_POST["{$field}_permission"])) $checked = true;
-		else $checked = false;
-	}
-	return $checked;
-}
-?>

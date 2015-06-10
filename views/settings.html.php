@@ -8,21 +8,6 @@
 </ul>
 <? endif; ?>
 
-<!--
-<script>
-$(document).ready(function() {
-	$('#sms').change(function() {
-		if ($(this).prop('checked')) {
-			$('#gsm').prop('checked', true);
-		}
-		else {
-			$('#gsm').prop('checked', false);
-		}
-	})
-})
-</script>
--->
-
 <form action="<?=url_for('settings')?>" method="POST">
 	<fieldset>
 		<legend>Giriş Yöntemi</legend>
@@ -30,12 +15,16 @@ $(document).ready(function() {
 			<input type="checkbox" name="authentication[sms]" id="sms" value="1"<? echo isset($settings['authentication']['sms']) ? ' checked="checked"' : ''; ?>>
 			<label for="sms">SMS ile şifre gönderimi</label>
 				<div class="secondary-item">
-					<input type="checkbox" name="simple_screen" id="simple_screen" value="1"<? echo isset($settings['simple_screen']) ? ' checked="checked"' : ''; ?>>
-					<label for="simple_screen">Basitleştirilmiş Ekran</label>
+					<input type="checkbox" name="sms[simple_screen]" id="sms_simple_screen" value="1"<? echo isset($settings['sms']['simple_screen']) ? ' checked="checked"' : ''; ?>>
+					<label for="sms_simple_screen">Basitleştirilmiş ekran</label>
 				</div>
 				<div class="secondary-item">
-					<input type="checkbox" name="sms_fields[id_number]" id="sms_field_id_number" value="1"<? echo isset($settings['sms_fields']['id_number']) ? ' checked="checked"' : ''; ?>>
-					<label for="sms_field_id_number">TC Kimlik No doğrulaması yap</label>
+					<input type="checkbox" name="sms[always_send_password]" id="sms_always_send_password" value="1"<? echo isset($settings['sms']['always_send_password']) ? ' checked="checked"' : ''; ?>>
+					<label for="sms_always_send_password">Geçerli şifresi olsa bile yeni şifre gönder</label>
+				</div>
+				<div class="secondary-item">
+					<input type="checkbox" name="sms[id_number]" id="sms_id_number" value="1"<? echo isset($settings['sms']['id_number']) ? ' checked="checked"' : ''; ?>>
+					<label for="sms_id_number">TC Kimlik No doğrulaması yap</label>
 				</div>
 		<?php $method = 'sms'; include 'settings_permissions.html.php'; ?>
 		</div>
@@ -55,11 +44,11 @@ $(document).ready(function() {
 		<legend>Genel Ayarlar</legend>
 		<div class="item">
 			<div class="label">Oturum Geçerlilik Süresi</div>
-			<input type="text" class="xsmall<?=isset($errors['session_timeout']) ? ' error' : ''?>" name="session_timeout" value="<?=$settings['session_timeout']?>"> dakika
+			<input type="text" class="numeric xsmall<?=isset($errors['session_timeout']) ? ' error' : ''?>" name="session_timeout" value="<?=$settings['session_timeout']?>"> dakika
 		</div>
 		<div class="item">
 			<div class="label">Şifre Geçerlilik Süresi</div>
-			<input type="text" class="xsmall<?=isset($errors['valid_for']) ? ' error' : ''?>" name="valid_for" value="<?=$settings['valid_for']?>"> gün
+			<input type="text" class="numeric xsmall<?=isset($errors['valid_for']) ? ' error' : ''?>" name="valid_for" value="<?=$settings['valid_for']?>"> gün
 		</div>
 	</fieldset>
 
@@ -67,28 +56,28 @@ $(document).ready(function() {
 		<legend>SMS Ayarları</legend>
 		<div class="item">
 			<div class="label">Günlük Toplam SMS Limiti</div>
-			<input type="text" class="xsmall<?=isset($errors['daily_global_limit']) ? ' error' : ''?>" name="daily_global_limit" value="<?=$settings['daily_global_limit']?>">
+			<input type="text" class="numeric xsmall<?=isset($errors['daily_global_limit']) ? ' error' : ''?>" name="daily_global_limit" value="<?=$settings['daily_global_limit']?>">
 		</div>
 		Kullanıcı başına ayarlar:
 		<div class="item">
 			<div class="label">Günlük SMS Limiti</div>
-			<input type="text" class="xsmall<?=isset($errors['daily_limit']) ? ' error' : ''?>" name="daily_limit" value="<?=$settings['daily_limit']?>">
+			<input type="text" class="numeric xsmall<?=isset($errors['daily_limit']) ? ' error' : ''?>" name="daily_limit" value="<?=$settings['daily_limit']?>">
 		</div>
 		<div class="item">
 			<div class="label">Haftalık SMS Limiti</div>
-			<input type="text" class="xsmall<?=isset($errors['weekly_limit']) ? ' error' : ''?>" name="weekly_limit" value="<?=$settings['weekly_limit']?>">
+			<input type="text" class="numeric xsmall<?=isset($errors['weekly_limit']) ? ' error' : ''?>" name="weekly_limit" value="<?=$settings['weekly_limit']?>">
 		</div>
 		<div class="item">
 			<div class="label">Aylık SMS Limiti</div>
-			<input type="text" class="xsmall<?=isset($errors['monthly_limit']) ? ' error' : ''?>" name="monthly_limit" value="<?=$settings['monthly_limit']?>">
+			<input type="text" class="numeric xsmall<?=isset($errors['monthly_limit']) ? ' error' : ''?>" name="monthly_limit" value="<?=$settings['monthly_limit']?>">
 		</div>
 		<div class="item">
 			<div class="label">Yıllık SMS Limiti</div>
-			<input type="text" class="xsmall<?=isset($errors['yearly_limit']) ? ' error' : ''?>" name="yearly_limit" value="<?=$settings['yearly_limit']?>">
+			<input type="text" class="numeric xsmall<?=isset($errors['yearly_limit']) ? ' error' : ''?>" name="yearly_limit" value="<?=$settings['yearly_limit']?>">
 		</div>
 		<div class="item">
 			<div class="label">İki SMS arası minimum süre</div>
-			<input type="text" class="xsmall<?=isset($errors['min_interval']) ? ' error' : ''?>" name="min_interval" value="<?=$settings['min_interval']?>"> dk.
+			<input type="text" class="numeric xsmall<?=isset($errors['min_interval']) ? ' error' : ''?>" name="min_interval" value="<?=$settings['min_interval']?>"> dk.
 		</div>
 	</fieldset>
 
@@ -108,7 +97,7 @@ $(document).ready(function() {
 	<legend>Yönetim Ekranı Ayarları</legend>
 		<div class="item">
 			<div class="label">Sayfa Başına Adet</div>
-			<input type="text" class="xsmall<?=isset($errors['items_per_page']) ? ' error' : ''?>" name="items_per_page" value="<?=$settings['items_per_page']?>">
+			<input type="text" class="numeric xsmall<?=isset($errors['items_per_page']) ? ' error' : ''?>" name="items_per_page" value="<?=$settings['items_per_page']?>">
 		</div>
 		<div class="item">
 			<div class="label">Özel Alanlar</div>

@@ -23,43 +23,69 @@ function validateForm(form) {
 	for (var i=0; i < elements.length; i++) {
 
 		var el = elements[i];
-		if (el.type != "submit") el.removeAttribute("class");
 
-		/* gsm validation */
+		// gsm validation
 		if (el.name == "user[gsm]") {
 			if (el.value == "") {
-				errors[i] = "<?=t('gsm_required')?>";
+				errors[i] = "• <?=t('gsm_required')?>";
 			} else if (el.value.charAt(0) == "0") {
-				errors[i] = "<?=t('gsm_zero')?>";
+				errors[i] = "• <?=t('gsm_zero')?>";
 			} else if (/[^0-9]/g.test(el.value)) {
-				errors[i] = "<?=t('gsm_numeric')?>";
+				errors[i] = "• <?=t('gsm_numeric')?>";
 			} else if (!(el.value.length == 10)) {
-				errors[i] = "<?=t('gsm_valid')?>";
+				errors[i] = "• <?=t('gsm_valid')?>";
 			}
 		}
 
-		/* username validation */
+		// username validation
 		if (el.name == "user[username]") {
 			if (el.value == "") {
-				errors[i] = "<?=t('username_required')?>";
+				errors[i] = "• <?=t('username_required')?>";
 			}
 		}
 
-		/* id_number validation */
+		// email validation
+		if (el.name == "user[email]") {
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(el.value) == false) {
+				errors[i] = "• <?=t('email_error')?>";
+			}
+		}
+
+		// id_number validation
 		if (el.name == "user[id_number]") {
-		console.log('id');
 			if (!validateTurkishIdentificationNumber(el.value)) {
-				errors[i] = "<?=t('invalid_id_number_js')?>";
+				errors[i] = "• <?=t('invalid_id_number_js')?>";
+			}
+		}
+
+		// gsm_permission_required validation
+		if (el.name == "gsm_permission") {
+			if (form.elements.hasOwnProperty("gsm_permission_required")) {
+				if (!el.checked) {
+					errors[i] = "• <?=t('gsm_permission_required')?>";
+				}
+			}
+		}
+
+		// email_permission_required validation
+		if (el.name == "email_permission") {
+			if (form.elements.hasOwnProperty("email_permission_required")) {
+				if (!el.checked) {
+					errors[i] = "• <?=t('email_permission_required')?>";
+				}
 			}
 		}
 
 	};
 
 	if (errors.length != 0) {
+		var message = "";
 		for (var key in errors) {
-			elements[key].className = "error";
+			$(elements[key]).addClass("error");
+			message = message + errors[key] + "\n";
 		}
-		alert(errors.join("\n"));
+		message = message.slice(0, -1)
+		alert(message);
 		return false;
 	}
 

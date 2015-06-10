@@ -59,7 +59,7 @@ function welcome()
 	set('color', $settings['color']);
 	set('user', $user);
 	set('lang', isset($_SESSION['lang']) ? $_SESSION['lang'] : 'tr');
-	if (isset($settings['simple_screen'])) set('form', 'sms_register');
+	if (isset($settings['sms']['simple_screen'])) set('form', 'sms_register');
 	return html('layouts/captiveportal.html.php');
 }
 
@@ -87,7 +87,7 @@ function welcome_post()
 				$user->defaults();
 				$user->fill($_POST['user']);
 
-				if (isset($settings['sms_fields']['id_number']))
+				if (isset($settings['sms']['id_number']))
 				{
 					$user->name = tr_toUpper($user->name);
 					$user->surname = tr_toUpper($user->surname);
@@ -119,8 +119,18 @@ function welcome_post()
 				}
 				else
 				{
-					$message = 'user_already_registered';
-					$form = 'sms_login';
+					if (isset($settings['sms']['always_send_password']))
+					{
+						// Geçerli şifresi olsa bile yeni şifre gönder etkinse
+						$_POST['form_id'] = 'sms_login';
+						$_POST['password'] = '';
+						return welcome_post();
+					}
+					else
+					{
+						$message = 'user_already_registered';
+						$form = 'sms_login';
+					}
 				}
 			}
 
@@ -264,7 +274,7 @@ function welcome_post()
 	set('message', $message);
 	set('arg', $arg);
 	set('form', $form);
-	if (!$form && isset($settings['simple_screen'])) set('form', 'sms_register');
+	if (!$form && isset($settings['sms']['simple_screen'])) set('form', 'sms_register');
 	set('user', $user);
 	set('lang', isset($_SESSION['lang']) ? $_SESSION['lang'] : 'tr');
 	return html('layouts/captiveportal.html.php');
@@ -281,11 +291,11 @@ function permission_process(&$user, $method)
 	$message = '';
 
 	// izin vermek zorunlu ise izin verilmiş mi kontrol et (javascript'te de kontrol var ama teorik olarak aşılabilir)
-	if (isset($settings['authentication'][$method]['contact']['gsm_permission_required']))
+	if (isset($settings['contact'][$method]['gsm_permission_required']))
 	{
 		if (!isset($_POST['gsm_permission'])) $message = 'gsm_permission_required';
 	}
-	if (isset($settings['authentication'][$method]['contact']['email_permission_required']))
+	if (isset($settings['contact'][$method]['email_permission_required']))
 	{
 		if (!isset($_POST['email_permission'])) $message =  'email_permission_required';
 	}

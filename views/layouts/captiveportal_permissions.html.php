@@ -1,11 +1,11 @@
-<? if (isset($settings['authentication'][$method]['contact']['gsm'])): ?>
+<? if (isset($settings['contact'][$method]['gsm'])): ?>
 	<div class="item">
 		<label><?=t('gsm')?>:</label>
 		<input name="user[gsm]" class="text" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)">
 		<div class="item-description"><?=t('gsm_desc')?></div>
 	</div>
 <? endif; ?>
-<? if (isset($settings['authentication'][$method]['contact']['gsm_permission'])): ?>
+<? if (isset($settings['contact'][$method]['gsm_permission'])): ?>
 	<div class="item">
 		<div class="permission">
 			<input type="hidden" name="gsm_permission_asked">
@@ -14,17 +14,17 @@
 		</div>
 	</div>
 <? endif; ?>
-<? if (isset($settings['authentication'][$method]['contact']['gsm_permission_required'])): ?>
+<? if (isset($settings['contact'][$method]['gsm_permission_required'])): ?>
 	<input type="hidden" name="gsm_permission_required">
 <? endif; ?>
 
-<? if (isset($settings['authentication'][$method]['contact']['email'])): ?>
+<? if (isset($settings['contact'][$method]['email'])): ?>
 	<div class="item">
 		<label><?=t('email')?>:</label>
 		<input name="user[email]" class="text" type="text" maxlength="40" value="<?=$user->email?>">
 	</div>
 <? endif; ?>
-<? if (isset($settings['authentication'][$method]['contact']['email_permission'])): ?>
+<? if (isset($settings['contact'][$method]['email_permission'])): ?>
 	<div class="item">
 		<div class="permission">
 			<input type="hidden" name="email_permission_asked">
@@ -33,6 +33,6 @@
 		</div>
 	</div>
 <? endif; ?>
-<? if (isset($settings['authentication'][$method]['contact']['email_permission_required'])): ?>
+<? if (isset($settings['contact'][$method]['email_permission_required'])): ?>
 	<input type="hidden" name="email_permission_required">
 <? endif; ?>
