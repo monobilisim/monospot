@@ -112,7 +112,7 @@ function welcome_post()
 			else
 			{
 				// daha önce kayıt olmuşsa bile gsm/e-posta izin bilgileri güncellensin
-				$message = permission_process($user, 'sms');
+				$message = permission_process($user, 'sms', 'sms_register');
 				if ($message)
 				{
 					$form = 'sms_register';
@@ -285,12 +285,12 @@ run();
 
 /* Functions */
 
-function permission_process(&$user, $method)
+function permission_process(&$user, $method, $form_id = null)
 {
 	global $settings, $clientmac, $clientip;
 	$message = '';
 
-	// izin vermek zorunlu ise izin verilmiş mi kontrol et (javascript'te de kontrol var ama teorik olarak aşılabilir)
+	// izin vermek ya da sözleşmeyi kabul etmek zorunlu ise kontrol et (javascript'te de kontrol var ama teorik olarak aşılabilir)
 	if (isset($settings['contact'][$method]['gsm_permission_required']))
 	{
 		if (!isset($_POST['gsm_permission'])) $message = 'gsm_permission_required';
@@ -298,6 +298,11 @@ function permission_process(&$user, $method)
 	if (isset($settings['contact'][$method]['email_permission_required']))
 	{
 		if (!isset($_POST['email_permission'])) $message =  'email_permission_required';
+	}
+	// sms kayıt formu dışında sözleşme kontrolü yap
+	if (isset($settings['terms']) && $form_id != 'sms_register')
+	{
+		if (!isset($_POST['terms'])) $message = 'terms_required';
 	}
 
 	// izinleri kaydet
@@ -468,4 +473,16 @@ function tcno_dogrula($bilgiler) {
 
 function tr_toUpper($string) {
     return strtoupper (str_replace(array ('ı', 'i', 'ğ', 'ü', 'ş', 'ö', 'ç' ),array ('I', 'İ', 'Ğ', 'Ü', 'Ş', 'Ö', 'Ç' ),$string));
+}
+
+
+function permission_checked($method, $form_id, $type) {
+	global $settings;
+
+	if ($_POST && $form_id == $_POST['form_id']) {
+		return isset($_POST[$type . '_permission']);
+	}
+	else {
+		return isset($settings['contact'][$method][$type . '_permission_checked']);
+	}
 }

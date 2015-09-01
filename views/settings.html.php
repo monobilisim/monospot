@@ -38,6 +38,14 @@
 			<label for="manual_user">Elle kullanıcı açma</label>
 		</div>
 		<?php $method = 'manual_user'; include 'settings_permissions.html.php'; ?>
+		<div class="item">
+			<input type="checkbox" name="terms" id="terms" value="1"<? echo isset($settings['terms']) ? ' checked="checked"' : ''; ?>>
+			<label for="terms">Sözleşme onayı</label>
+				<div class="secondary-item">
+					<input type="checkbox" name="terms_checked" id="terms_checked" value="1"<? echo isset($settings['terms_checked']) ? ' checked="checked"' : ''; ?>>
+					<label for="terms_checked">Sözleşme onayı işaretli gelsin</label>
+				</div>
+		</div>
 	</fieldset>
 
 	<fieldset>

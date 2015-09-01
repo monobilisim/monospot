@@ -14,6 +14,8 @@ $(document).ready(function() {
 			});
 		}
 	});
+
+	$('a.popup').popup();
 });
 
 function validateForm(form) {
@@ -73,6 +75,13 @@ function validateForm(form) {
 				if (!el.checked) {
 					errors[i] = "• <?=t('email_permission_required')?>";
 				}
+			}
+		}
+
+		// terms validation
+		if (el.name == "terms") {
+			if (!el.checked) {
+				errors[i] = "• <?=t('terms_required')?>";
 			}
 		}
 

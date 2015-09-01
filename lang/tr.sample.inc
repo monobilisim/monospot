@@ -50,4 +50,8 @@ return array(
   'email_permission_required' => 'Wi-Fi hizmetini kullanabilmeniz için e-posta aracılığıyla iletişim izni vermeniz gerekmektedir.',
   'gsm_permission' => 'Bu cep telefonunun bilgilendirme amaçlı kullanılmasını onaylıyorum.',
   'gsm_permission_required' => 'Wi-Fi hizmetini kullanabilmeniz için cep telefonu aracılığıyla iletişim izni vermeniz gerekmektedir.',
+  'terms' => 'Sözleşmeyi kabul ediyorum.',
+  'terms_link' => 'Sözleşmeyi okumak için tıklayınız',
+  'terms_text' => 'Sözleşme metnini buraya yazınız.',
+  'terms_required' => 'Wi-Fi hizmetini kullanabilmeniz için sözleşmeyi kabul etmeniz gerekmektedir.',
 );

@@ -7,7 +7,7 @@
 <? endif; ?>
 <? if (isset($settings['contact'][$method]['gsm_permission'])): ?>
 	<div class="item">
-		<div class="permission">
+		<div class="checkbox">
 			<input type="hidden" name="gsm_permission_asked">
 			<input type="checkbox" name="gsm_permission" id="<?=$method?>_gsm_permission" value="1"<?= permission_checked($method, $_form, 'gsm') ? ' checked="checked"' : ''; ?>>
 			<label for="<?=$method?>_gsm_permission"><?=t('gsm_permission')?></label>
@@ -26,7 +26,7 @@
 <? endif; ?>
 <? if (isset($settings['contact'][$method]['email_permission'])): ?>
 	<div class="item">
-		<div class="permission">
+		<div class="checkbox">
 			<input type="hidden" name="email_permission_asked">
 			<input type="checkbox" name="email_permission" id="<?=$method?>_email_permission" value="1"<?= permission_checked($method, $_form, 'email') ? ' checked="checked"' : ''; ?>>
 			<label for="<?=$method?>_email_permission"><?=t('email_permission')?></label>

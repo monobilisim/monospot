@@ -4,6 +4,9 @@ body {
 	background-color: #666;
 	color: #333;
 }
+a, a:visited {
+	color: #00c;
+}
 #container {
 	padding: 20px;
 	background-color: #fff;
@@ -74,19 +77,6 @@ button {
 	font-weight: bold;
 	padding: 4px;
 }
-.form .permission input {
-	display: inline-block;
-	vertical-align: middle;
-}
-.form .permission label {
-	font-size: 12px;
-	font-weight: normal;
-	display: inline-block;
-	text-align: left;
-	vertical-align: middle;
-	width: 190px;
-	padding-left: 0;
-}
 .form .item-description {
 	font-size: 12px;
 	margin-top: 5px;
@@ -104,9 +94,18 @@ button {
 	border: 1px solid #c33;
 	box-shadow: 0 0 10px #ebadad;
 }
-.form .highlight {
-	color: #c33;
-	font-size: 14px;
+.form .checkbox input {
+	display: inline-block;
+	vertical-align: middle;
+}
+.form .checkbox label {
+	font-size: 12px;
+	font-weight: normal;
+	display: inline-block;
+	text-align: left;
+	vertical-align: middle;
+	max-width: 190px;
+	padding-left: 0;
 }
 .form .submit {
 	background-color: #333;
@@ -119,6 +118,9 @@ button {
 }
 .form .submit:active {
 	margin: 7px auto 0px;
+}
+.terms-link {
+	font-size: 12px;
 }
 #lang {
 	text-align: center;
@@ -136,4 +138,13 @@ button {
 #wifi-logo {
 	text-align: center;
 	margin-top: 20px;
+}
+.popup_cont {
+	width: 60%;
+}
+@media (max-width: 700px) {
+	.popup_cont {
+		width: 80%;
+	}
+}
 }

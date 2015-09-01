@@ -42,4 +42,8 @@ return array(
   'email_permission_required' => 'You have to give authorization for correspondence via e-mail in order to use Wi-Fi services.',
   'gsm_permission' => 'I agree that this mobile number can be used for contact purposes.',
   'gsm_permission_required' => 'You have to give authorization for correspondence via mobile phone in order to use Wi-Fi services.',
+  'terms' => 'I agree to the terms of service.',
+  'terms_link' => 'Click here to read the terms',
+  'terms_text' => 'Enter the Terms of Service Agreement here.',
+  'terms_required' => 'You have to agree to the terms of service in order to use Wi-Fi services.',
 );

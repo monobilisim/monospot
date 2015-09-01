@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <title><?=$title?></title>
 <link href="<?=$hotspot['_marka']?>/assets/css/captiveportal-style.css" rel="stylesheet">
+<link href="<?=$hotspot['_marka']?>/assets/css/captiveportal-popup.css" rel="stylesheet">
 <script src="<?=$hotspot['_marka']?>/assets/js/captiveportal-jquery-1.9.1.js"></script>
+<script src="<?=$hotspot['_marka']?>/assets/js/captiveportal-jquery.popup.min.js"></script>
 <script>
 <? include $hotspot['_marka'] . '/assets/js/captiveportal.js'; ?>
 <? $settings = include $hotspot['_marka'] . '/settings.inc'; ?>
@@ -86,6 +88,7 @@ button#sms_register, button#sms_login {display: none}
 			<input name="password" class="text" type="password">
 			<div class="item-description"><?=t('password_desc_gsm')?></div>
 			</div>
+		<?php if (isset($settings['terms'])) require 'captiveportal_terms.html.php'; ?>
 			<input name="form_id" type="hidden" value="sms_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
@@ -118,6 +121,8 @@ button#sms_register, button#sms_login {display: none}
 
 			<?php $method = 'id_number'; $_form = 'id_number_login'; include 'captiveportal_permissions.html.php'; ?>
 
+			<?php if (isset($settings['terms'])) require 'captiveportal_terms.html.php'; ?>
+
 			<input name="form_id" type="hidden" value="id_number_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
@@ -142,6 +147,8 @@ button#sms_register, button#sms_login {display: none}
 
 			<?php $method = 'manual_user'; $_form = 'manual_user_login'; include 'captiveportal_permissions.html.php'; ?>
 
+			<?php if (isset($settings['terms'])) require 'captiveportal_terms.html.php'; ?>
+
 			<input name="form_id" type="hidden" value="manual_user_login">
 			<input class="submit" name="submit" type="submit" value="<?=t('login')?> &#187;">
 			</form>
@@ -163,6 +170,8 @@ button#sms_register, button#sms_login {display: none}
 	<div id="wifi-logo">
 		<img src="<?=$hotspot['_marka']?>/assets/img/captiveportal-wifi.png">
 	</div>
+
+	<div id="terms-text" style="display:none"><p><?=nl2br(t('terms_text'))?></p></div>
 
 </body>
 </html>
