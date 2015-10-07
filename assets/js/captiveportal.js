@@ -28,14 +28,16 @@ function validateForm(form) {
 
 		// gsm validation
 		if (el.name == "user[gsm]") {
-			if (el.value == "") {
-				errors[i] = "• <?=t('gsm_required')?>";
-			} else if (el.value.charAt(0) == "0") {
-				errors[i] = "• <?=t('gsm_zero')?>";
-			} else if (/[^0-9]/g.test(el.value)) {
-				errors[i] = "• <?=t('gsm_numeric')?>";
-			} else if (!(el.value.length == 10)) {
-				errors[i] = "• <?=t('gsm_valid')?>";
+			if (form.elements.hasOwnProperty("gsm_required")) {
+				if (el.value == "") {
+					errors[i] = "• <?=t('gsm_required')?>";
+				} else if (el.value.charAt(0) == "0") {
+					errors[i] = "• <?=t('gsm_zero')?>";
+				} else if (/[^0-9]/g.test(el.value)) {
+					errors[i] = "• <?=t('gsm_numeric')?>";
+				} else if (!(el.value.length == 10)) {
+					errors[i] = "• <?=t('gsm_valid')?>";
+				}
 			}
 		}
 
@@ -48,8 +50,10 @@ function validateForm(form) {
 
 		// email validation
 		if (el.name == "user[email]") {
-			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(el.value) == false) {
-				errors[i] = "• <?=t('email_error')?>";
+			if (form.elements.hasOwnProperty("email_required")) {
+				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(el.value) == false) {
+					errors[i] = "• <?=t('email_error')?>";
+				}
 			}
 		}
 

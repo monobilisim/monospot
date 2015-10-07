@@ -45,6 +45,7 @@ button#sms_register, button#sms_login {display: none}
 			<label><?=t('gsm')?>:</label>
 			<input name="user[gsm]" class="text" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)">
 			<div class="item-description"><?=t('gsm_desc')?></div>
+			<input type="hidden" name="gsm_required">
 			</div>
 		<? if (isset($settings['sms']['id_number']) && $lang == 'tr'): ?>
 			<div class="item">
@@ -82,6 +83,7 @@ button#sms_register, button#sms_login {display: none}
 			<label><?=t('gsm')?>:</label>
 			<input name="user[gsm]" class="text" type="text" maxlength="10" value="<?=$user->gsm?>" onkeypress="checkphone(this, event)"/>
 			<div class="item-description"><?=t('gsm_desc')?></div>
+			<input type="hidden" name="gsm_required">
 			</div>
 			<div class="item">
 			<label><?=t('password')?>:</label>

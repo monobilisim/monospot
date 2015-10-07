@@ -17,6 +17,9 @@
 <? if (isset($settings['contact'][$method]['gsm_permission_required'])): ?>
 	<input type="hidden" name="gsm_permission_required">
 <? endif; ?>
+<? if (isset($settings['contact'][$method]['gsm_required'])): ?>
+	<input type="hidden" name="gsm_required">
+<? endif; ?>
 
 <? if (isset($settings['contact'][$method]['email'])): ?>
 	<div class="item">
@@ -35,4 +38,7 @@
 <? endif; ?>
 <? if (isset($settings['contact'][$method]['email_permission_required'])): ?>
 	<input type="hidden" name="email_permission_required">
+<? endif; ?>
+<? if (isset($settings['contact'][$method]['email_required'])): ?>
+	<input type="hidden" name="email_required">
 <? endif; ?>
