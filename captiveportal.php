@@ -134,6 +134,44 @@ function welcome_post()
 				}
 			}
 
+            if (isset($settings['disallow_multiple_logins']))
+            {
+                // Aynı MAC adresi ile farklı kullanıcının giriş yapmasını engelle etkinse
+                if (isset($settings['disallow_multiple_logins_for']))
+                {
+                    $mac_disallow_for = $settings['disallow_multiple_logins_for'];
+                }
+                else
+                {
+                    $mac_disallow_for = 30;
+                }
+
+                if (!empty($clientmac))
+                {
+                    $mac_sms = ORM::for_table('sms')->where('mac', $clientmac)->order_by_desc('timestamp')->find_one(); // Bu MAC adresi icin son gonderilen SMS
+                    if ($mac_sms)
+                    {
+                        $mac_user = Model::factory('User')->find_one($mac_sms->user_id);
+                        $mac_gsm = $mac_user->gsm;
+
+                        if ($_POST['user']['gsm'] != $mac_gsm) // Bu MAC adresi icin son gonderilen SMS kullanicinin verdigi numaradan farkli bir numaraya gonderilmisse
+                        {
+                            $current_time = time();
+                            $mac_time = $mac_sms->timestamp;
+                            $mac_interval = $current_time - $mac_time;
+
+                            if ($mac_interval <= ($mac_disallow_for * 86400)) // Son gonderilen SMS'ten beri yeterli sure gecmemisse
+                            {
+                                $mac_user = Model::factory('User')->find_one($mac_sms->user_id);
+                                $message = 'multiple_logins_from_same_mac_address_disallowed';
+                                $arg = $mac_gsm;
+                                $form = 'sms_login';
+                            }
+                        }
+                    }
+                }
+            }
+
 			if (!$form) // TC kimlik doğrulama varsa ondan geçmiş demektir
 			{
 				$message = permission_process($user, 'sms');

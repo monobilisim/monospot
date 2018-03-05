@@ -58,6 +58,14 @@
 			<div class="label">Şifre Geçerlilik Süresi</div>
 			<input type="text" class="numeric xsmall<?=isset($errors['valid_for']) ? ' error' : ''?>" name="valid_for" value="<?=$settings['valid_for']?>"> gün
 		</div>
+        <div class="item">
+            <input type="checkbox" name="disallow_multiple_logins" id="disallow_multiple_logins" value="1"<? echo isset($settings['disallow_multiple_logins']) ? ' checked="checked"' : ''; ?>>
+            <label for="disallow_multiple_logins">Aynı MAC adresi ile farklı kullanıcının giriş yapmasını engelle</label>
+        </div>
+        <div class="item">
+            <div class="label">MAC Adresi Bazlı Engelleme Süresi</div>
+            <input type="text" class="numeric xsmall<?=isset($errors['disallow_multiple_logins_for']) ? ' error' : ''?>" name="disallow_multiple_logins_for" value="<?=$settings['disallow_multiple_logins_for']?>"> gün
+        </div>
 	</fieldset>
 
 	<fieldset<?=isset($settings['authentication']['sms']) ? '' : ' style="display:none"'?>>
