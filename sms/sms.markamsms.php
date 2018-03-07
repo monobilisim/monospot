@@ -14,7 +14,7 @@ function send_sms($user, $password)
     $params = array(
         'username' => $api_username,
         'password' => $api_password,
-        'originator' => $api_originator
+        'originator' => $api_originator,
         'sms_account' => 0,
         'message' => $message,
         'receipients' => '90' . $user->gsm,
