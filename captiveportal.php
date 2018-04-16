@@ -510,7 +510,7 @@ function tcno_dogrula($bilgiler) {
 }
 
 function tr_toUpper($string) {
-    return strtoupper (str_replace(array ('ı', 'i', 'ğ', 'ü', 'ş', 'ö', 'ç' ),array ('I', 'İ', 'Ğ', 'Ü', 'Ş', 'Ö', 'Ç' ),$string));
+    return str_replace(array('ı', 'i', 'ğ', 'ü', 'ş', 'ö', 'ç' ), array('I', 'İ', 'Ğ', 'Ü', 'Ş', 'Ö', 'Ç'), strtoupper($string));
 }
 
 
