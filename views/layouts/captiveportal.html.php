@@ -99,8 +99,8 @@ button#sms_register, button#sms_login {display: none}
 	<? endif; ?>
 
 	<? if (isset($settings['authentication']['id_number']) && $lang == 'tr'): ?>
-		<button id="id_number_login"<?= $form == 'id_number_login' ? ' class="active"' : '' ?>><?=t('id_number_login')?></button>
-		<div class="form<?= $form == 'id_number_login' ? ' active' : '' ?>" id="form_id_number_login">
+		<button id="id_number_login"<?= $form == 'id_number_login' || isset($settings['id_number']['open_extended']) ? ' class="active"' : '' ?>><?=t('id_number_login')?></button>
+		<div class="form<?= $form == 'id_number_login' || isset($settings['id_number']['open_extended']) ? ' active' : '' ?>" id="form_id_number_login">
 			<div class="content">
 			<form method="post" onSubmit="return validateForm(this)" action="">
 			<p class="description"><?=t('login_desc_id_number')?></p>

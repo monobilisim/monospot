@@ -31,6 +31,10 @@
 		<div class="item">
 			<input type="checkbox" name="authentication[id_number]" id="id_number" value="1"<? echo isset($settings['authentication']['id_number']) ? ' checked="checked"' : ''; ?>>
 			<label for="id_number">TC Kimlik No</label>
+			<div class="secondary-item">
+				<input type="checkbox" name="id_number[open_extended]" id="id_number_open_extended" value="1"<? echo isset($settings['id_number']['open_extended']) ? ' checked="checked"' : ''; ?>>
+				<label for="id_number_open_extended">Açık gelsin</label>
+			</div>
 		</div>
 		<?php $method = 'id_number'; include 'settings_permissions.html.php'; ?>
 		<div class="item">
