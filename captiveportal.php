@@ -1,8 +1,9 @@
 <?php
 
 // assets dizinindeki dosyalara gelen isteklerde dosyayi goster ve cik
-if (substr($redirurl, 0, 17) == '/monospot/assets/') {
-    $extension = substr($redirurl, strrpos($redirurl, '.') + 1);
+$request_uri = $_SERVER[REQUEST_URI];
+if (substr($request_uri, 0, 17) == '/monospot/assets/') {
+    $extension = substr($request_uri, strrpos($request_uri, '.') + 1);
     $content_types = array(
         'txt' => 'text/plain',
         'css' => 'text/css',
@@ -17,7 +18,7 @@ if (substr($redirurl, 0, 17) == '/monospot/assets/') {
     } else {
         header('Content-Type: text/plain');
     }
-    print file_get_contents(".$redirurl");
+    print file_get_contents(".$request_uri");
     exit();
 }
 
