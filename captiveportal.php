@@ -1,5 +1,26 @@
 <?php
 
+// assets dizinindeki dosyalara gelen isteklerde dosyayi goster ve cik
+if (substr($redirurl, 0, 17) == '/monospot/assets/') {
+    $extension = substr($redirurl, strrpos($redirurl, '.') + 1);
+    $content_types = array(
+        'txt' => 'text/plain',
+        'css' => 'text/css',
+        'js' => 'application/javascript',
+        'png' => 'image/png',
+        'jpeg' => 'image/jpeg',
+        'jpg' => 'image/jpeg',
+        'gif' => 'image/gif',
+    );
+    if (array_key_exists($extension, $content_types)) {
+        header('Content-Type: ' . $content_types[$extension]);
+    } else {
+        header('Content-Type: text/plain');
+    }
+    print file_get_contents(".$redirurl");
+    exit();
+}
+
 date_default_timezone_set('Europe/Istanbul');
 
 require 'lib/limonade.php';
