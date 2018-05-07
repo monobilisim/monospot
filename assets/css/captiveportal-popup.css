@@ -58,3 +58,8 @@ div.popup {
 	position: fixed;
 	top: 50%;
 }
+
+.popup_cont {
+	max-height: calc(100% - 20px) !important;
+	overflow-y: scroll;
+}
