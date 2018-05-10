@@ -435,6 +435,7 @@ function login($user, $field)
 	global $settings, $clientmac, $clientip;
 
 	$user->last_login = time();
+	$user->last_mac = $clientmac;
 	$user->save();
 	captiveportal_logportalauth($user->$field,$clientmac,$clientip,"LOGIN");
 	$attributes = array();

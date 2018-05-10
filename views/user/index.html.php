@@ -37,6 +37,7 @@
 		<? endif; ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'expires', 'Şifre Son Geçerlilik')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_login', 'Son Oturum Açma')?></th>
+			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_mac', 'Son MAC Adresi')?></th>
 			<th rowspan="<?=$rowspan?>">GSM İzin</th>
 			<th rowspan="<?=$rowspan?>">E-posta İzin</th>
 			<th rowspan="<?=$rowspan?>" style="width:140px">İşlem</th>
@@ -78,6 +79,7 @@
 		<? endif; ?>
 			<td><?=format_date($user->expires)?></td>
 			<td><?=format_date($user->last_login)?></td>
+			<td><?=$user->last_mac?></td>
 			<td><?=$user->gsm_permission === '1' ? 'Evet' : ($user->gsm_permission === '0' ? 'Hayır' : '')?></td>
 			<td><?=$user->email_permission === '1' ? 'Evet' : ($user->email_permission === '0' ? 'Hayır' : '')?></td>
 			<td>

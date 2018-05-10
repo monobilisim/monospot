@@ -23,3 +23,20 @@ if (!$result) {
 		file_put_contents('lang/' . $code . '.inc', '<?php' . "\n\n" . 'return ' . var_export($lang, true) . ';');
 	}
 }
+
+// Son MAC adresi sütunu eklendi.
+$result = ORM::for_table('user')->raw_query("PRAGMA table_info(user)")->find_many();
+$last_mac_column_exists = FALSE;
+foreach ($result as $column) {
+    if ($column->name === 'last_mac') {
+        $last_mac_column_exists = TRUE;
+        break;
+    }
+}
+if (!$last_mac_column_exists) {
+    try {
+        ORM::for_table('user')->raw_execute('ALTER TABLE user ADD last_mac TEXT');
+    } catch (Exception $e) {
+        die('Veritabani guncellemesi sirasinda bir hata olustu: ' .$e->getMessage());
+    }
+}
