@@ -196,7 +196,7 @@ function welcome_post()
 
 			if (!$form) // TC kimlik doğrulama varsa ondan geçmiş demektir
 			{
-				$message = permission_process($user, 'sms');
+				$message = permission_process($user, 'sms', 'sms_register');
 				if ($message)
 				{
 					$form = 'sms_register';
