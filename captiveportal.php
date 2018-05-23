@@ -127,6 +127,7 @@ function welcome_post()
 					{
 						captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
 						$message = 'invalid_id_number';
+						$user->delete();
 						$form = 'sms_register';
 					}
 				}
@@ -286,6 +287,7 @@ function welcome_post()
 		{
 			captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
 			$message = 'invalid_id_number';
+			$user->delete();
 		}
 		$form = 'id_number_login';
 	}
