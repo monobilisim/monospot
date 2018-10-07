@@ -142,8 +142,68 @@ button {
 .popup_cont {
 	width: 60%;
 }
-@media (max-width: 700px) {
+
+@media all and (max-width: 767px) {
 	.popup_cont {
 		width: 80%;
+	}
+	#title, #container {
+		width: auto;
+	}
+	button, .form {
+		width: calc(100% - 36px);
+	}
+	body {
+		font-size: 24px;
+	}
+	button {
+		font-size: 27px;
+	}
+	.form .item {
+		margin-bottom: 23px;
+	}
+	.form .title {
+		font-size: 27px;
+	}
+	.form .description {
+		font-size: 22px;
+	}
+	.form .item-description {
+		font-size: 18px;
+	}
+	.form input.text {
+		font-size: 22px;
+		text-align: center;
+		width: calc(100% - 6px);
+	}
+	.intl-tel-input {
+		width: 100%;
+	}
+	.form .checkbox label {
+		font-size: 18px;
+	}
+	.form .submit {
+		font-size: 22px;
+	}
+	.terms-link {
+		font-size: 18px;
+	}
+	#lang {
+		font-size: 15px;
+	}
+	#lang input {
+		font-size: 15px;
+	}
+	.iti-mobile .intl-tel-input.iti-container {
+		top: 40px;
+		bottom: 40px;
+		left: 40px;
+		right: 40px;
+		position: fixed;
+		width: calc(100% - 80px);
+		-webkit-box-shadow: 0px 0px 100px 100px rgba(0,0,0,0.5);
+		-moz-box-shadow: 0px 0px 100px 100px rgba(0,0,0,0.5);
+		box-shadow: 0px 0px 100px 100px rgba(0,0,0,0.5);
+		-webkit-appearance: none;
 	}
 }
