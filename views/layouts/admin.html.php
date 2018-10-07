@@ -29,7 +29,8 @@
 	<? endif; ?>
 		<a href="<?=url_for('permissions')?>">İzin Raporu</a> |
 		<a href="<?=url_for('settings')?>">Ayarlar</a> |
-		<a href="<?=url_for('lang/tr')?>">Dil</a>
+		<a href="<?=url_for('lang/tr')?>">Dil</a> |
+		<a href="<?=url_for('logout')?>">Çıkış</a>
 	</div>
 
 	<? if (isset($message)): ?>

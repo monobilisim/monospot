@@ -65,6 +65,7 @@ dispatch('settings', 'admin_settings');
 dispatch_post('settings', 'admin_settings_save');
 dispatch('lang/*', 'admin_lang');
 dispatch_post('lang/*', 'admin_lang_save');
+dispatch('logout', 'admin_logout');
 
 function home()
 {
@@ -443,6 +444,23 @@ function admin_lang_save($code)
 	$_SESSION['message'] = 'Ayarlar kaydedildi.';
 
 	return html('lang.html.php');
+}
+
+function admin_logout()
+{
+    // unset cookies
+    if (isset($_SERVER['HTTP_COOKIE'])) {
+        $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+        foreach($cookies as $cookie) {
+            $parts = explode('=', $cookie);
+            $name = trim($parts[0]);
+            setcookie($name, '', time()-1000);
+            setcookie($name, '', time()-1000, '/');
+        }
+    }
+
+    // redirect to index.php
+    header('Location: ' . $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] . '/index.php');
 }
 
 run();
