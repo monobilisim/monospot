@@ -1,4 +1,24 @@
+var intPhoneInput = {};
+
 $(document).ready(function() {
+    if (smsInternational) {
+    	$(".intlPhone").each(function () {
+    		var id = $(this).attr("id");
+			var element = document.querySelector("#" + id);
+
+            intPhoneInput[id] = {};
+            intPhoneInput[id].element = element;
+            intPhoneInput[id].iti = intlTelInput(element, {
+                allowDropdown: true,
+                initialCountry: "tr",
+                preferredCountries: ["tr", "us", "gb"],
+                nationalMode: true,
+                utilsScript: "intlTelInputUtils.js",
+                autoHideDialCode: false
+            });
+        });
+    }
+
 	$(".form.active").slideDown();
 
 	$("button").click(function() {
@@ -21,6 +41,7 @@ $(document).ready(function() {
 function validateForm(form) {
 	var errors = new Array();
 	var elements = form.elements;
+	var phoneInputId = null;
 
 	for (var i=0; i < elements.length; i++) {
 
@@ -29,15 +50,24 @@ function validateForm(form) {
 		// gsm validation
 		if (el.name == "user[gsm]") {
 			if (form.elements.hasOwnProperty("gsm_required")) {
-				if (el.value == "") {
-					errors[i] = "• <?=t('gsm_required')?>";
-				} else if (el.value.charAt(0) == "0") {
-					errors[i] = "• <?=t('gsm_zero')?>";
-				} else if (/[^0-9]/g.test(el.value)) {
-					errors[i] = "• <?=t('gsm_numeric')?>";
-				} else if (!(el.value.length == 10)) {
-					errors[i] = "• <?=t('gsm_valid')?>";
-				}
+				if (smsInternational) {
+					if (el.classList.contains("intlPhone")) {
+						phoneInputId = el.id;
+						if (!intPhoneInput[el.id].iti.isValidNumber()) {
+                            errors[i] = "• <?=t('gsm_valid')?>";
+						}
+					}
+				} else {
+                    if (el.value == "") {
+                        errors[i] = "• <?=t('gsm_required')?>";
+                    } else if (el.value.charAt(0) == "0") {
+                        errors[i] = "• <?=t('gsm_zero')?>";
+                    } else if (/[^0-9]/g.test(el.value)) {
+                        errors[i] = "• <?=t('gsm_numeric')?>";
+                    } else if (!(el.value.length == 10)) {
+                        errors[i] = "• <?=t('gsm_valid')?>";
+                    }
+                }
 			}
 		}
 
@@ -106,13 +136,21 @@ function validateForm(form) {
 	form.submit.value = "<?=t('wait')?>";
 	form.submit.style.backgroundColor = "gray";
 	form.submit.style.cursor = "default";
+
+	// populate GSM field with the full international number
+	if (smsInternational && phoneInputId) {
+		$("#" + phoneInputId).val(intPhoneInput[phoneInputId].iti.getNumber());
+	}
+
 	return true;
 }
 
 function checkphone(input, event) {
-	if (input.value.length === 0 && String.fromCharCode(event.charCode) === '0') {
-		event.preventDefault();
-	}
+	if (!smsInternational) {
+        if (input.value.length === 0 && String.fromCharCode(event.charCode) === '0') {
+            event.preventDefault();
+        }
+    }
 }
 
 var validateTurkishIdentificationNumber = function(n) {

@@ -99,7 +99,8 @@ function welcome_post()
 	// SMS ile giriş - yeni kayıt
 	if ($_POST['form_id'] == 'sms_register')
 	{
-		if (strlen($_POST['user']['gsm']) == 10)
+		if ((!isset($settings['sms']['international']) && strlen($_POST['user']['gsm']) == 10) ||
+            isset($settings['sms']['international']))
 		{
 			$user = Model::factory('User')->where('gsm', $_POST['user']['gsm'])->find_one();
 

@@ -12,6 +12,7 @@ return array(
   'login_desc_sms' => 'If you already have a password<br>you can login here',
   'gsm' => 'Mobile Number',
   'gsm_desc' => 'Enter your number without spaces in 10 digits',
+  'gsm_int_desc' => 'Select country and enter your phone number',
   'manual_user_name' => 'Username',
   'password' => 'Password',
   'password_desc_gsm' => 'If your password is expired<br>leave this field blank to request a new one',
