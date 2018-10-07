@@ -12,7 +12,6 @@ $(document).ready(function() {
                 allowDropdown: true,
                 initialCountry: "tr",
                 preferredCountries: ["tr", "us", "gb"],
-                nationalMode: true,
                 utilsScript: "intlTelInputUtils.js",
                 autoHideDialCode: false
             });
