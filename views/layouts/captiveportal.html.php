@@ -74,10 +74,10 @@
                     <div class="item">
                         <label><?= t('gsm') ?>:</label>
                         <? if (isset($settings['sms']['international'])): ?>
-                            <input id="phoneRegister" name="user[gsm]" class="text intlPhone" type="text" value="<?= $user->gsm ?>">
+                            <input id="phoneRegister" name="user[gsm]" class="text intlPhone" type="tel" value="<?= $user->gsm ?>">
                             <div class="item-description"><?= t('gsm_int_desc') ?></div>
                         <? else: ?>
-                            <input id="phoneRegister" name="user[gsm]" class="text" type="text" maxlength="10" value="<?= $user->gsm ?>" onkeypress="checkphone(this, event)">
+                            <input id="phoneRegister" name="user[gsm]" class="text" type="tel" maxlength="10" value="<?= $user->gsm ?>" onkeypress="checkphone(this, event)">
                             <div class="item-description"><?= t('gsm_desc') ?></div>
                         <? endif; ?>
                         <input type="hidden" name="gsm_required">
@@ -122,10 +122,10 @@
                     <div class="item">
                         <label><?= t('gsm') ?>:</label>
                         <? if (isset($settings['sms']['international'])): ?>
-                            <input id="phoneLogin" name="user[gsm]" class="text intlPhone" type="text" value="<?= $user->gsm ?>">
+                            <input id="phoneLogin" name="user[gsm]" class="text intlPhone" type="tel" value="<?= $user->gsm ?>">
                             <div class="item-description"><?= t('gsm_int_desc') ?></div>
                         <? else: ?>
-                            <input name="user[gsm]" class="text" type="text" maxlength="10" value="<?= $user->gsm ?>" onkeypress="checkphone(this, event)">
+                            <input name="user[gsm]" class="text" type="tel" maxlength="10" value="<?= $user->gsm ?>" onkeypress="checkphone(this, event)">
                             <div class="item-description"><?= t('gsm_desc') ?></div>
                         <? endif; ?>
                         <input type="hidden" name="gsm_required">
