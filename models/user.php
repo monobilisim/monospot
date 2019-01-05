@@ -3,7 +3,7 @@
 class User extends Model
 {
 
-	public function defaults()
+	public function fillDefaults()
 	{
 		global $settings;
 		$this->daily_limit = $settings['daily_limit'];

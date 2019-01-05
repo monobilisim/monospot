@@ -148,7 +148,7 @@ function admin_user_add_page()
 {
 	global $settings;
 	$user = Model::factory('User')->create();
-	$user->defaults();
+	$user->fillDefaults();
 	$user->password = mt_rand(100000, 999999);
 	$user->expires = strtotime('+' . $settings['valid_for'] . ' days');
 	set('user', $user);
@@ -400,7 +400,7 @@ function admin_settings_save()
 	if (!$halt)
 	{
 		file_put_contents('settings.inc', '<?php' . "\n\n" . 'return ' . var_export($_POST, true) . ';');
-		$settings = include('settings.inc');
+		$settings = $_POST;
 		set('settings', $settings);
 		set('message', 'Ayarlar kaydedildi.');
 		set('status', 'success');

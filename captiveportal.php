@@ -76,7 +76,7 @@ function welcome()
 	global $settings;
 
 	$user = Model::factory('User')->create();
-	$user->defaults();
+	$user->fillDefaults();
 	set('title', $settings['name'] . ' ' . t('welcome'));
 	set('color', $settings['color']);
 	set('user', $user);
@@ -107,7 +107,7 @@ function welcome_post()
 			if (!$user) // Daha önceden kaydı yoksa yeni kayıt açıp gerekirse TC kimlik kontrolü yapıyoruz
 			{
 				$user = Model::factory('User')->create();
-				$user->defaults();
+				$user->fillDefaults();
 				$user->fill($_POST['user']);
 
 				if (isset($settings['sms']['id_number']))
@@ -128,7 +128,6 @@ function welcome_post()
 					{
 						captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
 						$message = 'invalid_id_number';
-						$user->delete();
 						$form = 'sms_register';
 					}
 				}
@@ -261,7 +260,7 @@ function welcome_post()
 		if (!$user)
 		{
 			$user = Model::factory('User')->create();
-			$user->defaults();
+			$user->fillDefaults();
 			$user->fill($_POST['user']);
 			$user->name = tr_toUpper($user->name);
 			$user->surname = tr_toUpper($user->surname);
@@ -288,7 +287,6 @@ function welcome_post()
 		{
 			captiveportal_logportalauth($user->id_number,$clientmac,$clientip,"FAILURE");
 			$message = 'invalid_id_number';
-			$user->delete();
 		}
 		$form = 'id_number_login';
 	}
