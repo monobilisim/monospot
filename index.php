@@ -99,6 +99,12 @@ function admin_user_index()
 	$users->select('user.*');
 
 	$columns = array('id_number', 'gsm', 'last_sms', 'last_login', 'expires', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit');
+	if ($settings['custom_fields']) {
+        foreach (explode("\n", $settings['custom_fields']) as $field) {
+            $field = explode('|', $field);
+            $columns[] = $field[0];
+        }
+    }
 	if (!empty($get['order']) && in_array($get['order'], $columns)) $col = $get['order'];
 	else $col = 'user.last_login';
 	if (!empty($get['dir']) && in_array($get['dir'], array('asc', 'desc'))) $dir = $get['dir'];
@@ -382,6 +388,9 @@ function admin_settings_save()
 
 		$custom_fields = str_replace("\r\n", "\n", $_POST['custom_fields']);
 
+		$lang['tr'] = include 'lang/tr.inc';
+        $lang['en'] = include 'lang/en.inc';
+
 		foreach (explode("\n", $custom_fields) as $field)
 		{
 			$field = explode('|', $field);
@@ -390,11 +399,12 @@ function admin_settings_save()
 
 			foreach(array('tr', 'en') as $code)
 			{
-				$lang = include 'lang/' . $code . '.inc';
-				if (!array_key_exists($field[0], $lang)) $lang[$field[0]] = $field[1];
-				file_put_contents('lang/' . $code . '.inc', '<?php' . "\n\n" . 'return ' . var_export($lang, true) . ';');
+				if (!array_key_exists($field[0], $lang[$code])) $lang[$code][$field[0]] = $field[1];
 			}
 		}
+
+		file_put_contents('lang/tr.inc', '<?php' . "\n\n" . 'return ' . var_export($lang['tr'], true) . ';');
+        file_put_contents('lang/en.inc', '<?php' . "\n\n" . 'return ' . var_export($lang['en'], true) . ';');
 	}
 
 	if (!$halt)

@@ -57,7 +57,7 @@
 			<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
 				<? $field = explode('|', $field); ?>
 				<? if ($field[0] != 'gsm'): ?>
-				<td><?=$user->$field[0]?></td>
+				<td><?=$user->{$field[0]}?></td>
 				<? endif; ?>
 			<? endforeach; ?>
 		<? endif; ?>
