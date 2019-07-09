@@ -7,7 +7,7 @@
 		<? if ($field[0] != 'gsm'): ?>
 		<div class="item">
 			<div class="label"><?=$field[1]?></div>
-			<span class="value"><?=$user->$field[0]?></span>
+			<span class="value"><?=$user->{$field[0]}?></span>
 		</div>
 		<? endif; ?>
 	<? endforeach; ?>

@@ -29,7 +29,7 @@
 			<? if ($field[0] != 'gsm'): ?>
 			<div class="item">
 				<div class="label"><?=$field[1]?></div>
-				<input type="text" class="large" name="user[<?=$field[0]?>]" value="<?=$user->$field[0]?>">
+				<input type="text" class="large" name="user[<?=$field[0]?>]" value="<?=$user->{$field[0]}?>">
 			</div>
 			<? endif; ?>
 		<? endforeach; ?>
