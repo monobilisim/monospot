@@ -13,7 +13,6 @@ $(document).ready(function() {
                 initialCountry: "tr",
                 preferredCountries: ["tr", "us", "gb"],
                 autoPlaceholder: "off",
-                utilsScript: "intlTelInputUtils.js",
                 autoHideDialCode: false
             });
         });

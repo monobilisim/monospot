@@ -17,7 +17,6 @@
         </script>
         <script src="<?= $hotspot['_marka'] ?>/assets/js/intlTelInput.js"></script>
         <script src="<?= $hotspot['_marka'] ?>/assets/js/intlTelInputUtils.js"></script>
-        <script src="<?= $hotspot['_marka'] ?>/assets/js/intlTelInputUtilsValidate.js"></script>
     <? else: ?>
         <script>
             var smsInternational = false;
