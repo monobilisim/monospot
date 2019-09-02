@@ -37,6 +37,7 @@ class Group extends Model
 
         $macs = array_unique(explode("\n", $_POST['group']['macs']));
 
+        // MAC adresleri geçerli mi kontrolü
         $invalid_macs = array();
         foreach ($macs as $i => $mac) {
             if ($mac) {
@@ -49,7 +50,26 @@ class Group extends Model
         }
 
         if ($invalid_macs) {
-            $errors['macs'] = "Aşağıdaki MAC adresleri geçersiz:<br>" . implode("<br>", $invalid_macs);
+            $errors['macs'] = 'Aşağıdaki MAC adresleri geçersiz:<br>' . implode('<br>', $invalid_macs);
+        }
+
+        // MAC adresleri mükerrer mi kontrolü
+        $duplicate_macs = array();
+        if ($this->id) {
+            $previous_groups = Model::factory('Group')->where_not_equal('id', $this->id)->find_many();
+        } else {
+            $previous_groups = Model::factory('Group')->find_many();
+        }
+        foreach ($previous_groups as $previous_group) {
+            foreach ($macs as $mac) {
+                if (strpos($previous_group->macs, $mac) !== false) {
+                    $duplicate_macs[] = $mac . ' <em>(Grup adı: ' . $previous_group->name . ', Grup ID\'si: ' . $previous_group->id . ')</em>';
+                }
+            }
+        }
+
+        if ($duplicate_macs) {
+            $errors['macs'] = 'Aşağıdaki MAC adresleri başka gruplarda yer alıyor:<br>' . implode('<br>', $duplicate_macs);
         }
 
         return $errors;
