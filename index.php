@@ -328,17 +328,17 @@ function admin_group_update($id)
     $group = Model::factory('Group')->find_one($id);
     $group->fill($_POST['group']);
 
-    if ($errors = $group->validate($_POST['user']))
+    if ($errors = $group->validate($_POST['group']))
     {
         set('group', $group);
         set('errors', $errors);
         set('settings', $settings);
         return html('group/_form.html.php');
     }
-    if($group->save())
+    if($group->save() && $group->saveSettings($_POST))
     {
         $_SESSION['message'] = 'Grup bilgileri güncellendi.';
-        redirect_to('group', $id);
+        redirect_to('groups');
     }
     else
     {
@@ -348,10 +348,11 @@ function admin_group_update($id)
 
 function admin_group_delete($id)
 {
-    $user = Model::factory('User')->find_one($id);
-    $user->delete();
-    $_SESSION['message'] = 'Kullanıcı silindi.';
-    redirect_to('users');
+    $group = Model::factory('Group')->find_one($id);
+    $group->delete();
+    $group->deleteSettings();
+    $_SESSION['message'] = 'Grup silindi.';
+    redirect_to('groups');
 }
 
 function admin_sms_index()

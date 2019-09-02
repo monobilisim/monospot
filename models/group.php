@@ -70,6 +70,11 @@ class Group extends Model
     public function saveSettings($post)
     {
         unset($post['group']);
-        return file_put_contents(__DIR__ . '/../settings_group' . $this->id . '.inc', '<?php' . "\n\n" . 'return ' . var_export($_POST, true) . ';');
+        return file_put_contents(__DIR__ . '/../settings_group' . $this->id . '.inc', '<?php' . "\n\n" . 'return ' . var_export($post, true) . ';');
+    }
+
+    public function deleteSettings()
+    {
+        unlink(__DIR__ . '/../settings_group' . $this->id . '.inc');
     }
 }

@@ -12,7 +12,7 @@
             <tr>
                 <td><?=$group->id?></td>
                 <td><?=$group->name?></td>
-                <td><a href="<?=url_for('group', $group->id)?>/edit">Düzenle</a></td>
+                <td><a href="<?=url_for('group', $group->id)?>/update">Düzenle</a></td>
                 <td><a href="<?=url_for('group', $group->id)?>/delete">Sil</a></td>
             </tr>
         <? endforeach; ?>
