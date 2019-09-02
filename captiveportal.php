@@ -32,6 +32,7 @@ require 'models/group.php';
 include 'sms.php';
 include 'custom_functions.php';
 
+$global_settings = get_global_settings();
 $settings = get_settings();
 $hotspot = parse_ini_file('hotspot.ini');
 $hotspot['_marka'] = strtolower(str_replace(' ', '', $hotspot['marka']));
@@ -55,6 +56,11 @@ function get_settings()
         }
     }
 
+    return get_global_settings();
+}
+
+function get_global_settings()
+{
     return include 'settings.inc';
 }
 
@@ -456,18 +462,23 @@ function send_password($user)
 
 function login($user, $field)
 {
-	global $settings, $clientmac, $clientip;
+	global $settings, $global_settings, $clientmac, $clientip;
 
 	$user->last_login = time();
 	$user->last_mac = $clientmac;
 	$user->save();
 	captiveportal_logportalauth($user->$field,$clientmac,$clientip,"LOGIN");
 	$attributes = array();
-	// Şifre geçerlilik süresinin oturum geçerlilik süresinden (hard timeout) daha kısa olduğu durumlar için kullanıcıya özel olarak bu değeri atıyoruz
+    // Kullanıcının grubuna ait oturum geçerlilik süresinin global oturum geçerlilik süresinden (hard timeout) daha kısa olduğu durumlar için kullanıcıya özel olarak bu değeri atıyoruz
+    if ($settings['session_timeout'] < $global_settings['session_timeout']) {
+        $attributes['session_terminate_time'] = strtotime('+' . $settings['session_timeout'] . ' minutes');
+    }
+	// Şifre geçerlilik süresinin oturum geçerlilik süresinden daha kısa olduğu durumlar için kullanıcıya özel olarak bu değeri atıyoruz
 	if ($user->expires && $user->expires < strtotime('+' . $settings['session_timeout'] . ' minutes'))
 	{
 		$attributes['session_terminate_time'] = $user->expires;
 	}
+
 	portal_allow($clientip, $clientmac, $user->$field, $password = null, $attributes);
 	exit();
 }
