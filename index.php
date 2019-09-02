@@ -308,7 +308,7 @@ function admin_group_add()
 
 function admin_group_update_page($id)
 {
-    global $settings;
+    $settings = include("settings_group$id.inc");
     $group = Model::factory('Group')->find_one($id);
     if ($group->id)
     {
@@ -324,12 +324,15 @@ function admin_group_update_page($id)
 
 function admin_group_update($id)
 {
-    global $settings;
+    $settings = include("settings_group$id.inc");
     $group = Model::factory('Group')->find_one($id);
     $group->fill($_POST['group']);
 
     if ($errors = $group->validate($_POST['group']))
     {
+        $settings = $_POST;
+        unset($settings['group']);
+
         set('group', $group);
         set('errors', $errors);
         set('settings', $settings);

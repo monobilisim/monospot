@@ -34,13 +34,5 @@ $action = empty($group->id) ? url_for('group/add') : url_for('group', $group->id
     </div>
 
     <h4>Grup Ayarları</h4>
-    <?php
-    if ($_POST) {
-        $settings = $_POST;
-    } else {
-        global $settings;
-    }
-    ?>
-
     <? include __DIR__ . '/../settings_form_inner.html.php'; ?>
 </form>
