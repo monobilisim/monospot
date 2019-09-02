@@ -24,6 +24,7 @@
 
 	<div id="nav">
 		<a href="<?=url_for('users')?>">Kullanıcı Listesi</a> |
+        <a href="<?=url_for('groups')?>">Grup Listesi</a> |
 	<? if (isset($settings['authentication']['sms'])): ?>
 		<a href="<?=url_for('sms')?>">SMS Raporu</a> |
 	<? endif; ?>

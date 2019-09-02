@@ -234,3 +234,9 @@ Session.vim
 # Auto-generated tag files
 tags
 
+db/hotspot.db
+hotspot.ini
+lang/en.inc
+lang/tr.inc
+settings.inc
+settings_group*.inc

@@ -20,6 +20,7 @@ require 'lib/idiorm.php';
 require 'lib/paris.php';
 require 'lib/validate.class.php';
 require 'models/user.php';
+require 'models/group.php';
 
 // örnek dosyalardan asıl dosyaları oluştur
 if (!file_exists(dirname(__FILE__) . '/db/hotspot.db'))
@@ -60,6 +61,13 @@ dispatch('user/:id', 'admin_user_view');
 dispatch('user/:id/update', 'admin_user_update_page');
 dispatch_post('/user/:id/update', 'admin_user_update');
 dispatch('user/:id/delete', 'admin_user_delete');
+dispatch('groups*', 'admin_group_index');
+dispatch('group/add', 'admin_group_add_page');
+dispatch_post('group/add', 'admin_group_add');
+dispatch('group/:id', 'admin_group_view');
+dispatch('group/:id/update', 'admin_group_update_page');
+dispatch_post('/group/:id/update', 'admin_group_update');
+dispatch('group/:id/delete', 'admin_group_delete');
 dispatch('sms*', 'admin_sms_index');
 dispatch('settings', 'admin_settings');
 dispatch_post('settings', 'admin_settings_save');
@@ -249,6 +257,101 @@ function admin_user_delete($id)
 	$user->delete();
 	$_SESSION['message'] = 'Kullanıcı silindi.';
 	redirect_to('users');
+}
+
+function admin_group_index()
+{
+    $groups = ORM::for_table('group');
+
+    $groups->select('group.*');
+    $groups = $groups->find_many();
+
+    set('groups', $groups);
+
+    return html('group/index.html.php');
+}
+
+function admin_group_add_page()
+{
+    global $settings;
+    $group = Model::factory('Group')->create();
+    $group->fillDefaults();
+    set('user', $group);
+    set('settings', $settings);
+    set('title', 'Grup ekle');
+    return html('group/_form.html.php');
+}
+
+function admin_group_add()
+{
+    global $settings;
+    $group = Model::factory('Group')->create();
+    $group->fill($_POST['group']);
+
+    if ($errors = $group->validate($_POST['group'], true))
+    {
+        set('errors', $errors);
+        set('group', $group);
+        set('settings', $settings);
+        return html('group/_form.html.php');
+    }
+    if($group->save() && $group->saveSettings($_POST))
+    {
+        $_SESSION['message'] = 'Grup eklendi.';
+        redirect_to('groups');
+    }
+    else
+    {
+        halt(SERVER_ERROR, "Grup oluşturulması sırasında bir hata oluştu.");
+    }
+}
+
+function admin_group_update_page($id)
+{
+    global $settings;
+    $group = Model::factory('Group')->find_one($id);
+    if ($group->id)
+    {
+        set('group', $group);
+        set('settings', $settings);
+        return html('group/_form.html.php');
+    }
+    else
+    {
+        halt(NOT_FOUND, 'Böyle bir grup yok.');
+    }
+}
+
+function admin_group_update($id)
+{
+    global $settings;
+    $group = Model::factory('Group')->find_one($id);
+    $group->fill($_POST['group']);
+
+    if ($errors = $group->validate($_POST['user']))
+    {
+        set('group', $group);
+        set('errors', $errors);
+        set('settings', $settings);
+        return html('group/_form.html.php');
+    }
+    if($group->save())
+    {
+        $_SESSION['message'] = 'Grup bilgileri güncellendi.';
+        redirect_to('group', $id);
+    }
+    else
+    {
+        halt(SERVER_ERROR, "Grup bilgilerinin güncellenmesi sırasında bir hata oluştu. (id:" . params('id') . ")");
+    }
+}
+
+function admin_group_delete($id)
+{
+    $user = Model::factory('User')->find_one($id);
+    $user->delete();
+    $_SESSION['message'] = 'Kullanıcı silindi.';
+    redirect_to('users');
 }
 
 function admin_sms_index()
