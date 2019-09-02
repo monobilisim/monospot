@@ -1,5 +1,3 @@
-<? $settings = include $hotspot['_marka'] . '/settings.inc'; ?>
-
 <!DOCTYPE html>
 <html>
 <head>

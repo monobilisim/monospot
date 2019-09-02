@@ -28,14 +28,35 @@ require 'lib/limonade.php';
 require 'lib/idiorm.php';
 require 'lib/paris.php';
 require 'models/user.php';
+require 'models/group.php';
 include 'sms.php';
 include 'custom_functions.php';
 
-$settings = include('settings.inc');
+$settings = get_settings();
 $hotspot = parse_ini_file('hotspot.ini');
 $hotspot['_marka'] = strtolower(str_replace(' ', '', $hotspot['marka']));
 
 session_start();
+
+function get_settings()
+{
+    global $clientmac;
+
+    if ($clientmac) {
+        ORM::configure('sqlite:'. __DIR__ .'/db/hotspot.db');
+        global $hotspot;
+        set('hotspot', $hotspot);
+        $group = Model::factory('Group')->where_like('macs', "%$clientmac%")->find_one();
+        if ($group) {
+            $settings_file = 'settings_group' . $group->id . '.inc';
+            if (file_exists(__DIR__ . '/' . $settings_file)) {
+                return include $settings_file;
+            }
+        }
+    }
+
+    return include 'settings.inc';
+}
 
 function configure()
 {
@@ -77,6 +98,7 @@ function welcome()
 
 	$user = Model::factory('User')->create();
 	$user->fillDefaults();
+	set('settings', $settings);
 	set('title', $settings['name'] . ' ' . t('welcome'));
 	set('color', $settings['color']);
 	set('user', $user);
@@ -330,6 +352,7 @@ function welcome_post()
 
 	include 'captiveportal_custom.php';
 
+    set('settings', $settings);
 	set('title', $settings['name'] . ' ' . t('welcome'));
 	set('color', $settings['color']);
 	set('message', $message);
