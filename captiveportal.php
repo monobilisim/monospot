@@ -32,10 +32,10 @@ require 'models/group.php';
 include 'sms.php';
 include 'custom_functions.php';
 
-$global_settings = get_global_settings();
-$settings = get_settings();
 $hotspot = parse_ini_file('hotspot.ini');
 $hotspot['_marka'] = strtolower(str_replace(' ', '', $hotspot['marka']));
+$global_settings = get_global_settings();
+$settings = get_settings();
 
 session_start();
 
