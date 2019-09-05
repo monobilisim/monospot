@@ -49,10 +49,7 @@ function get_settings()
         set('hotspot', $hotspot);
         $group = Model::factory('Group')->where_like('macs', "%$clientmac%")->find_one();
         if ($group) {
-            $settings_file = 'settings_group' . $group->id . '.inc';
-            if (file_exists(__DIR__ . '/' . $settings_file)) {
-                return include $settings_file;
-            }
+            return $group->getSettings();
         }
     }
 

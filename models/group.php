@@ -97,4 +97,57 @@ class Group extends Model
     {
         unlink(__DIR__ . '/../settings_group' . $this->id . '.inc');
     }
+
+    public function getSettings($posted_settings = false)
+    {
+        global $hotspot;
+        $global_settings = include __DIR__ . '/../settings.inc';
+
+        if ($posted_settings) {
+            $group_settings = $posted_settings;
+        } else {
+            $group_settings = include __DIR__ . '/../settings_group'. $this->id . '.inc';
+        }
+
+        if (!isset($hotspot['mac_grup_ayarlari']) || !in_array('authentication', $hotspot['mac_grup_ayarlari'])) {
+            $group_settings['authentication'] = $global_settings['authentication'];
+            if (isset($global_settings['sms'])) {
+                $group_settings['sms'] = $global_settings['sms'];
+            } else {
+                unset($group_settings['sms']);
+            }
+            if (isset($global_settings['contact'])) {
+                $group_settings['contact'] = $global_settings['contact'];
+            } else {
+                unset($group_settings['contact']);
+            }
+            if (isset($global_settings['id_number'])) {
+                $group_settings['id_number'] = $global_settings['id_number'];
+            } else {
+                unset($group_settings['id_number']);
+            }
+        }
+
+        if (!isset($hotspot['mac_grup_ayarlari']) || !in_array('general', $hotspot['mac_grup_ayarlari'])) {
+            $group_settings['terms'] = $global_settings['terms'];
+            $group_settings['terms_checked'] = $global_settings['terms_checked'];
+            $group_settings['session_timeout'] = $global_settings['session_timeout'];
+            $group_settings['valid_for'] = $global_settings['valid_for'];
+            $group_settings['disallow_multiple_logins'] = $global_settings['disallow_multiple_logins'];
+            $group_settings['disallow_multiple_logins_for'] = $global_settings['disallow_multiple_logins_for'];
+            $group_settings['daily_limit'] = $global_settings['daily_limit'];
+            $group_settings['weekly_limit'] = $global_settings['weekly_limit'];
+            $group_settings['monthly_limit'] = $global_settings['monthly_limit'];
+            $group_settings['yearly_limit'] = $global_settings['yearly_limit'];
+            $group_settings['min_interval'] = $global_settings['min_interval'];
+        }
+
+        $group_settings['daily_global_limit'] = $global_settings['daily_global_limit'];
+        $group_settings['name'] = $global_settings['name'];
+        $group_settings['color'] = $global_settings['color'];
+        $group_settings['items_per_page'] = $global_settings['items_per_page'];
+        $group_settings['custom_fields'] = $global_settings['custom_fields'];
+
+        return $group_settings;
+    }
 }

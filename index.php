@@ -273,12 +273,18 @@ function admin_group_index()
 
 function admin_group_add_page()
 {
-    global $settings;
+    global $settings, $hotspot;
+
     $group = Model::factory('Group')->create();
     $group->fillDefaults();
+
     set('user', $group);
     set('settings', $settings);
     set('title', 'Grup ekle');
+    set('group', $group);
+    set('authentication_settings_enabled', isset($hotspot['mac_grup_ayarlari']) && in_array('authentication', $hotspot['mac_grup_ayarlari']));
+    set('general_settings_enabled', isset($hotspot['mac_grup_ayarlari']) && in_array('general', $hotspot['mac_grup_ayarlari']));
+
     return html('group/_form.html.php');
 }
 
@@ -308,12 +314,19 @@ function admin_group_add()
 
 function admin_group_update_page($id)
 {
-    $settings = include("settings_group$id.inc");
+    global $hotspot;
+
     $group = Model::factory('Group')->find_one($id);
     if ($group->id)
     {
+        $settings = $group->getSettings();
+
         set('group', $group);
         set('settings', $settings);
+        set('hotspot', $hotspot);
+        set('authentication_settings_enabled', isset($hotspot['mac_grup_ayarlari']) && in_array('authentication', $hotspot['mac_grup_ayarlari']));
+        set('general_settings_enabled', isset($hotspot['mac_grup_ayarlari']) && in_array('general', $hotspot['mac_grup_ayarlari']));
+
         return html('group/_form.html.php');
     }
     else
@@ -324,18 +337,22 @@ function admin_group_update_page($id)
 
 function admin_group_update($id)
 {
-    $settings = include("settings_group$id.inc");
+    global $hotspot;
+
     $group = Model::factory('Group')->find_one($id);
     $group->fill($_POST['group']);
 
     if ($errors = $group->validate($_POST['group']))
     {
-        $settings = $_POST;
-        unset($settings['group']);
+        $posted_settings = $_POST;
+        unset($posted_settings['group']);
+
+        $settings = $group->getSettings($posted_settings);
 
         set('group', $group);
         set('errors', $errors);
         set('settings', $settings);
+        set('hotspot', $hotspot);
         return html('group/_form.html.php');
     }
     if($group->save() && $group->saveSettings($_POST))
@@ -440,7 +457,11 @@ function admin_settings()
 
 	global $settings;
 	require 'update.php';
+
 	set('settings', $settings);
+	set('authentication_settings_enabled', true);
+    set('general_settings_enabled', true);
+
 	return html('settings.html.php');
 }
 
