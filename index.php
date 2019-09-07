@@ -278,7 +278,6 @@ function admin_group_add_page()
     $group = Model::factory('Group')->create();
     $group->fillDefaults();
 
-    set('user', $group);
     set('settings', $settings);
     set('title', 'Grup ekle');
     set('group', $group);
