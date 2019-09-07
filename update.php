@@ -45,7 +45,6 @@ if (!$last_mac_column_exists) {
 $result = ORM::for_table('user')->raw_query("SELECT name FROM sqlite_master WHERE type='table' AND name='group'")->find_one();
 if (!$result) {
     try {
-        ORM::for_table('user')->raw_execute('ALTER TABLE user ADD group_id INTEGER');
         ORM::for_table('user')->raw_execute("CREATE TABLE 'group' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT, 'macs' TEXT)");
     } catch (Exception $e) {
         die('Veritabani guncellemesi sirasinda bir hata olustu: ' .$e->getMessage());
