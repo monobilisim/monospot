@@ -171,7 +171,7 @@
                name="valid_for"
                value="<?= $settings['valid_for'] ?>"
                <? echo !$general_settings_enabled ? ' disabled' : ''; ?>
-        > <select name="valid_for_unit">
+        > <select name="valid_for_unit" <? echo !$general_settings_enabled ? ' disabled' : ''; ?>>
             <option value="days"<? echo (isset($settings['valid_for_unit']) && $settings['valid_for_unit'] === 'days') || !isset($settings['valid_for_unit']) ? ' selected' : ''; ?>>gün</option>
             <option value="minutes"<? echo isset($settings['valid_for_unit']) && $settings['valid_for_unit'] === 'minutes' ? ' selected' : ''; ?>>dakika</option>
         </select>
