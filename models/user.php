@@ -24,7 +24,7 @@ class User extends Model
 			if ($post['expires'])
 				$post['expires'] = strtotime(str_replace('-', '', $post['expires']));
 			else
-				$post['expires'] = strtotime('+' . $settings['valid_for'] . ' days');
+				$post['expires'] = strtotime('+' . $settings['valid_for'] . ' ' . (isset($settings['valid_for_unit']) ? $settings['valid_for_unit'] : 'days'));
 		}
 		foreach ($post as $column => $value)
 		{

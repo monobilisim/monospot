@@ -445,7 +445,7 @@ function send_password($user)
 			$sms->timestamp = time();
 			$sms->save();
 			$user->last_sms = time();
-			$user->expires = strtotime('+' . $settings['valid_for'] . ' days');
+			$user->expires = strtotime('+' . $settings['valid_for'] . ' ' . (isset($settings['valid_for_unit']) ? $settings['valid_for_unit'] : 'days'));
 			$user->save();
 			$message = 'password_sent';
 		}

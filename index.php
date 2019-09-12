@@ -164,7 +164,7 @@ function admin_user_add_page()
 	$user = Model::factory('User')->create();
 	$user->fillDefaults();
 	$user->password = mt_rand(100000, 999999);
-	$user->expires = strtotime('+' . $settings['valid_for'] . ' days');
+	$user->expires = strtotime('+' . $settings['valid_for'] . ' ' . (isset($settings['valid_for_unit']) ? $settings['valid_for_unit'] : 'days'));
 	set('user', $user);
 	set('settings', $settings);
 	set('title', 'Kullanıcı ekle');

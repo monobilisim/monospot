@@ -7,6 +7,7 @@ return array(
         ),
     'session_timeout' => '180',
     'valid_for' => '1',
+    'valid_for_unit' => 'days',
     'disallow_multiple_logins' => '1',
     'disallow_multiple_logins_for' => '30',
     'daily_global_limit' => '200',

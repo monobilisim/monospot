@@ -133,6 +133,7 @@ class Group extends Model
             $group_settings['terms_checked'] = $global_settings['terms_checked'];
             $group_settings['session_timeout'] = $global_settings['session_timeout'];
             $group_settings['valid_for'] = $global_settings['valid_for'];
+            $group_settings['valid_for_unit'] = $global_settings['valid_for_unit'];
             $group_settings['disallow_multiple_logins'] = $global_settings['disallow_multiple_logins'];
             $group_settings['disallow_multiple_logins_for'] = $global_settings['disallow_multiple_logins_for'];
             $group_settings['daily_limit'] = $global_settings['daily_limit'];
