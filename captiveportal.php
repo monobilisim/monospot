@@ -280,16 +280,11 @@ function welcome_post()
 	// TC kimlik no ile giriş
 	if ($_POST['form_id'] == 'id_number_login')
 	{
-		$user = Model::factory('User')->where('id_number', $_POST['user']['id_number'])->find_one();
-
-		if (!$user)
-		{
-			$user = Model::factory('User')->create();
-			$user->fillDefaults();
-			$user->fill($_POST['user']);
-			$user->name = tr_toUpper($user->name);
-			$user->surname = tr_toUpper($user->surname);
-		}
+		$user = Model::factory('User')->create();
+		$user->fillDefaults();
+		$user->fill($_POST['user']);
+		$user->name = tr_toUpper($user->name);
+		$user->surname = tr_toUpper($user->surname);
 
 		$bilgiler = array(
 			"isim"      => $user->name,
@@ -302,6 +297,13 @@ function welcome_post()
 
 		if ($sonuc == 'true')
 		{
+			$possible_user = Model::factory('User')->where('id_number', $_POST['user']['id_number'])->find_one();
+
+			if ($possible_user && $possible_user->surname !== $user->surname) {
+				$possible_user->delete();
+				$user->save();
+			}
+
 			$message = permission_process($user, 'id_number');
 			if (!$message)
 			{
