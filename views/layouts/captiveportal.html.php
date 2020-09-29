@@ -104,7 +104,7 @@
                     <?php $method = 'sms';
                     $_form = 'sms_register';
                     include 'captiveportal_permissions.html.php'; ?>
-
+                    <?php if (isset($settings['terms'])) require 'captiveportal_terms.html.php'; ?>
                     <input name="form_id" type="hidden" value="sms_register">
                     <input class="submit" name="submit" type="submit" value="<?= t('register') ?> &#187;">
                 </form>
