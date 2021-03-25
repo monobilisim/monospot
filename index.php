@@ -12,7 +12,7 @@ if (!session_auth()) {
 }
 /* ------------------- */
 
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED;
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 date_default_timezone_set('Europe/Istanbul');
 
 require 'lib/limonade.php';
