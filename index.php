@@ -198,6 +198,10 @@ function admin_user_add()
 function admin_user_view($id)
 {
 	global $settings;
+    $id = params('id');
+	if (!$id) {
+		halt(NOT_FOUND);
+	}
 	$user = Model::factory('User')->find_one($id);
 	if ($user->id)
 	{
