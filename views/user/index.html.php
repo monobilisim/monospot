@@ -14,27 +14,27 @@
 
 	<table>
 		<tr>
-		<? if ($settings['custom_fields']): ?>
-			<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
-				<? $field = explode('|', $field); ?>
-				<? if ($field[0] != 'gsm'): ?>
+		<?php if ($settings['custom_fields']): ?>
+			<?php foreach (explode("\n", $settings['custom_fields']) as $field): ?>
+				<?php $field = explode('|', $field); ?>
+				<?php if ($field[0] != 'gsm'): ?>
 				<th rowspan="<?=$rowspan?>"><?=order_link('users', $field[0], $field[1])?></th>
-				<? endif; ?>
-			<? endforeach; ?>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
+				<?php endif; ?>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		<?php if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'name', 'Ad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'surname', 'Soyad')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'id_number', 'TC Kimlik No')?></th>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false): ?>
+		<?php endif; ?>
+		<?php if (isset($settings['authentication']['sms']) || strpos($settings['custom_fields'], 'gsm') !== false): ?>
 			<th rowspan="2"><?=order_link('users', 'gsm', 'GSM')?></th>
 			<th rowspan="2"><?=order_link('users', 'last_sms', 'Son Şifre Alma')?></th>
 			<th colspan="4">SMS Limiti</th>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['manual_user'])): ?>
+		<?php endif; ?>
+		<?php if (isset($settings['authentication']['manual_user'])): ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'username', 'Kullanıcı adı')?></th>
-		<? endif; ?>
+		<?php endif; ?>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'expires', 'Şifre Son Geçerlilik')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_login', 'Son Oturum Açma')?></th>
 			<th rowspan="<?=$rowspan?>"><?=order_link('users', 'last_mac', 'Son MAC Adresi')?></th>
@@ -42,41 +42,41 @@
 			<th rowspan="<?=$rowspan?>">E-posta İzin</th>
 			<th rowspan="<?=$rowspan?>" style="width:140px">İşlem</th>
 		</tr>
-	<? if (isset($settings['authentication']['sms'])): ?>
+	<?php if (isset($settings['authentication']['sms'])): ?>
 		<tr>
 			<th><?=order_link('users', 'daily_limit', 'Günlük')?></th>
 			<th><?=order_link('users', 'weekly_limit', 'Haftalık')?></th>
 			<th><?=order_link('users', 'monthly_limit', 'Aylık')?></th>
 			<th><?=order_link('users', 'yearly_limit', 'Yıllık')?></th>
 		</tr>
-	<? endif; ?>
+	<?php endif; ?>
 
-	<? foreach($users as $user): ?>
+	<?php foreach ($users as $user): ?>
 		<tr>
-		<? if ($settings['custom_fields']): ?>
-			<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
-				<? $field = explode('|', $field); ?>
-				<? if ($field[0] != 'gsm'): ?>
+		<?php if ($settings['custom_fields']): ?>
+			<?php foreach (explode("\n", $settings['custom_fields']) as $field): ?>
+				<?php $field = explode('|', $field); ?>
+				<?php if ($field[0] != 'gsm'): ?>
 				<td><?=$user->{$field[0]}?></td>
-				<? endif; ?>
-			<? endforeach; ?>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
+				<?php endif; ?>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		<?php if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
 			<td class="left"><?=$user->name?></td>
 			<td class="left"><?=$user->surname?></td>
 			<td><?=$user->id_number?></td>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['sms'])): ?>
+		<?php endif; ?>
+		<?php if (isset($settings['authentication']['sms'])): ?>
 			<td><?=$user->gsm?></td>
 			<td><?=format_date($user->last_sms)?></td>
-			<td><?=$user->sms->day ? $user->sms->day.'/'.$user->daily_limit : ''?></td>
-			<td><?=$user->sms->week ? $user->sms->week.'/'.$user->weekly_limit : ''?></td>
-			<td><?=$user->sms->month ? $user->sms->month.'/'.$user->monthly_limit : ''?></td>
-			<td><?=$user->sms->year ? $user->sms->year.'/'.$user->yearly_limit : ''?></td>
-		<? endif; ?>
-		<? if (isset($settings['authentication']['manual_user'])): ?>
+			<td><?=$user->sms->day.'/'.$user->daily_limit?></td>
+			<td><?=$user->sms->week.'/'.$user->weekly_limit?></td>
+			<td><?=$user->sms->month.'/'.$user->monthly_limit?></td>
+			<td><?=$user->sms->year.'/'.$user->yearly_limit?></td>
+		<?php endif; ?>
+		<?php if (isset($settings['authentication']['manual_user'])): ?>
 			<td><?=$user->username?></td>
-		<? endif; ?>
+		<?php endif; ?>
 			<td><?=format_date($user->expires)?></td>
 			<td><?=format_date($user->last_login)?></td>
 			<td><?=$user->last_mac?></td>
@@ -88,13 +88,13 @@
 				<a href="<?=url_for('user', $user->id, 'delete')?>" onclick="if (confirm('Emin misiniz?')) { return true; } return false;">Sil</a>
 			</td>
 		</tr>
-	<? endforeach?>
+	<?php endforeach?>
 	</table>
 
 	<div id="filter">
 		<form action="" method="GET">
 		<input type="hidden" name="filter" value="1">
-	<? if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
+	<?php if (isset($settings['authentication']['id_number']) || isset($settings['sms']['id_number'])): ?>
 		<div class="item">
 			Ad<br>
 			<input type="text" class="large" name="name" value="<?=isset($get['name']) ? $get['name'] : ''?>">
@@ -107,8 +107,8 @@
 			TC Kimlik No<br>
 			<input type="text" class="large" name="id_number" value="<?=isset($get['id_number']) ? $get['id_number'] : ''?>">
 		</div>
-	<? endif; ?>
-	<? if (isset($settings['authentication']['sms'])): ?>
+	<?php endif; ?>
+	<?php if (isset($settings['authentication']['sms'])): ?>
 		<div class="item">
 			GSM<br>
 			<input type="text" class="small" name="gsm" value="<?=isset($get['gsm']) ? $get['gsm'] : ''?>">
@@ -117,21 +117,21 @@
 			Son Şifre Alma Tarihi<br>
 			<input type="text" class="small date" name="last_sms" value="<?=isset($get['last_sms']) ? $get['last_sms'] : ''?>">
 		</div>
-	<? endif; ?>
-	<? if (isset($settings['authentication']['manual_user'])): ?>
+	<?php endif; ?>
+	<?php if (isset($settings['authentication']['manual_user'])): ?>
 		<div class="item">
 			Kullanıcı adı<br>
 			<input type="text" class="large" name="username" value="<?=isset($get['username']) ? $get['username'] : ''?>">
 		</div>
-	<? endif; ?>
-	<? if ($settings['custom_fields']): ?>
-		<? foreach (explode("\n", $settings['custom_fields']) as $field): ?>
-			<? $field = explode('|', $field); ?>
+	<?php endif; ?>
+	<?php if ($settings['custom_fields']): ?>
+		<?php foreach (explode("\n", $settings['custom_fields']) as $field): ?>
+			<?php $field = explode('|', $field); ?>
 				<div class="item">
 				<?=$field[1]?><br>
 				<input type="text" class="large" name="<?=$field[0]?>" value="<?=isset($get[$field[0]]) ? $get[$field[0]] : ''?>">
-		<? endforeach; ?>
-	<? endif; ?>
+		<?php endforeach; ?>
+	<?php endif; ?>
 		<div class="item">
 			Şifre Son Geçerlilik Tarihi<br>
 			<input type="text" class="small date" name="expires" value="<?=isset($get['expires']) ? $get['expires'] : ''?>">
