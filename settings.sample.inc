@@ -2,9 +2,20 @@
 
 return array(
     'authentication' =>
-        array(
-            'sms' => '1',
-        ),
+    array(
+        'sms' => '1',
+    ),
+    'sms' => 
+    array (
+      'id_number' => '1',
+    ),
+    'contact' => 
+    array (
+      'sms' => 
+      array (
+        'gsm_permission' => '1',
+      ),
+    ),
     'session_timeout' => '180',
     'valid_for' => '1',
     'valid_for_unit' => 'days',
