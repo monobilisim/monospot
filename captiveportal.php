@@ -1,7 +1,7 @@
 <?php
 
 // assets dizinindeki dosyalara gelen isteklerde dosyayi goster ve cik
-$request_uri = $_SERVER[REQUEST_URI];
+$request_uri = $_SERVER['REQUEST_URI'];
 if (substr($request_uri, 0, 17) == '/monospot/assets/') {
     $extension = substr($request_uri, strrpos($request_uri, '.') + 1);
     $content_types = array(
