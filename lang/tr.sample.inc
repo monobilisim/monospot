@@ -55,4 +55,5 @@ return array(
   'terms_link' => 'Sözleşmeyi okumak için tıklayınız',
   'terms_text' => 'Sözleşme metnini buraya yazınız.',
   'terms_required' => 'Wi-Fi hizmetini kullanabilmeniz için sözleşmeyi kabul etmeniz gerekmektedir.',
+  'multiple_logins_disallowed' => 'Aynı MAC adresi ile daha önce giriş yapılmış.',
 );

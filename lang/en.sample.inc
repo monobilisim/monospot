@@ -47,4 +47,5 @@ return array(
   'terms_link' => 'Click here to read the terms',
   'terms_text' => 'Enter the Terms of Service Agreement here.',
   'terms_required' => 'You have to agree to the terms of service in order to use Wi-Fi services.',
+  'multiple_logins_disallowed' => 'Already logged in from this MAC address.',
 );

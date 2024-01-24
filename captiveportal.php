@@ -44,7 +44,7 @@ function get_settings()
     global $clientmac;
 
     if ($clientmac) {
-        ORM::configure('sqlite:'. __DIR__ .'/db/hotspot.db');
+        ORM::configure('sqlite:' . __DIR__ . '/db/hotspot.db');
         global $hotspot;
         set('hotspot', $hotspot);
         $group = Model::factory('Group')->where_like('macs', "%$clientmac%")->find_one();
@@ -65,9 +65,9 @@ function configure()
 {
     $dir = dirname(__FILE__);
 
-    ORM::configure('sqlite:'.$dir.'/db/hotspot.db');
+    ORM::configure('sqlite:' . $dir . '/db/hotspot.db');
 
-    option('views_dir', $dir.'/views');
+    option('views_dir', $dir . '/views');
 
     error_layout('layouts/captiveportal.html.php');
 
@@ -190,7 +190,7 @@ function welcome_post()
 
                             if ($mac_interval <= ($mac_disallow_for * 86400)) { // Son gonderilen SMS'ten beri yeterli sure gecmemisse
                                 $mac_user = Model::factory('User')->find_one($mac_sms->user_id);
-                                $message = 'multiple_logins_from_same_mac_address_disallowed';
+                                $message = 'multiple_logins_disallowed';
                                 $form = 'sms_login';
                             }
                         }
@@ -251,11 +251,10 @@ function welcome_post()
     if ($_POST['form_id'] == 'id_number_login') {
         $user = Model::factory('User')->where('id_number', $_POST['user']['id_number'])->find_one();
 
-		if (!$user)
-		{
-			$user = Model::factory('User')->create();
-			$user->fillDefaults();
-		}
+        if (!$user) {
+            $user = Model::factory('User')->create();
+            $user->fillDefaults();
+        }
 
         // Daha önce kayıtlı olsa bile Nüfus Müdürlüğü'ne kullanıcının girdiği bilgiler gonderilsin
         $user->fill($_POST['user']);
@@ -456,7 +455,7 @@ function login($user, $field)
 function t($key, $message_arg = '')
 {
     $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'tr';
-    $messages = include dirname(__FILE__).'/lang/'.$lang.'.inc';
+    $messages = include dirname(__FILE__) . '/lang/' . $lang . '.inc';
     $translated_message = sprintf($messages[$key], $message_arg);
     return $translated_message ?: $key;
 }
@@ -487,7 +486,7 @@ function password_request_check($user)
 
     # minimum interval
     $seconds = time() - $user->last_sms;
-    $minutes = floor($seconds/60);
+    $minutes = floor($seconds / 60);
     if ($minutes < $settings['min_interval']) {
         return 'min_interval';
     }
@@ -525,10 +524,10 @@ function tckn_dogrula($tckn_data)
 	<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 	<soap:Body>
 	<TCKimlikNoDogrula xmlns="http://tckimlik.nvi.gov.tr/WS">
-	<TCKimlikNo>'.$tckn_data["tcno"].'</TCKimlikNo>
-	<Ad>'.$tckn_data["isim"].'</Ad>
-	<Soyad>'.$tckn_data["soyisim"].'</Soyad>
-	<DogumYili>'.$tckn_data["dogumyili"].'</DogumYili>
+	<TCKimlikNo>' . $tckn_data["tcno"] . '</TCKimlikNo>
+	<Ad>' . $tckn_data["isim"] . '</Ad>
+	<Soyad>' . $tckn_data["soyisim"] . '</Soyad>
+	<DogumYili>' . $tckn_data["dogumyili"] . '</DogumYili>
 	</TCKimlikNoDogrula>
 	</soap:Body>
 	</soap:Envelope>';
@@ -545,7 +544,7 @@ function tckn_dogrula($tckn_data)
         'Host: tckimlik.nvi.gov.tr',
         'Content-Type: text/xml; charset=utf-8',
         'SOAPAction: "http://tckimlik.nvi.gov.tr/WS/TCKimlikNoDogrula"',
-        'Content-Length: '.strlen($xml)
+        'Content-Length: ' . strlen($xml)
     ));
     $response = curl_exec($ch);
     curl_close($ch);
