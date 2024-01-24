@@ -59,7 +59,7 @@
     </div>
 
     <? if (isset($message)): ?>
-        <div class="message <?= $message == 'password_sent' ? 'success' : 'error' ?>"><?= t($message, $arg) ?></div>
+        <div class="message <?= $message == 'password_sent' ? 'success' : 'error' ?>"><?= t($message, $message_arg) ?></div>
     <? endif; ?>
 
     <? if (isset($settings['authentication']['sms'])): ?>

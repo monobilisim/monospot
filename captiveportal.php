@@ -119,7 +119,7 @@ function welcome_post()
     }
 
     $form = '';
-    $arg = '';
+    $message_arg = '';
 
     // SMS ile giriş - yeni kayıt
     if ($_POST['form_id'] == 'sms_register') {
@@ -136,16 +136,16 @@ function welcome_post()
                     $user->name = tr_toUpper($user->name);
                     $user->surname = tr_toUpper($user->surname);
 
-                    $bilgiler = array(
+                    $tckn_data = array(
                         'isim'      => $user->name,
                         'soyisim'   => $user->surname,
                         'dogumyili' => $_POST['birthyear'],
                         'tcno'      => $user->id_number
                     );
 
-                    $sonuc = tcno_dogrula($bilgiler);
+                    $sonuc = tckn_dogrula($tckn_data);
 
-                    if ($sonuc != 'true') {
+                    if ($sonuc === false) {
                         captiveportal_logportalauth($user->id_number, $clientmac, $clientip, "FAILURE");
                         $message = 'invalid_id_number';
                         $form = 'sms_register';
@@ -191,7 +191,6 @@ function welcome_post()
                             if ($mac_interval <= ($mac_disallow_for * 86400)) { // Son gonderilen SMS'ten beri yeterli sure gecmemisse
                                 $mac_user = Model::factory('User')->find_one($mac_sms->user_id);
                                 $message = 'multiple_logins_from_same_mac_address_disallowed';
-                                $arg = $mac_gsm;
                                 $form = 'sms_login';
                             }
                         }
@@ -206,7 +205,7 @@ function welcome_post()
                 } else {
                     $message = send_password($user);
                     if ($message == 'min_interval') {
-                        $arg = $settings['min_interval'];
+                        $message_arg = $settings['min_interval'];
                     }
                     $form = 'sms_login';
                 }
@@ -241,7 +240,7 @@ function welcome_post()
             } else { // şifre isteği
                 $message = send_password($user);
                 if ($message == 'min_interval') {
-                    $arg = $settings['min_interval'];
+                    $message_arg = $settings['min_interval'];
                 }
             }
             $form = 'sms_login';
@@ -250,23 +249,30 @@ function welcome_post()
 
     // TC kimlik no ile giriş
     if ($_POST['form_id'] == 'id_number_login') {
-        $user = Model::factory('User')->create();
-        $user->fillDefaults();
+        $user = Model::factory('User')->where('id_number', $_POST['user']['id_number'])->find_one();
+
+		if (!$user)
+		{
+			$user = Model::factory('User')->create();
+			$user->fillDefaults();
+		}
+
+        // Daha önce kayıtlı olsa bile Nüfus Müdürlüğü'ne kullanıcının girdiği bilgiler gonderilsin
         $user->fill($_POST['user']);
         $user->name = tr_toUpper($user->name);
         $user->surname = tr_toUpper($user->surname);
 
-        $bilgiler = array(
+        $tckn_data = array(
             "isim"      => $user->name,
             "soyisim"   => $user->surname,
             "dogumyili" => $_POST['birthyear'],
             "tcno"      => $user->id_number
         );
 
-        $sonuc = tcno_dogrula($bilgiler);
+        $sonuc = tckn_dogrula($tckn_data);
 
-        if ($sonuc == 'true') {
-            $possible_user = Model::factory('User')->where('id_number', $_POST['user']['id_number'])->find_one();
+        if ($sonuc === true) {
+            $possible_user = Model::factory('User')->where('id_number', $user->id_number)->find_one();
 
             if ($possible_user && $possible_user->surname !== $user->surname) {
                 $possible_user->delete();
@@ -316,7 +322,7 @@ function welcome_post()
     set('title', $settings['name'] . ' ' . t('welcome'));
     set('color', $settings['color']);
     set('message', $message);
-    set('arg', $arg);
+    set('message_arg', $message_arg);
     set('form', $form);
     if (!$form && isset($settings['sms']['simple_screen'])) {
         set('form', 'sms_register');
@@ -447,16 +453,17 @@ function login($user, $field)
     exit();
 }
 
-function t($key, $arg = '')
+function t($key, $message_arg = '')
 {
     $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'tr';
     $messages = include dirname(__FILE__).'/lang/'.$lang.'.inc';
-    return sprintf($messages[$key], $arg);
+    $translated_message = sprintf($messages[$key], $message_arg);
+    return $translated_message ?: $key;
 }
 
 function generate_password()
 {
-    return $password = mt_rand(100000, 999999);
+    return mt_rand(100000, 999999);
 }
 
 function password_expired($user)
@@ -512,16 +519,16 @@ function password_request_check($user)
     return false;
 }
 
-function tcno_dogrula($bilgiler)
+function tckn_dogrula($tckn_data)
 {
-    $gonder = '<?xml version="1.0" encoding="utf-8"?>
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
 	<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 	<soap:Body>
 	<TCKimlikNoDogrula xmlns="http://tckimlik.nvi.gov.tr/WS">
-	<TCKimlikNo>'.$bilgiler["tcno"].'</TCKimlikNo>
-	<Ad>'.$bilgiler["isim"].'</Ad>
-	<Soyad>'.$bilgiler["soyisim"].'</Soyad>
-	<DogumYili>'.$bilgiler["dogumyili"].'</DogumYili>
+	<TCKimlikNo>'.$tckn_data["tcno"].'</TCKimlikNo>
+	<Ad>'.$tckn_data["isim"].'</Ad>
+	<Soyad>'.$tckn_data["soyisim"].'</Soyad>
+	<DogumYili>'.$tckn_data["dogumyili"].'</DogumYili>
 	</TCKimlikNoDogrula>
 	</soap:Body>
 	</soap:Envelope>';
@@ -532,18 +539,18 @@ function tcno_dogrula($bilgiler)
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $gonder);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'POST /Service/KPSPublic.asmx HTTP/1.1',
-    'Host: tckimlik.nvi.gov.tr',
-    'Content-Type: text/xml; charset=utf-8',
-    'SOAPAction: "http://tckimlik.nvi.gov.tr/WS/TCKimlikNoDogrula"',
-    'Content-Length: '.strlen($gonder)
+        'POST /Service/KPSPublic.asmx HTTP/1.1',
+        'Host: tckimlik.nvi.gov.tr',
+        'Content-Type: text/xml; charset=utf-8',
+        'SOAPAction: "http://tckimlik.nvi.gov.tr/WS/TCKimlikNoDogrula"',
+        'Content-Length: '.strlen($xml)
     ));
-    $gelen = curl_exec($ch);
+    $response = curl_exec($ch);
     curl_close($ch);
 
-    return strip_tags($gelen);
+    return strip_tags($response) == 'true' ? true : false;
 }
 
 function tr_toUpper($string)

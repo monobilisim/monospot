@@ -585,6 +585,8 @@ function admin_settings_save()
             set('status', 'error');
         }
     }
+    set('authentication_settings_enabled', true);
+    set('general_settings_enabled', true);
     return html('settings.html.php');
 }
 
