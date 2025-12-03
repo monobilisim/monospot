@@ -1,6 +1,6 @@
 <?php
 
-require 'api/ekomesaj/SmsApi.php';
+require 'sms/api/ekomesaj/SmsApi.php';
 
 function send_sms($user, $password)
 {
@@ -23,7 +23,7 @@ function send_sms($user, $password)
 
     $response = $smsApi->sendSingleSms($request);
 
-    if ($response->err == null){
+    if ($response->err == null) {
         return true;
     } else {
         return false;
