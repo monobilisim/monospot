@@ -2,7 +2,6 @@
 
 function send_sms($user, $password)
 {
-	// TT Mesaj legacy gateway (FortiAuthenticator ile ayni endpoint)
 	$api_username = '';
 	$api_password = '';
 	$api_origin = '';
