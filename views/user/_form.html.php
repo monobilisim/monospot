@@ -91,7 +91,7 @@
 
 		<div class="actions">
 			<input type="submit" value="<?= empty($user->id) ? "Ekle" : "Güncelle" ?>">
-			<a href="<?= empty($user->id) ? url_for('user') : url_for('user', $user->id) ?>">İptal</a>
+			<a href="<?= empty($user->id) ? url_for('users') : url_for('user', $user->id) ?>">İptal</a>
 		</div>
 	</div>
 </form>

@@ -222,7 +222,7 @@ function admin_user_add()
     }
 }
 
-function admin_user_view($id)
+function admin_user_view($id = null)
 {
     global $settings;
     $id = params('id');
